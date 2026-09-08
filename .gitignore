@@ -1,0 +1,21 @@
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.venv/
+dist/
+build/
+
+# Data — episodes/datasets never go into git
+data/
+!data/README.md
+*.mp4
+*.hdf5
+*.parquet
+*.mcap
+
+# Tooling
+.pytest_cache/
+.ruff_cache/
+.mypy_cache/
+.DS_Store
