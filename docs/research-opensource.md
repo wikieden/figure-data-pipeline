@@ -51,7 +51,7 @@
 
 ## 3. 数据可视化与 QC
 
-- **rerun**（[rerun-sdk 0.34.1](https://pypi.org/project/rerun-sdk/)，2026-07）：多速率多模态同步可视化，**内置 LeRobotDataset 导入器**（指向目录即可加载），HF 官方数据集可视化 Space 也基于它。→ **选定**为 episode 检视/QC 工具。
+- **rerun**（[rerun-sdk](https://pypi.org/project/rerun-sdk/)，调研时 0.34.1/2026-07，仓库锁定 0.36.3）：多速率多模态同步可视化，**内置 LeRobotDataset 导入器**（指向目录即可加载），HF 官方数据集可视化 Space 也基于它。→ **选定**为 episode 检视/QC 工具。
 - **Foxglove**：2026-08-18 起转型 "physical AI 的 agentic 数据平台"（自然语言查询录制数据）；MCAP 生态的官方查看器。→ 采集侧（MCAP）调试用。
 
 ---
@@ -83,9 +83,9 @@
 来源：[Isaac Lab + GR00T 工作流](https://blog.pebblous.ai/project/AgenticAI/isaac-groot/en/)、[Isaac Lab RL post-training](https://isaac-sim.github.io/IsaacLab/develop/source/experimental-features/rlinf_vla_posttraining.html)、[Isaac-GR00T N1.7](https://github.com/Nvidia/Isaac-GR00T)
 
 - GR00T N1 **数据金字塔**：web 视频 → 合成轨迹 → 真机数据。实测配比：**88 小时真机 + 780K 合成轨迹（≈6,500 小时，11 计算小时生成）**，合成占 ~98%。
-- 四阶段管线：Teleop → MimicGen（演示增殖）→ Neural Trajectory → Fine-tune。
+- 四阶段管线：Teleop → DexMimicGen（MimicGen 的双臂/灵巧手版，演示增殖）→ Neural Trajectory → Fine-tune。
 - Isaac Lab 已支持对 VLA（GR00T/OpenVLA）做 **RL post-training**（RLinf 实验特性）；Isaac Lab-Arena 做仿真中的策略批量评测。
-- **启示**：我们管线的第三条 ingest 轨道（仿真）直接对接 Isaac Lab/MimicGen 产物；评测环节用仿真 Arena 跑回归。
+- **启示**：我们管线的 sim 轨直接对接 Isaac Lab/DexMimicGen 产物；评测环节用仿真 Arena 跑回归。
 
 ---
 
@@ -99,7 +99,7 @@
 | 可视化/QC | **rerun-sdk**（内置 LeRobot 导入器）+ Foxglove（MCAP 调试） | 双层各用其长 |
 | 视频编码 | AV1 (svt-av1/硬编, yuv420p)，解码 torchcodec | LeRobot 官方基准结论 |
 | 语言标注 | VLM 自动标注（Qwen-VL / Claude 双后端），分层指令 | DeMiAn/NILS/Figure 同路线 |
-| 仿真轨道 | Isaac Lab / MimicGen 产物导入 + Arena 评测 | GR00T 数据金字塔验证 |
+| 仿真轨道 | Isaac Lab / DexMimicGen 产物导入 + Arena 评测 | GR00T 数据金字塔验证 |
 | 格式互转 | forge + lerobot convert | 覆盖 RLDS/HDF5/Rosbag 存量 |
 
-未及查证：MuJoCo 侧（非 Isaac）仿真数据生成现状、mcap Python SDK 具体版本号、`lerobot-dataset` 包的精确 API 面——搭骨架时以实际安装为准。
+未及查证：MuJoCo 侧（非 Isaac）仿真数据生成现状、`lerobot-dataset` 包的精确 API 面——搭骨架时以实际安装为准。已回填：mcap Python SDK 锁定 1.4.0、rerun-sdk 锁定 0.36.3（uv.lock）。
