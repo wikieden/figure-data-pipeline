@@ -1,0 +1,23 @@
+{
+  "schema_version": "0.1",
+  "episode_id": "ep_v01_fixture",
+  "track": "device",
+  "robot_model": null,
+  "operator_id": "op_007",
+  "started_at_ns": 1756450000000000000,
+  "duration_ns": 42000000000,
+  "videos": [
+    {"name": "ego_wrist", "fps": 60.0, "width": 1920, "height": 1080, "encoding": "h264"}
+  ],
+  "signals": [
+    {"name": "ee_pose", "rate_hz": 60.0, "dim": 9, "dtype": "float32", "slot": "ee_pose_right"},
+    {"name": "gripper_width", "rate_hz": 60.0, "dim": 1, "dtype": "float32", "slot": "gripper_right"},
+    {"name": "imu", "rate_hz": 200.0, "dim": 6, "dtype": "float32", "slot": null}
+  ],
+  "task_instruction": "把杯子放进洗碗机",
+  "subtask_instructions": ["拿起杯子", "打开洗碗机门", "放入杯子"],
+  "quality_flags": ["flag:slam_lost_short"],
+  "curated": true,
+  "success": true,
+  "intervention_ts_ns": []
+}

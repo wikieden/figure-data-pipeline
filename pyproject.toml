@@ -1,7 +1,7 @@
 [project]
 name = "fdp"
 version = "0.1.0"
-description = "Add your description here"
+description = "Open humanoid robot data pipeline and capture tooling (MCAP capture → curation → LeRobotDataset v3), benchmarked against Figure Helix/Figure 03/Index"
 readme = "README.md"
 authors = [
     { name = "wikieden", email = "wikieden@gmail.com" }

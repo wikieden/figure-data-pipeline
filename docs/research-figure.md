@@ -111,7 +111,8 @@
 - **控制频率：200 Hz**（S1 动作输出 / 动作块执行）；**S2 视觉-语言 backbone：7–9 Hz**；**S0 执行器环：1 kHz**（Helix 02）。
 - **动作空间：35-DoF**（初代上半身）→ Helix 02 全身（腿/躯干/头/臂/腕/单指）。
 - **动作块（action chunk）机制**：S1 输出动作块，可通过线性重采样缩短后仍以 200 Hz 执行，实现测试时加速（"Sport Mode"，最高 +50% 有效，+20% 常用）。来源：[helix-logistics](https://www.figure.ai/news/helix-logistics)
-- **传感器套件（Figure 03）**：头部相机（视野较上代 +60%）、**双掌心相机**（抓取近距冗余视觉）、指尖触觉（**3 克力**检测，可预判打滑）、全身本体感知、力觉；全部 "wired into the policy"。来源：[introducing-figure-03](https://www.figure.ai/news/introducing-figure-03)
+- **传感器套件（Figure 03）**：头部相机（视野较上代 +60%，帧率 2×、延迟 ¼，官方口径）、**双掌心相机**（抓取近距冗余视觉）、指尖触觉（**3 克力**检测，可预判打滑）、全身本体感知、力觉；全部 "wired into the policy"。**相机总数官方未公开 ⚠️**（本仓库早期文档写过"8 相机"，为推断，已撤回）。来源：[introducing-figure-03](https://www.figure.ai/news/introducing-figure-03)
+- **供能与回坞（Figure 03）**：足底感应线圈 **2 kW 无线充电**（站上充电底座即充电）、电池 2.3 kWh、单次运行约 5 小时、回坞同时走 10 Gbps mmWave 卸数（官方数字；[introducing-figure-03](https://www.figure.ai/news/introducing-figure-03)、[Forbes 2026-01-09](https://www.forbes.com/sites/johnkoetsier/2026/01/09/figure-adds-inductive-charging-robot-feet-to-its-humanoid-robot/)）。
 - **架构增量（物流版）**：短时视觉记忆模块（近帧特征组合，有状态感知）、本体感知历史窗口（手/躯干/头历史位姿，改善动作块衔接）、力反馈入观测、decoder 头参数 +50%。
 - ⚠️ 未公开：相机分辨率/帧率、图像与状态的对齐/时间戳方案、存储格式（是否类 LeRobot/RLDS）、压缩编码。
 
@@ -123,7 +124,7 @@
 2. **多模态同步 Schema 要一次设计到位**：每条 episode 至少包含：多路 RGB（头部+腕/掌）、本体感知（腕位姿、逐指位置）、力/触觉、动作（200 Hz）、语言指令。建议**分层采样率存储**（视觉 ~10 Hz 对齐 S2、状态/动作 200 Hz 对齐 S1），用统一时间戳对齐——这直接对应 S1/S2 解耦消费。
 3. **语言标注自动化**：复刻 Figure 的事后反推式 auto-labeling——用开源 VLM（如 Qwen-VL 类）对切片视频生成"你会给机器人什么指令"，人工只做抽检。这是整条管线中 ROI 最高的自动化点，且完全可开源实现。
 4. **"回坞批量上传"而非实时回传**：Figure 03 的 10 Gbps 回坞卸数说明工程上选择了 store-and-forward。开源管线应设计**机上环形缓冲 + 断点续传 + 坞站/Wi-Fi 高带宽批量同步**，云端做去重与入湖。
-5. **人类第一视角视频作为廉价预训练层**：Go-Big 证明纯 egocentric 人类视频可零机器人数据迁移导航。开源对标可用 Ego4D/Epic-Kitchens + 自采头戴相机数据，管线要预留"人类视频轨道"（无动作标签，弱监督/重定向）与"机器人轨道"两条 ingest 路径，共享标注与切分基础设施。
-6. **动捕重定向是第三条数据轨道**：Helix 02 用 1,000+ 小时关节级重定向人体动捕 + 大规模仿真训练全身控制。→ 管线应支持 mocap → 机器人关节空间的 retargeting 流水线与仿真 rollout 数据入库。
+5. **人类第一视角视频作为廉价预训练层**：Go-Big 证明纯 egocentric 人类视频可零机器人数据迁移导航。开源对标可用 Ego4D/Epic-Kitchens + 自采头戴相机数据，管线要预留"人类视频轨道"（human 轨，无动作标签，弱监督/重定向）与"机器人轨道"（robot 轨）两条 ingest 路径，共享标注与切分基础设施（本仓库后续扩为四轨 robot/human/device/sim，见 architecture.md）。
+6. **动捕重定向与仿真 rollout 归入 sim 轨**：Helix 02 用 1,000+ 小时关节级重定向人体动捕 + 大规模仿真训练全身控制。→ 管线应支持 mocap → 机器人关节空间的 retargeting 流水线与仿真 rollout 数据入库（轨归属裁决见 sim-track.md）。
 7. **可迭代的观测/动作版本管理**：Figure 明确按 S0/S1/S2 分层、可独立换数据独立迭代；且传感器在代际间增加（掌心相机、触觉）。→ Schema 要带**版本化与可空字段**，老数据在新模型下仍可用（缺失模态用 mask）。
 8. **数据缩放实验作为管线内建能力**：Figure 以 10/20/40/60 小时做消融来决定采集投入。→ 管线应内建"按小时数/任务/操作员切分训练子集 + 自动跑缩放曲线"的工具，把采集预算决策数据化。

@@ -5,7 +5,7 @@
 ## 0. 总览：episode 状态机
 
 ```
-raw ──технический校验──► ingested ──质量门L1──► gated ──L2/L3──► scored
+raw ──技术校验──► ingested ──质量门L1──► gated ──L2/L3──► scored
      └─(拒收:损坏/不完整)         └─(flag:reject_*)      │
                                                         ▼
 training_ready ◄──打包── labeled ◄──标注/伪标签── segmented ◄──分割──
@@ -28,7 +28,7 @@ training_ready ◄──打包── labeled ◄──标注/伪标签── seg
 | 时间戳 | 单调性、跨流对齐残差（视觉↔IMU↔信号流 <1 帧周期）、GoPro 时戳抖动检查 | 超限→reject_timing |
 | 时长/帧率 | <10s 拒；fps 波动 >5% 标记 | 拒/降级 |
 | 元数据 | 标定文件存在且版本匹配、设备固件版本、传感器健康自检记录 | 缺失→拒收 |
-| 隐私 | 人脸检测→模糊（不可逆，唯一的破坏性操作）；GPS 等敏感元数据剥离 | 强制 |
+| 隐私 | 人脸检测→模糊（不可逆，唯一的破坏性操作；端上可选先模糊，入湖强制复检并补模糊；误模糊率进 QC 指标，脱敏前的哈希留存以审计）；GPS 等敏感元数据剥离。政策与保留期见 [compliance-and-security.md](compliance-and-security.md) | 强制 |
 
 ### 1.2 视觉门（轻量模型，GPU 批处理）
 
@@ -37,7 +37,7 @@ training_ready ◄──打包── labeled ◄──标注/伪标签── seg
 - **抖动**：IMU 角速度积分 + 稀疏光流幅值双指标（有 IMU 用 IMU，纯视频用光流）
 - **内容有效性**：黑屏/镜头遮挡/朝天花板占比
 - **手部可见率**（human/device 轨核心指标）：轻量手部检测器逐秒采样，可见帧占比 <60% → 不拒，**降级路由**到导航/预训练轨道
-- 全部指标写入 episode 指标表，阈值集中在 configs/ 可调——阈值最终服从下游消融（§7）
+- 全部指标写入 episode 指标表，阈值集中在 configs/ 可调——阈值最终服从下游消融（§7）。**过渡方案（M2 期消融工具尚未交付时）**：阈值取本文写死的临时值并版本化，各门只做标记不做删除，记录漏斗通过率；M3 mixture-runner 就绪后按 §7 回溯裁决（governance.md U-16）
 
 ### 1.3 运动学门（robot/device 轨，L1）
 
@@ -73,14 +73,14 @@ training_ready ◄──打包── labeled ◄──标注/伪标签── seg
 
 ### 2.1 去重
 
-- **embedding 选型**：视频级自监督表征（InternVideo/VideoMAE 类）为主，CLIP 帧均值为快速兜底；向量库存全量
+- **embedding 选型**（以 [cleaning-algo-selection.md](cleaning-algo-selection.md) §1.9 为准）：**SigLIP 帧特征聚合（Apache-2.0）起步**，InternVideo2/VideoMAE V2 类视频级表征在 license 核查通过后升级；向量库存全量
 - **两层阈值**：近重复（余弦 >0.95，同机位同任务重复录制）→ 保留质量分最高的 1 条；语义重复（0.85–0.95）→ 不删，参与再平衡降权
 - 同人去重严、跨人去重松（跨人的"相似"本身是操作者多样性）
 
 ### 2.2 再平衡
 
-- 对 curated 池按（任务 × 物体 × 环境）三轴聚类（embedding + HDBSCAN），统计簇覆盖度
-- **多样性 KPI**：每 1,000 小时独特任务/物体/环境数（对标 Index 373/1,146/116）
+- 对 curated 池按（任务 × 物体 × 环境 × 操作者）四轴聚类（前三轴 embedding + HDBSCAN，操作者轴直接用 `operator_id`），统计簇覆盖度——操作者轴依据 Lin 幂律（research-vla-pretraining §4.5：场景×物体×操作者数是要扩的三个维度）
+- **多样性 KPI**：每 1,000 小时独特任务/物体/环境/操作者数（前三项对标 Index 373/1,146/116，为公司自报数字且分母口径未公开，见 governance.md D-09；计数定义见 [eval-protocol.md](eval-protocol.md) 指标字典）
 - 稀缺簇 → 生成任务配额下发 App（主动采集）；过剩簇 → 采样降权（被动平衡）
 - 训练分片构建时按簇做温度采样（稀缺簇过采样），温度是消融参数
 
@@ -115,7 +115,7 @@ training_ready ◄──打包── labeled ◄──标注/伪标签── seg
 
 ### 4.2 伪标签工厂（human 轨）
 
-流水线（细节与依据见 [index-replica-plan.md](index-replica-plan.md) §4、手部精度方案见会话记录/§6.5）：
+流水线（细节与依据见 [index-replica-plan.md](index-replica-plan.md) §4；纯视觉手部位姿的精度保证与 device 轨真值校准见 [device-track-umi.md](device-track-umi.md) §3、[cleaning-algo-selection.md](cleaning-algo-selection.md) §1 手部姿态条目）：
 
 1. 手部关键点（HaMeR/WiLoR 级模型逐帧初值）
 2. 整段时序优化：骨长恒定 + 关节限位 + 速度上限约束 + Savitzky-Golay/SLERP 平滑；遮挡帧标插值
@@ -151,3 +151,19 @@ SLAM 位姿回环校正与平滑；gripper 宽度标记追踪缺帧插补；robo
 - 每个门的通过率进漏斗仪表盘；阈值改动必须走消融：同批数据不同阈值切子集 → 小模型训练 → 仿真基准分。**指标不涨的严格化一律回退**
 - 少样本适应基准（1 条演示零梯度 / 5 分钟 10 步微调）作为演示库质量的直接探针
 - 伪标签抽检：金标准配对集上的 MPJPE/轨迹 RMSE 回归，算法升级必须先过此关
+- 质量分合成公式（§4.2 第 6 步的六因子乘积）本身要验证：以金标准配对集上"质量分 vs 真实误差"的 Spearman 相关为验收，<0.5 则回退到单因子（误差预测器）
+
+## 8. 评测集固定与泄漏防护
+
+- **held-out 在 ingest 后、curation 前就固定**：按 `scene_id` 与 `operator_id` 做组切分（同一场景/同一操作者不跨 train/held-out），比例 5–10%，切分结果写入 `split` 字段并版本化（`split_version`）；曾进入 held-out 的 episode 永不回流训练集
+- **M1 期（curation 尚未实现）的过渡**：Stage A 微调验证前，export 层用同一组切分规则生成 held-out 清单文件（`data/splits/<version>.json`）——机制不等 M2
+- 去重与再平衡只在 train 池内做，held-out 不参与聚类统计；演示库切片不得取自 held-out episode
+- 泄漏检测：训练前跑 train↔held-out 的近重复检查（余弦 >0.95 视为泄漏，直接从 train 剔除并记录）
+- 真机评测任务集与仿真基准的选定、统计判定规则见 [eval-protocol.md](eval-protocol.md)
+
+## 9. 人工在环（HITL）
+
+- 人工触点只有四个：欺诈灰区审核台（§1.6）、L2 尾部 1% 复核（§1.4）、VLM 双模型分歧队列（§4.1）、伪标签金标准抽检（§7）；其余全自动
+- 编制估算（H1 规模，1,000 小时/月入湖）：欺诈灰区约 2–3% 上传 → 2 人；L2 尾部 1% + 分歧样本 <5% → 2 人；金标准抽检 1 人；共 5 人/千小时·月，随信誉体系成熟下降。成本进 [program-plan.md](program-plan.md) 预算
+- 审核台产物（标签、裁决）全部进 lineage，作为 VLM 审计与欺诈模型的再训练数据；审核员一致性（Cohen's κ）每月抽测，<0.7 重训指南
+- 隐私：审核员只看脱敏后（人脸已模糊）的预览流，raw 不进审核台

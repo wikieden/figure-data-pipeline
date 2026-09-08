@@ -1,6 +1,6 @@
 # 阿里通义机器人栈调研（QwenRobot-Manip / Qwen-VLA / QwenRobot-Nav）
 
-> 来源：阿里云通义线下技术分享现场拍摄 slide（分享时间约 2026-09-02，用户提供照片，2026-09-04 整理）。**非公开发布材料，数字与命名以其正式发布为准**。重要背景：其数据管线与 [research-vla-pretraining.md](research-vla-pretraining.md) §1 引用的 Ego2Robot（arXiv 2026-08）为同一团队同一工作——slide 数字（1,933h、15 本体、Qwen3.5-4B+DiT）与论文吻合且更新。
+> 来源：阿里云通义线下技术分享现场拍摄 slide（分享时间约 2026-09-02，用户提供照片，2026-09-04 整理）。**非公开发布材料，数字与命名以其正式发布为准**。重要背景：其数据管线与 [architecture.md](architecture.md) §2.2 引用的 Ego2Robot（[arXiv:2608.02580](https://arxiv.org/abs/2608.02580)，2026-08）为同一团队同一工作——slide 数字（1,933h、15 本体、Qwen3.5-4B+DiT）与论文吻合且更新。全仓库统一采用本文口径：**1,933h → 24,808h（≈12.8×）**；"38K 小时"是 slide 上另一口径（含跨构型扩展），不与前者混用。
 
 ## 1. Egocentric 数据处理管线：从原始视频到 LeRobot 数据集（对我们最有价值）
 

@@ -103,11 +103,11 @@ pHash/videohash（传统感知哈希抓完全重复上传）、设备指纹与�
 | 抖动 | 传统 | IMU 积分 / LK 光流 | 1 |
 | 隐私 | AI | EgoBlur（Apache，头戴特化） | 2 |
 | 语义/标注 | AI | Qwen-VL 本地 + API 仲裁 | 4 |
-| 手部 | 分层 | MediaPipe 门控 → HaMeR 类精标 | 2→3 |
-| SLAM/标定 | 传统主干 | ORB-SLAM3/Basalt + Kalibr；MASt3R-SLAM 兜底 | 3 |
+| 手部 | 分层 | MediaPipe 门控 → HaMeR 类精标；世界系轨迹 HaWoR + MegaSAM（相机位姿）+ MoGe-2（深度），三者 ⚠️license 待核查 | 2→3 |
+| SLAM/标定 | 传统主干 | ORB-SLAM3（GPLv3 ⚠️，服务端限定）/Basalt + Kalibr；MASt3R-SLAM 兜底；众包视频 GeoCalib/DroidCalib ⚠️ | 3 |
 | 光流/深度 | AI | RAFT/SEA-RAFT + Depth Anything | 3 |
 | 去重 | AI | SigLIP 聚合起步 | 3 |
 | 分割 | 传统优先 | 硬件事件锚点 + VLM 语义合并 | 1→4 |
 | 欺诈 | 传统为主 | pHash/规则 + 摩尔纹轻 CNN | 1–2 |
 
-**三条全局纪律**：(1) 每个模型的版本与权重哈希进 lineage——模型升级=数据世代切换，必须可追溯；(2) ⚠️项在 M0 结束前完成 license 终审，非商用许可的模型只允许出现在研究分支；(3) 所有 AI 判定阈值与传统阈值一样服从消融裁决（curation-pipeline §7）。
+**三条全局纪律**：(1) 每个模型的版本与权重哈希进 lineage——模型升级=数据世代切换，必须可追溯；(2) ⚠️项在 M2 策展实现开始前（即 H0 结束前）完成 license 终审，非商用许可的模型只允许出现在研究分支；(3) 所有 AI 判定阈值与传统阈值一样服从消融裁决（curation-pipeline §7）；(4) 商业 API（Claude 等）没有权重哈希，改记 **模型名 + API 版本字符串 + 调用日期**进 lineage，且其服务条款对"输出用于训练数据"的许可属于 license 终审范围（governance.md R-09）。⚠️项的逐项核查状态与 owner 在 [governance.md](governance.md) U-11 表。
