@@ -31,7 +31,7 @@
 | track | 必须 | 可选 |
 |---|---|---|
 | robot | ≥1 路 `/video/head*`、`/signal/joint_pos`、`/signal/joint_vel`、`/signal/action`（遥操作指令）、`/event/intervention`、`/event/task` | `/video/wrist_*`、`/video/palm_*`、`/signal/tactile_*`、`/signal/ee_pose`、`/signal/base_vel` |
-| human | ≥1 路 `/video/ego`、`/imu/head`（有 IMU 时） | `/video/slam_left|right`、`/signal/audio_env`、`/event/task`（口令） |
+| human | ≥1 路 `/video/ego`、`/imu/head`（有 IMU 时） | `/video/slam_left|right`、`/signal/audio_env`、`/event/task`（口令）；Creator App 手机众包另带 `/meta/task_goal`（个性化任务的谓词目标 id + 场景孪生版本，index-replica-plan §2） |
 | device | `/video/ego_wrist`（UMI 鱼眼）、`/signal/ee_pose`（原生频率 ≥50 Hz）、`/signal/gripper_width`、`/imu/wrist` | `/video/ego`（头戴场景）、`/signal/glove_joint_*`（穿戴子形态） |
 | sim | `/video/*`（渲染）、`/signal/joint_pos`、`/signal/action`、`/meta/sim`（仿真器/资产/随机化种子） | 特权信息 `/signal/object_pose_*`、`/signal/contact_*` |
 
@@ -85,7 +85,7 @@ episode 级元数据（`EpisodeMeta` 全量 JSON）写入 `meta/episodes/*.parqu
 - 幂等键：`(dataset_version, episode_id, content_hash)`；重跑 export 时已存在且哈希一致的 episode 跳过，不一致的整 shard 重写并 bump `dataset_version`。
 - 增量：新 episode 追加为新 shard，旧 shard 不改；held-out 清单（curation §8）作为 export 输入，held-out episode 单独成 split。
 - 归一化统计（分位数 1%/99%）按（track × 具身）分开存 `meta/stats/<track>_<embodiment>.json`，随 `dataset_version` 走。
-- writer 抽象成接口（`ExportWriter`），LeRobot v3 是默认实现；对 lerobot-dataset 包的依赖限定在该实现内（governance R-10）。
+- writer 抽象成接口（`ExportWriter`），LeRobot v3 是默认实现；对 `lerobot` 核心包（≥0.6；`lerobot-dataset` 独立包已停更，2026-09-09 改判 U-03）的依赖限定在该实现内（governance R-10）。
 
 ### 2.5 连续时间消费视图（governance U-12 的验证钩子）
 

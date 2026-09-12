@@ -7,12 +7,13 @@
 | 角色 | 顺序 |
 |---|---|
 | 新成员（30 分钟） | architecture.md（§1、§7、术语表）→ governance.md §2（看哪些还没定）→ 本页文档表 |
+| 管理层 / CTO（15 分钟） | data-strategy-roadmap.md §0 与 §6 → §3 对应线条 → program-plan.md |
 | 数据层实现者（M1） | architecture §7/§8 → data-format-contract.md → recorder-sync-and-storage.md → ingest-spec.md → device-track-umi.md → CLAUDE.md |
 | 策展层实现者（M2） | curation-pipeline.md → cleaning-algo-selection.md → governance U-11 license 表 → eval-protocol.md → data-platform.md |
 | 训练层（M3） | training-pipeline.md → research-vla-pretraining.md §5 → eval-protocol.md → runtime-and-deployment.md |
-| 硬件/采集 | device-landscape.md → index-replica-plan.md §1 → device-track-umi.md → robot-track-teleop.md → sim-track.md |
+| 硬件/采集 | capture-devices-design.md → device-landscape.md → index-replica-plan.md §1 → device-track-umi.md → robot-track-teleop.md → sim-track.md |
 | 平台/运维 | data-platform.md → compliance-and-security.md → index-replica-plan.md §2–§3 |
-| 项目管理 | program-plan.md → governance.md → open-source-strategy.md |
+| 项目管理 | data-strategy-roadmap.md §4 → program-plan.md → governance.md → open-source-strategy.md |
 
 ## 文档表
 
@@ -21,7 +22,8 @@
 | 文档 | 内容 | 成文/最近修订 |
 |---|---|---|
 | [architecture.md](architecture.md) | 总设计：数据飞轮、管线、训练、验证、RL 闭环、风险、采集哲学、五层框图、里程碑、能力映射表、时间基准与同步 | 2026-08-29 / 2026-09-08 |
-| [governance.md](governance.md) | 风险登记 R-01–R-13、未决决策 U-01–U-19、自报数字登记 D-01–D-12、回灌清单 | 2026-09-08 |
+| [data-strategy-roadmap.md](data-strategy-roadmap.md) | **战略层**：2026-06..09 十维度态势判断（225 条带来源/可信度）、三条主线与北极星、方向线条 L1–L8、0–24 月实现路径与止损门、五条产品线与商业模式、CTO 拍板清单 | 2026-09-09 |
+| [governance.md](governance.md) | 风险登记 R-01–R-19、未决决策 U-01–U-36、自报数字登记 D-01–D-21、回灌清单 | 2026-09-08 / 2026-09-09 |
 | [program-plan.md](program-plan.md) | 里程碑验收矩阵（M/H/P 三套前缀）、人力角色、预算总盘 | 2026-09-08 |
 | [open-source-strategy.md](open-source-strategy.md) | 开源边界、license 选择、社区与商业分层 | 2026-09-08 |
 
@@ -32,6 +34,7 @@
 | [data-format-contract.md](data-format-contract.md) | MCAP channel/消息 schema、LeRobot v3 映射、EpisodeMeta 字段契约、版本迁移 | 2026-09-08 |
 | [recorder-sync-and-storage.md](recorder-sync-and-storage.md) | 机上落盘、flush/fsync、带宽与存储预算、断电恢复 | 2026-09-08 |
 | [ingest-spec.md](ingest-spec.md) | 入湖校验、对齐算法、重试/死信、幂等键、断点续传 | 2026-09-08 |
+| [capture-devices-design.md](capture-devices-design.md) | 关键采集设备五件套设计：触觉同构 UMI、头戴参考套件、Creator 手机套件、遥操作站 + 手套、车队回流录制器；规格/同步/契约/BOM/验收 | 2026-09-12 |
 | [device-track-umi.md](device-track-umi.md) | device 轨（UMI 手持夹爪）P0 可执行清单 | 2026-08-29 |
 | [robot-track-teleop.md](robot-track-teleop.md) | robot 轨：本体选型框架、遥操作站、接管打点、回流 | 2026-09-08 |
 | [sim-track.md](sim-track.md) | sim 轨：仿真器/资产/增殖/域随机化/sim QC/动捕归属 | 2026-09-08 |
@@ -71,6 +74,7 @@
 | [research-sunday.md](research-sunday.md) | Sunday Memo / Skill Capture Glove | 2026-09-04 |
 | [research-twindex.md](research-twindex.md) | 自变量 TwinDEX 孪生灵巧手 | 2026-09-04 |
 | [device-landscape.md](device-landscape.md) | 领先采集设备构型横评（多角度图集） | 2026-09-04 |
+| [research-simfoundry.md](research-simfoundry.md) | NVIDIA SimFoundry：单视频→仿真孪生/数字表亲，real2sim 评测与 sim2real 训练，license 边界 | 2026-09-09 |
 
 `assets/` 存文档图片（16 张，均在对应文档标注来源）。
 
@@ -79,3 +83,4 @@
 - **M1/M2/M3**：工程里程碑，按管线层（architecture §7）
 - **H0/H1/H2**：Index 复刻硬件/平台时间线（index-replica-plan §7）
 - **P0/P1/P2**：采集硬件成熟度（index-replica-plan §1）
+- 对外产品线用 **PL1–PL5**（data-strategy-roadmap §5），不与 P0/P1/P2 混用

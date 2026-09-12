@@ -38,8 +38,9 @@
 |---|---|---|
 | LIBERO（四套件） | 每 checkpoint 回归；社区可比 | 每 checkpoint |
 | SIMPLEREnv | real-to-sim 一致性 | 每数据版本 |
-| Isaac Lab-Arena 自建任务集（与真机任务模板一一对应） | 消融主战场 | 每数据版本 |
+| Isaac Lab-Arena 自建任务集（与真机任务模板一一对应；场景用 SimFoundry 从真机评测场地视频重建，[research-simfoundry.md](research-simfoundry.md) §5.2） | 消融主战场 | 每数据版本 |
 | RoboTwin 子集（双臂） | 双臂任务 | 每数据版本 |
+| 长任务规划基准（SimFoundry 孪生 + 任务表亲链成 3–6 步长任务，BDDL 逐步校验；含扰动注入） | S2 规划：子任务进度分、扰动后恢复率、重规划步数 | 每 S2 版本 |
 
 本体 gap：仿真基准用的具身与目标本体不同（LIBERO 是 Franka），所以仿真结论只用于**相对比较**（配方 A vs B），绝对能力以真机为准；Arena 自建任务集用目标本体的 USD，是唯一同具身的仿真基准。
 
@@ -74,7 +75,7 @@ reporting: 成功率 + Wilson 区间、进度分、介入率、吞吐、失败�
 
 ## 5. sim-real gap 探针
 
-同任务的 `teleop_replay`（sim-track §3）与真机 episode：轨迹 RMSE、成功率差；gap 超过 20 个百分点的任务簇标记"仿真不可信"，其消融只以真机为准。
+同任务的 `teleop_replay`（sim-track §3）与真机 episode：轨迹 RMSE、成功率差；gap 超过 20 个百分点的任务簇标记"仿真不可信"，其消融只以真机为准。场景级保真度用 SimFoundry 协议：同一组策略在孪生场景与真机各跑 ≥20 trial，报 Pearson r 与 MMRV（SimFoundry 论文值 0.911 / 0.018，我们自家 3 个任务的门槛 r ≥0.8）；子任务级成功率（对齐 curation 的 segment 边界）通常比整任务相关性更高，两者都报。
 
 ## 6. 评测集固定
 

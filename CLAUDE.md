@@ -4,7 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## 项目定位
 
-对标 Figure（Helix 02 + Figure 03 + Index）的开源人形机器人**数据管线与数据采集工具**。总设计见 [docs/architecture.md](docs/architecture.md)——改动任何管线层之前先读它；全部文档的索引与按角色阅读路径见 [docs/README.md](docs/README.md)；风险登记、未决决策、自报数字登记见 [docs/governance.md](docs/governance.md)。
+对标 Figure（Helix 02 + Figure 03 + Index）的开源人形机器人**数据管线与数据采集工具**。总设计见 [docs/architecture.md](docs/architecture.md)——改动任何管线层之前先读它；全部文档的索引与按角色阅读路径见 [docs/README.md](docs/README.md)；风险登记、未决决策、自报数字登记见 [docs/governance.md](docs/governance.md)；设计之上的战略层（态势判断、方向线条 L1–L8、实现路径、产品化）见 [docs/data-strategy-roadmap.md](docs/data-strategy-roadmap.md)，改变线条优先级或新增采集形态前先看它的 §3 与 §6。
 
 ## 常用命令
 
@@ -33,7 +33,7 @@ recorder(采集,MCAP) → ingest(入湖:校验/对齐/转码) → curation(策�
 贯穿性设计决策（偏离前必须先更新 docs/architecture.md）：
 
 1. **双格式**：机上采集/原始数据用 MCAP（append-only 耐崩、多流单文件）；训练/发布态用 LeRobotDataset v3（parquet+mp4、流式）。二者间由 `export` 层转换，不引入第三种持久化格式。
-2. **四轨同 schema**：robot（遥操作/车队，含动作真值）、human（第一视角视频，无动作标签）、device（UMI/Data Hands 式手持采集，硬件动作真值）、sim（仿真 rollout）四条 ingest 轨共用 `fdp/schema.py` 的 EpisodeMeta，用 `track` 字段区分；采集方式是组合不是单选，新增采集形态=新增 track 值，不新增 schema。所有模态可空（mask），schema 带版本号，新增传感器不得破坏旧数据可读性。
+2. **四轨同 schema**：robot（遥操作/车队，含动作真值）、human（第一视角视频，无动作标签；含官方头戴设备与后续的 Creator App 手机众包两种形态，用设备档案区分）、device（UMI/Data Hands 式手持采集，硬件动作真值）、sim（仿真 rollout）四条 ingest 轨共用 `fdp/schema.py` 的 EpisodeMeta，用 `track` 字段区分；采集方式是组合不是单选，新增采集形态=新增 track 值，不新增 schema。所有模态可空（mask），schema 带版本号，新增传感器不得破坏旧数据可读性。
 3. **分层采样率**：视觉流 ~10-30 Hz（对齐 VLM/S2 消费）、状态/动作流 100-200 Hz（对齐动作专家/S1 消费），统一时间戳（ns）对齐，不做全局重采样到单一频率。**豁免**：device 轨（UMI 等手持/穿戴设备）的动作流以传感器原生频率入湖（≥50Hz，如 VIO 位姿 60Hz），`rate_hz` 如实记录，export 不做上采；训练取帧时对信号流线性插值（docs/curation-pipeline.md §5）。时间戳语义与同步误差预算见 docs/architecture.md §8。
 4. **策展五阶段**（curation 层，对标 Index）：自动质量门 → 欺诈/来源审计 → embedding 去重 → 多样性再平衡 → VLM 分层标注（任务级+子任务级指令，事后反推式）。QC 三级：L1 运动学过滤 / L2 统计过滤 / L3 VLM 语义审计。详细实施规范（episode 状态机、各门方法与阈值原则、分割/伪标签/打包）见 docs/curation-pipeline.md；清洗是标记不是删除，raw 永存（隐私脱敏除外），阈值改动必须走消融裁决。
 5. **视频编码**：机上 h264 硬编，入湖转 AV1（svt-av1）+ `yuv420p`（yuv444p 会导致浏览器/可视化不可解码），解码用 torchcodec。

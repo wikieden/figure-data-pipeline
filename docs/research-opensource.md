@@ -13,7 +13,7 @@
 - 表格数据（关节状态、动作、时间戳等低维高频信号）存 **Apache Parquet**；视觉数据合并存 **MP4**（同 episode 帧成组、按相机分 shard）。
 - v3 核心改进：**多 episode 打包进单文件**（v2.x 每 episode 一文件，百万级 episode 会崩），用关系型元数据索引；元数据统一进 parquet（不再散落 JSON）；**原生流式加载**（不必全量下载）。
 - 自 `lerobot >= 0.4.0` 起内置；当前 lerobot 最新版 **0.6.1**（2026-08-03，[PyPI](https://pypi.org/project/lerobot/)）。
-- 另有独立包 **`lerobot-dataset`**（2026-03 起，[PyPI](https://pypi.org/project/lerobot-dataset/)）：松依赖的 LeRobotDataset 独立发行版，适合不想引入整个 lerobot 的集成场景——**适合我们**。
+- 另有独立包 **`lerobot-dataset`**（2026-03 起，[PyPI](https://pypi.org/project/lerobot-dataset/)）：松依赖的 LeRobotDataset 独立发行版。**2026-09-09 更正**：该包停在 0.5.0 后无更新，已落后主线（v0.6.0 于 2026-07-06 加入 12-bit 深度流、逐帧 subtask/plan/progress/reward 列；0.7 路线图为"流优先"重设计，[issue #3832](https://github.com/huggingface/lerobot/issues/3832)）；训练态依赖改为 `lerobot` 核心包（≥0.6），governance U-03 改判、R-10 重开。
 
 ### 对比结论
 
@@ -94,7 +94,7 @@
 | 层 | 选择 | 理由 |
 |---|---|---|
 | 机上采集/记录 | **MCAP**（Python SDK） | append-only 耐崩、多流单文件、ROS 2 事实标准 |
-| 训练/发布格式 | **LeRobotDataset v3**（`lerobot-dataset` 独立包） | 社区标准、流式、parquet+mp4 |
+| 训练/发布格式 | **LeRobotDataset v3**（`lerobot` 核心包 ≥0.6；`lerobot-dataset` 独立包已停更） | 社区标准、流式、parquet+mp4、逐帧标注列 |
 | 遥操作 | Quest 3 手追（OPEN TEACH 路线），接口留 AVP/GELLO | 成本/开源度/人形适配平衡 |
 | 可视化/QC | **rerun-sdk**（内置 LeRobot 导入器）+ Foxglove（MCAP 调试） | 双层各用其长 |
 | 视频编码 | AV1 (svt-av1/硬编, yuv420p)，解码 torchcodec | LeRobot 官方基准结论 |
@@ -102,4 +102,4 @@
 | 仿真轨道 | Isaac Lab / DexMimicGen 产物导入 + Arena 评测 | GR00T 数据金字塔验证 |
 | 格式互转 | forge + lerobot convert | 覆盖 RLDS/HDF5/Rosbag 存量 |
 
-未及查证：MuJoCo 侧（非 Isaac）仿真数据生成现状、`lerobot-dataset` 包的精确 API 面——搭骨架时以实际安装为准。已回填：mcap Python SDK 锁定 1.4.0、rerun-sdk 锁定 0.36.3（uv.lock）。
+未及查证：MuJoCo 侧（非 Isaac）仿真数据生成现状——搭骨架时以实际安装为准（`lerobot-dataset` API 面一项已于 2026-09-09 改判为依赖 `lerobot` 核心，见上）。已回填：mcap Python SDK 锁定 1.4.0、rerun-sdk 锁定 0.36.3（uv.lock）。
