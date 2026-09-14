@@ -1,0 +1,23 @@
+SOURCE ARCHIVE (fdp docs/sources)
+URL: https://www.sunday.ai/blog/series-b
+Title: Sunday's Series B: No More Demos
+Page date: 2026-03-12
+Fetched: 2026-09-14 via curl (UA: desktop Chrome), HTML → text extraction (tags stripped, nav/footer removed)
+Raw HTML sha256: 94369ce78db3ff492fca57f688c0958138488caa65397afebb9a2d096d5f9e7f
+Raw HTML bytes: 115681
+Rights: © the publishing company; archived verbatim for citation/verification only, not for redistribution.
+========================================================================
+
+Sunday's Series B: No More Demos
+Mar 12, 2026
+2 min read
+We’re moving beyond demos to focus entirely on real-world deployment of our robot, Memo.
+For too long, the robotics industry has been defined by impressive demos. No matter how awe-inspiring, these demos are inherently constrained and designed to impress through the screen. The public rightfully questions when their ever-promised robots will arrive. We’re here to break the cycle.
+Public deployment starts with our beta program, rolling out to users this Fall. To deliver on this promise with quality and care, we’ve grown Engineering by 3x, Research by 4x, and Data Operations by 5x.
+We just raised an oversubscribed $165M Series B at a $1.15B valuation to stop demos and bring the first autonomous home robot to households this year. Our round is led by Coatue, with Thomas Laffont joining the board. We are also welcoming Bain Capital Ventures, Fidelity Management & Research Company, Tiger Global, Benchmark, Conviction, Xtal Ventures and others.
+We’re uniquely positioned to solve general autonomy through three core advantages:
+Unmatched Iteration speed: We built the fastest model iteration loop in robotics. We can move from collecting in-the-wild data, to model training and real-world evaluation faster than anyone else.
+A truly Full-stack Team This speed is only possible because we own the entire full stack from our Skill Capture Glove and data collection, to hardware design, manufacturing, and everything in between.
+Our Data Moat Our model iteration loop becomes the data flywheel that gives us vast proprietary data, from our gloves and robot fleet. We also benefit from improvements in public datasets, such as world models and VLMs. But our proprietary data is what enables us to deploy autonomous robots before others.
+If you’re interested in joining us, we’re hiring across all functions: Sunday.ai/careers
+Copy link

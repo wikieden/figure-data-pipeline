@@ -1,0 +1,28 @@
+SOURCE ARCHIVE (fdp docs/sources)
+URL: https://www.figure.ai/news/f-03-at-bmw
+Title: F.03 at BMW
+Page date: 2026-06-30
+Fetched: 2026-09-14 via curl (UA: desktop Chrome), HTML → text extraction (tags stripped, nav/footer removed)
+Raw HTML sha256: 730754cc9d503dad2687ce5fea58ad84cb402b5bae6020d2bd8897a66a3968a8
+Raw HTML bytes: 35806
+Rights: © the publishing company; archived verbatim for citation/verification only, not for redistribution.
+========================================================================
+
+F.03 Arrives at BMW 
+F.03 Arrives at BMW 
+June 30, 2026
+F.03 Arrives at BMW
+Today we are excited to share the next chapter in our partnership with BMW Group as Figure returns to the factory floor. Following the successful deployment of Figure 02 on the assembly line in 2025, our latest generation robot - Figure 03 - arrived in Hall 52, one of the assembly and logistics halls at BMW Group Plant Spartanburg.
+Figure 02 contributed to the assembly of 30,000 cars at BMW last year. Now, Figure has transitioned from classic pick-and-place sheet metal loading to an entirely new tier of complexity: the sequencing use case.
+Highlights
+Figure 03 in a manufacturing environment: The first demonstration of Figure 03 performing a logistics workflow at BMW Group Plant Spartanburg.
+Dynamic whole-body control powered by Helix 02: Helix 02, Figure’s proprietary pixels-to-actions VLA, coordinates Figure 03’s hands, arms, torso, and feet - allowing the robot to manipulate parts while stepping and repositioning its body to pull a heavy cart on caster wheels.
+The humanoid form at work: Automating dynamic material manipulation that is structurally infeasible to solve with traditional, fixed automation or six-axis robotic arm.
+Precision and power in one workflow: Figure 03 fluidly switches between precise picking and placement of thin-walled, individual parts and forceful manipulation requiring whole-body coordination - pulling a large metal cart down the line.
+Sequencing Use Case
+In automotive manufacturing, sequencing is integral to select parts for the assembly line. Rather than presenting identical components continuously in a uniform fashion, sequencing represents an intractable sorting environment: parts do not arrive in mathematically perfect orientations.
+Bringing Helix to Life on the Factory Floor
+Sequencing cannot be solved reliably with a fixed series of hard-coded motions. Carts, bins, and parts do not arrive in exactly the same position every time: parts may have shifted, rotated, partially occluded, or presented differently within a container. Each interaction therefore requires the robot to perceive the scene and make small corrections on the fly.
+The task becomes especially challenging when manipulation and locomotion must happen together. Figure 03 must grasp parts with both hands while adjusting its foot placement, shifting its body to maintain reach and balance, and precisely placing each part into the correct slot. Helix 02 powers this loco-manipulation behavior through high-frequency visual-motor control, continuously adapting Figure 03’s movements to spatial variation and correcting small errors as the task unfolds.
+Conclusion
+With Figure 03 enabled by Helix 02 at BMW Group Plant Spartanburg, we are demonstrating that general-purpose physical AI can master the cognitive and dexterous tasks that have bottlenecked manufacturing logistics for generations.

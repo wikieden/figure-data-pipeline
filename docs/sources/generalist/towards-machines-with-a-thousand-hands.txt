@@ -1,0 +1,77 @@
+SOURCE ARCHIVE (fdp docs/sources)
+URL: https://generalistai.com/blog/towards-machines-with-a-thousand-hands
+Title: Towards Machines with a Thousand Hands
+Page date: 2026-07-23
+Fetched: 2026-09-14 via curl (UA: desktop Chrome), HTML → text extraction (tags stripped, nav/footer removed)
+Raw HTML sha256: de0d67349743b11a3093c9f309ddc95b656720a9c886250937a0de641387c88f
+Raw HTML bytes: 47347
+Rights: © the publishing company; archived verbatim for citation/verification only, not for redistribution.
+========================================================================
+
+Generalist - Towards Machines with a Thousand Hands
+Research
+July 23, 2026
+Generalist Team
+5 min read
+Table of Contents
+Introduction
+Generalizing GEN-1 to Many Hands
+Every Hand Is a Different Language
+Studying How GEN-1 Adapts to New Hands
+Adapting to Different Hands On-the-Fly
+Towards a Cambrian Explosion of Robot Form Factors
+Citation
+Your browser does not support the video tag.
+GEN-1,1 our latest embodied foundation model, now supports a broad range of robot end effectors — from five-finger anthropomorphic hands, to specialized tools with new modes of actuation, and everything in between. By training GEN-1 to work with these new hands, we demonstrate that a single base model can learn sensorimotor policies on robots that transfer across radically different ways of interacting with the physical world. Below, we walk through examples of these hands in action and where we think this is headed.
+Generalizing GEN-1 to Many Hands
+GEN-1 is pretrained on our in-house robotics dataset, which now spans a wide variety of different end effectors across more than half a million hours of real interaction data. Some end effectors involve new form factors with their own actuation schemes and camera positions, a few inspired by real commercial use cases. Others are off-the-shelf tools, printed parts, or custom modifications to our standard two-finger grippers — approximately 9,000 variations so far — all chosen to expose the model to a broad range of contact physics.
+Hands can change, physics does not.
+Each end effector is a different sensorimotor interface through which GEN-1 experiences the physical world — a way to learn about geometry, contact, friction, forces, and dynamics. Scaling pretraining across thousands of these interfaces teaches GEN-1 universal sensorimotor representations: a general physical commonsense2 that transfers to new hands and new ways to grasp, push, pull, twist, and more.
+Robot uses extra wide hands with thin flat fingers to move boxes.
+Robot uses a power screwdriver to tighten four bolts.
+Robot uses tongs to place eggs into a pot of water.
+Robot uses a whisk to mix baking ingredients.
+Every Hand Is a Different Language for Physical Interaction
+Each hand is its own vocabulary for acting in the world. Power screwdrivers rotate faster than fingers can match. Controlling a tape dispenser requires managing tension and placement at once. Tongs introduce compliance and spring-force dynamics that change how an object should be approached. Metal spatulas and scrapers work against a surface rather than around an object, which means reasoning about distributed contact rather than single points of contact. A box cutter or a vegetable peeler demands controlled force along a constrained path.
+Just as training on multiple languages produces more capable language models3 (concepts learned in one language improve understanding in another), learning across many hands stands to benefit physical intelligence. A model trained across embodiments can gather shared knowledge across instances and more readily separate what is specific to a tool from what is universal about the world. Switching between end effectors to reach a goal then becomes a form of physical reasoning: using the right tool for the right job, much as multilingual chain-of-thought4 can improve language model reasoning for downstream reinforcement learning.
+Robot uses various tools to sweep and scrape debris off the table.
+Not every hand will help, though. Some end effectors may provide little learning signal — and some, like our two-finger grippers, will carry more real-world weight than others, much as English dominates today’s language models. We're studying how each new end effector shifts the pretrained model, expanding the dataset deliberately, and evaluating on real benchmarks.
+Studying How GEN-1 Adapts to New Hands
+Hands and tools are not just different shapes; each one is a different form of interaction the model needs to learn. We can measure this by analyzing how much model weights shift during fine-tuning as a quantitative signal of how novel an end effector really is. Comparing pretrained GEN-1 to the same model after fine-tuning on a new tool, we can treat the difference as a “task update” \(\Delta W = W_{\mathrm{ft}} - W_0\), where \(W_0\) is the pretrained model and \(W_{\mathrm{ft}}\) is the fine-tuned model. Similar task vector5 analyses have studied how fine-tuning moves foundation models through weight space; here we apply the lens to embodiments, decomposing updates across sensor processing, harmonic reasoning6, and actuation in the architecture and visualizing them below.
+GEN-1
+GEN-1 Pretrained Base
+0% change in model weights
+GEN-1 model weight updates with different end effectors range from 2.5% to 11.4% in relative parameter norm. Controlling a power screwdriver, it turns out, takes more re-education than controlling a pair of tongs.
+This tells us both which end effectors carry the most new information and where that novelty lands in the architecture. Whisks, for instance, shift the sensor-processing weights far more than peelers do, likely because the model has to perceive the whisk’s thin wire geometry. That points straight to a data intervention: collect more thin, visually sparse tools to precisely strengthen that subsystem.
+Adapting to Different Hands On-the-Fly
+What happens when you change the hand mid-task? We can test this directly: with the model mid-rollout, we physically swapped its end effector and let the same model keep running. It perceives the new tool, conditions on what it sees, and finds a new trajectory and contact strategy to reach the same goal.
+GEN-1 adapts to new manipulation strategies when its end effector gets changed mid task.
+This works because training on mixed data forces the model to condition its behavior on the hand in front of it. Rather than memorizing a fixed set of manipulation strategies, it learns something closer to a prior over how shapes and contact surfaces interact with the world — and which actuation strategy should follow. The result is a single model that recognizes its own tooling and adapts: towards one intelligence for many hands.
+Towards a Cambrian Explosion of Robot Form Factors
+Nature didn’t converge on just a single solution for manipulating the physical world.
+It exploded into millions. You can see this everywhere in the diversity of life around us: from the beak of a bird, to the trunk of an elephant, from the suction pads of an octopus, to the pollen baskets of a honeybee. Each gives its owner a different way to grasp, push, and pull, and these are only a few points in a design space so large we’ve barely begun to map.
+Robots aren’t locked into the hands they’re born with.
+Unlike humans, robots can easily swap mechanical hands, and tool changers7 are already common in automation. Powered by the right intelligence, robots can switch between end effectors and compose actuation modes to perform tasks in ways that go beyond what humans can do. Sometimes a highly specialized tool is exactly right, and Generalist systems should be capable of knowing when and how to use the best tool for the job.
+Building General Physical Intelligence
+If we can build general intelligence that understands the underlying physics of interaction, then the shape of the hand becomes secondary to the intelligence that drives it. A suction pad, a gripper, a brush, a plasma welding nozzle — are all just different interfaces through which the same intelligence can reshape the physical world.
+The future of robot hands won’t look like ours. It will look more like a toolbox with a thousand hands: augmented, recombined, and scaled. Five-fingered hands will be one tool among many; limiting robots to only that would be a failure of imagination. Robots were always meant to extend what humans can do — to empower people to shape the physical world in places and at scales we never could before.
+Citation
+Please cite this work as
+Generalist Team, “Towards Machines with a Thousand Hands”, Generalist AI Blog, Jul 2026.
+Or use the BibTeX citation:
+@article{generalist2026thousandhands,
+author = {Generalist Team},
+title = {Towards Machines with a Thousand Hands},
+journal = {Generalist AI Blog},
+year = {2026},
+note = {https://generalistai.com/blog/towards-machines-with-a-thousand-hands},
+}
+1GEN-1: Scaling Embodied Foundation Models to Mastery (Generalist, 2026)
+2The Dark Matter of Robotics: Physical Commonsense (Generalist, 2026)
+3Unsupervised Cross-lingual Representation Learning at Scale (Conneau et al., 2020)
+4Language Models are Multilingual Chain-of-Thought Reasoners (Shi et al., 2022)
+5Editing Models with Task Arithmetic (Ilharco et al., 2023)
+6GEN-0: Embodied Foundation Models That Scale with Physical Interaction (Generalist, 2025)
+7Automatic Tool Changer (Wikipedia)
+Postscript
+Recommended reading: The Beetle Roboticists: A Parable (Mason, 2024)

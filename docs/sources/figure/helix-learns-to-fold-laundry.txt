@@ -1,0 +1,28 @@
+SOURCE ARCHIVE (fdp docs/sources)
+URL: https://www.figure.ai/news/helix-learns-to-fold-laundry
+Title: Helix Learns to Fold Laundry
+Page date: 2025-08-12
+Fetched: 2026-09-14 via curl (UA: desktop Chrome), HTML → text extraction (tags stripped, nav/footer removed)
+Raw HTML sha256: 578806289d2f605682a6158a218e9c2913c450563de5115c35792f4d264fa90a
+Raw HTML bytes: 35576
+Rights: © the publishing company; archived verbatim for citation/verification only, not for redistribution.
+========================================================================
+
+Helix Learns to Fold Laundry
+Helix Learns to Fold Laundry
+August 12, 2025
+Helix, Figure’s Vision Language Action (VLA) model, recently demonstrated an hour of fully autonomous package reorientation in a logistics setting. Now, the same model is tackling something entirely different: folding laundry.
+Folding laundry sounds mundane for a person, but this is one of the most challenging dexterous manipulation tasks for a humanoid robot. Towels are deformable, constantly changing shape, bending unpredictably, and prone to wrinkling or tangling. There’s no fixed geometry to memorize, and no single “correct” grasp point. Even a slight slip of a finger can cause the material to bunch or fall. Success requires more than just seeing the world accurately - it demands fine, coordinated finger control to trace edges, pinch corners, smooth surfaces, and adapt in real time.
+Key Results:
+A first for humanoids. This is the first instance of a humanoid robot with multi-fingered hands folding laundry fully autonomously using an end-to-end neural network.
+Same architecture, data-only change. The same Helix architecture that solved logistic tasks was applied directly to laundry folding - with no modifications to the model or training hyperparameters. The only addition was the dataset.
+Natural multimodal interaction. In addition to folding, Helix learned to maintain eye contact, direct its gaze, and use learned hand gestures while engaging with people.
+Video 1: Helix folds towels autonomously.Without any architectural changes, Helix learned to:
+Pick towels from a mixed pile.
+Adjust folding strategies based on starting configurations.
+Recover from multi-pick errors by returning extra items.
+Use fine manipulation skills, like tracing an edge with a thumb, pinching corners, or unraveling tangled towels - before completing folds.
+Critically, Helix does all of this without explicit object-level representations. For highly deformable items like towels, building such representations is brittle and unreliable. Instead, Helix operates entirely end-to-end: from vision and language input to smooth, precise motor control.
+Why this matters
+The same general-purpose architecture, and the same physical platform, can seamlessly transition from industrial logistics to household chores. As we scale real-world data collection, we expect Helix’s dexterity, speed, and generalization to keep improving across an even broader range of tasks.
+If you’re interested in helping us push the frontier of general-purpose humanoid intelligence, we’re hiring.

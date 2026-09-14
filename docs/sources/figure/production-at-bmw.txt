@@ -1,0 +1,36 @@
+SOURCE ARCHIVE (fdp docs/sources)
+URL: https://www.figure.ai/news/production-at-bmw
+Title: F.02 Contributed to the Production of 30,000 Cars at BMW
+Page date: 2025-11-19
+Fetched: 2026-09-14 via curl (UA: desktop Chrome), HTML → text extraction (tags stripped, nav/footer removed)
+Raw HTML sha256: d7cbfd216f1d6c1d381221a3aa9634ca7e6d9d53a43ada486d4f44d493a2a02e
+Raw HTML bytes: 42414
+Rights: © the publishing company; archived verbatim for citation/verification only, not for redistribution.
+========================================================================
+
+F.02 Contributed to the Production of 30,000 Cars at BMW
+F.02 Contributed to the Production of 30,000 Cars at BMW
+November 19, 2025
+Today we’re excited to share our results of an 11 month Figure 02 robot deployment at BMW Group Plant Spartanburg. Within 6 months of bringing up Figure 02, we delivered robots to the plant and began testing. Within 10 months, we launched full deployment on an active assembly line at the plant, running every single working day. 
+BMW Deployment Highlights:
+Ran 10-hour shift Monday-Friday
+90,000+ parts loaded
+1,250+ hours of runtime 
+Contributed to the production of 30,000+ X3 vehicles
+Estimated 1.2+ million robot steps or 200+ miles
+Following the release of Figure 03, we’re officially starting the retirement of Figure 02, our second-generation humanoid robot. With Figure 02’s return to HQ from BMW as part of our fleet-wide retirement, we would like to highlight key learnings that can be rolled into Figure 03 operational readiness.
+Deployment Overview
+Our first use case with BMW was sheet-metal loading, a classic pick-and-place task in automotive manufacturing. An associate picks sheet-metal parts from racks or bins and places them on a welding fixture, after which six-axis industrial robots weld and feed the parts into the main line.
+To measure robot progress, we defined three critical KPIs:
+Cycle time: Total time to complete one cycle, including the loading phase after the weld-fixture door opens. The requirement was 84 seconds total, 37 seconds load time.
+Placement accuracy: Percentage of cycles where all three sheet-metal parts are correctly loaded. Our target was > 99% success per shift.
+Interventions: Number of times a human must pause or reset the robot. The goal was zero per shift. 
+The challenge of this use case is in balancing speed and precision – placing parts within a 5-millimeter tolerance in just 2 seconds.
+To meet this, our robot had to achieve precise yet adaptive locomotion, allowing rapid, accurate foot placement and real-time responsiveness to environmental changes. We also developed advanced hand-eye coordination algorithms and built field-calibration tools for consistent cross-robot performance.
+Hardware Reliability and Learnings
+Six months of daily runtime yielded invaluable insights for our mechanical and reliability teams. Across 1,250+ operational hours, Figure 02 recorded minimal hardware failures while generating critical data that informed the build procedures, component architecture, and mechanical design of Figure 03.
+One learning that informed Figure 03 design was the robot’s forearm, our top hardware failure point at BMW. The forearm is a challenging subsystem due to its tight packaging, dexterity requirements (three degrees of freedom), and thermal constraints. Figure 02’s forearm contained a microcontroller-based PCB that distributed communications between the main computer and the wrist actuators.
+For Figure 03, we completely re-architected the wrist electronics to eliminate both the distribution board and dynamic cabling. Each wrist’s motor controller now communicates directly with the main computer, reducing complexity, improving reliability, and simplifying thermal management. 
+Conclusion
+Figure 02 was an unprecedented advancement in bringing humanoid robots from the lab to the real world. Figure 02 taught us early lessons on what it takes to ship. Every hour on BMW’s line, every part loaded, and every intervention logged, shaped how we designed, validated, and built.
+Those lessons now live in Figure 03, a robot built from experience, ready for the world at scale. If you’re interested in helping ship robots into the world please consider joining our team.

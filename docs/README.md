@@ -77,6 +77,7 @@
 | [research-simfoundry.md](research-simfoundry.md) | NVIDIA SimFoundry：单视频→仿真孪生/数字表亲，real2sim 评测与 sim2real 训练，license 边界 | 2026-09-09 |
 | [research-dyna-comparison.md](research-dyna-comparison.md) | Dyna DYNA-1/DYNA-2 模型与数据方案；与 Generalist GEN-0/1/1.5、Skild S1、已研究厂商及学术四个接口的横向对比 | 2026-09-14 |
 | [research-four-routes.md](research-four-routes.md) | Figure / Dyna / Sunday / Generalist 四家技术路线精读（37 篇一手页面）：本体·数据·模型·部署评测四层对照，分歧与收敛点，回写清单 | 2026-09-14 |
+| [sources/MANIFEST.md](sources/MANIFEST.md) | 一手资料归档：Figure 18 / Dyna 6 / Sunday 4 / Generalist 10 篇官网原文文本（URL、页面日期、抓取日期、HTML sha256），research 文档的引用目标 | 2026-09-14 |
 
 `assets/` 存文档图片（16 张，均在对应文档标注来源）。
 

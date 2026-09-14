@@ -1,0 +1,36 @@
+SOURCE ARCHIVE (fdp docs/sources)
+URL: https://generalistai.com/blog/research-preview
+Title: Research Preview
+Page date: 2025-06-17
+Fetched: 2026-09-14 via curl (UA: desktop Chrome), HTML → text extraction (tags stripped, nav/footer removed)
+Raw HTML sha256: fde921ea2669c8b8bdd211dc072855fcb7919eb8d79708f6d8a13e5bc9bde1be
+Raw HTML bytes: 30573
+Rights: © the publishing company; archived verbatim for citation/verification only, not for redistribution.
+========================================================================
+
+Generalist - Research Preview
+Research
+June 17, 2025
+Generalist Team
+3 min read
+Table of Contents
+Introduction
+Pick & sort fasteners
+Fold a box, pack a bike chain lock & close
+Get the screws back into the glass jar
+Break apart, sort, & throw Legos
+Research Preview
+Today we’re excited to share a glimpse of what we’re building at Generalist.
+As a first step towards our mission of deploying general purpose robots, we are pushing the frontiers of what end-to-end AI models can achieve in the real world. We’ve been training models and evaluating their capabilities for dexterous sensorimotor policies across different embodiments, environments, and physical interactions. We’re sharing capability demonstrations on tasks stressing different aspects of manipulation: fine motor control, spatial and temporal precision, generalization across robots and settings, and robustness to external disturbances.
+In each of these videos, the robot is fully autonomous and controlled in real time by an end-to-end deep neural network mapping pixels and other sensor data to 100Hz actions. The entire hardware and software stack jointly enables reactive, smooth, and precise dexterous control from neural networks.
+We’re using these tasks to test model capabilities along various axes of autonomous dexterity. The tasks require nuanced behaviors like pushing, pulling, twisting, and multi-step re-grasping. Bi-manual coordination allows actions like stabilizing and breaking apart Lego structures, tensioning flexible materials, and dynamically creating funnels for small part handling. High-frequency control is important for real-time behaviors like wiggling, throwing, or adjusting in-flight grasps. Precision is a requisite for being able to close a box with millimeter-level tolerances.
+Further, the cross-embodied model transfers across different arms (e.g., 7-DoF Flexiv Rizon 4, and 6-DoF UR5), and generalizes well to entirely new environments. For example, the fasteners task used no data from UR5 arms, and zero data for that task inside the same evaluated environment.
+We’re encouraged by the early results and the potential this system demonstrates. More to come.
+Task: Pick & sort fasteners
+Evaluates the ability of an end-to-end model to quickly pick and sort small, thin objects from clutter, and place them oriented into corresponding compartments. Hardware torque is the limiting factor for cycle time.
+Task: Fold a box, pack a bike chain lock & close
+Evaluates capabilities in handling articulated and deformable objects over long-horizon sequences and with precision; adapts to disturbances and modulates force precisely. After assembling the box, the long bike lock chain needs to be deformably coiled into the box in order to fit. Precision is particularly tested in closing the box, which requires aligning flaps on both sides of the box simultaneously, each with millimeter-level tolerance. Note also that the arm is strong enough to crush the box at any moment.
+Task: Get the screws back into the glass jar
+Evaluates tool use, precision, and bi-manual coordination across a number of maneuvers. The robot is tasked with efficiently getting all the shiny M4 screws back into a clear container. As needed, it can scrape them off a magnetic bit holder, bend the paper plate to form a makeshift funnel to pour them, or pick them up one by one. Scraping requires precise interhand coordination (e.g. when does a scrape become a grasp?), as does forming and transporting the funnel without spilling.
+Task: Break apart, sort, & throw Legos
+Evaluates capabilities in precise regrasping, forceful interhand coordination, generalization, and high-velocity maneuvers. The robot is tasked with deconstructing assembled legos and sorting the bricks into their color-corresponding bins. This can require re-grasping the bricks to get a better grip, before wiggling and twisting them apart. The robot generalizes over a distribution of brick formations and works with any ordering and positioning of the bins, via visual conditioning. This task can’t be done slowly, due to the physics of throwing bricks.

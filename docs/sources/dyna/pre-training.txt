@@ -1,0 +1,26 @@
+SOURCE ARCHIVE (fdp docs/sources)
+URL: https://www.dyna.co/research/pre-training
+Title: DYNA-1 Pre-Training: Zero-Shot Dexterity Is Here
+Page date: 2025-11-20
+Fetched: 2026-09-14 via curl (UA: desktop Chrome), HTML → text extraction (tags stripped, nav/footer removed)
+Raw HTML sha256: cc1d96764a00ea9bdd13d4b5d0662a9e23128e1494951e8809d173a5c4a1a2cd
+Raw HTML bytes: 120272
+Rights: © the publishing company; archived verbatim for citation/verification only, not for redistribution.
+========================================================================
+
+DYNA-1 Pre-Training: Zero-Shot Dexterity Is Here — DYNA
+[ Research ]
+DYNA-1 Pre-Training: Zero-Shot Dexterity Is Here
+Category:
+Company
+Author:
+Dyna Team
+Date:
+November 2025
+Overview
+A quick progress update from our research team. We've been pushing on DYNA-1 pre-training, and the latest base model is showing capabilities that we haven't seen before.
+The new base model can perform diverse, dexterous tasks—including laundry folding and package sorting—without any post-training, even in environments it has never seen before. These behaviors come entirely from pre-training, with no task-specific fine-tuning or environment-specific data.
+The same base also enables extremely efficient fine-tuning. On challenging new tasks, we've been able to reach roughly 100% success with as little as one hour of demonstration data. As an early stress test, we trained the model on cup stacking, celery chopping, breakfast making, as well as tablemat preparation.
+The combination of zero-shot dexterity from the base and one-hour fine-tuning to high reliability is the clearest signal yet that pre-training is making meaningful progress towards commercial viability.
+If you're interested in pushing the boundaries of embodied AI and building robots that are ready for production, we're hiring across research and engineering!
+← PreviousOpen-World Dexterity and Live Demos around the WorldNext →What 10 Months in Production Taught Us About the Robotics “Bubble”

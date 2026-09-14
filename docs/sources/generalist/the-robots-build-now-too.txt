@@ -1,0 +1,28 @@
+SOURCE ARCHIVE (fdp docs/sources)
+URL: https://generalistai.com/blog/the-robots-build-now-too
+Title: The Robots Build Now, Too
+Page date: 2025-09-24
+Fetched: 2026-09-14 via curl (UA: desktop Chrome), HTML → text extraction (tags stripped, nav/footer removed)
+Raw HTML sha256: 56c46e77ce6e37f8a2c165164d23644e8fe554b489947dbfa7cb5ff43e7bbce1
+Raw HTML bytes: 27002
+Rights: © the publishing company; archived verbatim for citation/verification only, not for redistribution.
+========================================================================
+
+Generalist - The Robots Build Now, Too
+Research
+September 24, 2025
+Generalist Team
+3 min read
+Table of Contents
+Introduction
+Why this matters
+The Robots Build Now, Too
+At Generalist, we’re working towards a future where robots can “just do anything,” and we’re excited to share a step in this direction.
+One of our newest internal evaluation tasks is one-shot assembly. A person constructs a small structure, and the robot copies it. We’re evaluating our models on how well they can build Legos – end-to-end, from pixels to 100Hz actions. No task-specific engineering, no custom instructions: it sees what you build and replicates it.
+Why this matters
+Visual understanding: the model figures out “what to build” by looking at what is in front of it. Pixels in, Lego copies out.
+Next-level dexterity: Lego assembly demands sub-millimeter precision, careful re-grasps, nudges, and forceful interactions e.g. presses timed to the instant studs align.
+A recent perspective slots this task into the highest level of sophistication of general-purpose robots: “Level 4 represents the final evolution where robots can perform force-dependent, delicate tasks with pinpoint accuracy. These tasks require the Dexterity to understand and react with nuance to the physical forces of the environment.”
+Sequential reasoning: for each brick, the model must choose the right one, orient it, stage it, and attach it correctly.
+We were inspired by your suggestions on our previous Lego throwing demos, and as far as we know this is the world’s first robot to assemble Legos with end-to-end visuomotor control. If you have tasks that you want to see robots do, we’d love to hear.
+Note: there are expected bounds to the generalization of what’s shown in the video: we’ve only tested model capabilities for 4-colored, 3-brick structures of two-by-four Lego bricks. Calculating how many possibilities this presents is not easy. (If this is easy for you, please reach out for a job.) If we agree that uncolored 3-brick combinations of two-by-four Lego bricks have 1,560 combinations, then having 4 color options for each of the 3 bricks gives 4 × 4 × 4 × 1,560 = 99,840 possible combinations.
