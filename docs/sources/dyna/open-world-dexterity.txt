@@ -1,0 +1,35 @@
+SOURCE ARCHIVE (fdp docs/sources)
+URL: https://www.dyna.co/research/open-world-dexterity
+Title: Open-World Dexterity and Live Demos around the World (DYNA-1i)
+Page date: 2025-10-15
+Fetched: 2026-09-14 via curl (UA: desktop Chrome), HTML → text extraction (tags stripped, nav/footer removed)
+Raw HTML sha256: 7a291ca33d0cb871142a229e2f38b28b9c818b41d69aa0cf9bf0e50a47872966
+Raw HTML bytes: 146661
+Rights: © the publishing company; archived verbatim for citation/verification only, not for redistribution.
+========================================================================
+
+Open-World Dexterity and Live Demos around the World — DYNA
+[ Research ]
+Open-World Dexterity and Live Demos around the World
+Category:
+Company
+Author:
+Dyna Team
+Date:
+December 2025
+Overview
+Robot foundation models must achieve both on-task robustness and cross-environment generalization to be deployed at scale. On-task robustness ensures the model can reliably solve a manipulation task, while cross-environment generalization enables deployment in new environments without performance degradation.
+In our initial DYNA-1 release, we developed a training recipe for Vision-Language-Action models (VLAs) that achieves exceptional robustness, with a 99%+ success rate on complex manipulation tasks. However, VLA models, including our original DYNA-1 model, still suffer from performance degradation when deployed in environments not represented in the training data. In this short blog post, we share recent results on improving DYNA-1 to efficiently generalize its robust dexterity capabilities to completely unseen environments, bringing us closer to large-scale deployment.
+The improved DYNA-1 (DYNA-1i) can robustly and efficiently execute dexterous manipulation tasks from its training data in unseen environments. Importantly, DYNA-1i's training recipe is data efficient, requiring only tens of hours of post-training data collected entirely in our office. As a case study, we consider the laundry folding task, which requires the robot to continuously pick crumpled shirts from a laundry basket, fold them, and stack them neatly into a pile. Given the large number of possible shirts as well as possible crumpled configurations, this is a highly challenging task for cross-environment generalization.
+By collecting data on only a handful of unique robot stations in the office, we find that DYNA-1i is already capable of generalizing this skill to unseen and drastically different scenes. For example, we tested DYNA-1i in the office entrance lobby and the parking lot and found that the model continues to attain high performance on the task. Quantitatively, we benchmark the model in both seen and unseen environments to rigorously evaluate its ability to generalize. The evaluation consists of 30-minute continuous trials, measuring how many shirts the model can fold consecutively without failure during a 30-minute window. As shown below, DYNA-1i achieves comparable performance across both testing configurations.
+EnvironmentDurationShirts FoldedThroughput (shirts/hr)Avg Quality
+Seen (Office)30 min22~40/hr~3+
+Unseen (Lobby / Parking / CoRL)30 min20~40/hr~3+
+This result is particularly exciting given the efficiency of the data collection process. Typically, enabling VLA models to generalize to unseen environments requires collecting data across tens or even hundreds of unique environments. With DYNA-1i, we show that the data collection burden can be significantly reduced through sophisticated modeling and data collection techniques.
+Live Demo and Evaluation
+Encouraged by these internal results, we demonstrated the model's capabilities to a broader audience by performing live demos and evaluations at robotics conferences. We first demonstrated our model at the Actuate conference, where it performed laundry folding live on stage while our co-founder Jason delivered a keynote talk; see the whole talk here. As shown in the time lapse below, the live stage presents a particularly challenging deployment scenario, with lighting conditions that differ dramatically from typical office or home indoor environments.
+Later that week, our team traveled to South Korea to attend the Conference on Robot Learning (CoRL), the annual premier academic conference on robot learning. There, we deployed the same model on a brand new Dynasaur robot during exhibition hours for 3 days straight.
+Despite never experiencing the exhibition hall conditions, the model kept performing. In our CoRL demo, the robot was positioned facing conference-goers, which naturally invited many attendees to "mess" with the robot by disturbing the table layout, unfolding sleeves that had already been folded, and even placing completely new t-shirts onto the table for our model to attempt. In all of these cases, DYNA-1i was able to robustly recover and complete the folding as usual.
+Next Steps
+We are continuously pushing the boundaries of general-purpose and robust robot foundation models. Our goal is to bring this capability to businesses of every size, and unlock embodied AI for everyone. If you are obsessed about pushing the boundaries of embodied AI and building truly capable robots that are ready for production, we encourage you to reach out. We are actively hiring across engineering and research roles!
+← PreviousCustomer Testimonial: Monster LaundryNext →DYNA-1 Pre-Training: Zero-Shot Dexterity Is Here

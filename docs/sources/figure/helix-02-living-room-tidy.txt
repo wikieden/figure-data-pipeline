@@ -1,0 +1,32 @@
+SOURCE ARCHIVE (fdp docs/sources)
+URL: https://www.figure.ai/news/helix-02-living-room-tidy
+Title: Helix 02 Living Room Tidy
+Page date: 2026-03-09
+Fetched: 2026-09-14 via curl (UA: desktop Chrome), HTML → text extraction (tags stripped, nav/footer removed)
+Raw HTML sha256: 917d5c0e34a6848499ca98683132443a56030ed5527bd1d213d7ead6c0d6ab2e
+Raw HTML bytes: 41060
+Rights: © the publishing company; archived verbatim for citation/verification only, not for redistribution.
+========================================================================
+
+Helix 02 Living Room Tidy
+Helix 02 Living Room Tidy
+March 09, 2026
+Helix Tidies the Living Room
+A little over a month ago we released Helix 02, a single neural system that controls the full body directly from pixels, enabling dexterous, long horizon autonomy across an entire room. After cleaning up a kitchen, Helix 02 is now taking on another everyday task: tidying up a living room. 
+If you could give a home robot one job, “tidy the living room” would be near the top of the list. But from a robotics perspective, this task is incredibly difficult. Unlike more structured commercial tasks, a living room changes constantly. Objects are scattered unpredictably. Furniture creates narrow navigation paths. Soft items like towels and pillows behave dynamically. Many actions require both hands, while others require freeing a hand in the middle of a task. And nearly every behavior involves moving through the room while manipulating something at the same time.
+In this new demonstration, Helix 02 performs whole body, end-to-end living room cleanup - walking through the room while continuously manipulating objects, tools, and containers. 
+Key Results
+Helix 02 continues to learn new tasks that demand the full integration of locomotion, dexterity, and sensing just by adding new data. With no new algorithms, no special-case engineering Helix learned to:
+Clean surfaces with coordinated tool use: Use a spray bottle to wet a dirty surface, then perform forceful wiping motions with a towel to remove the mess.
+Handle flexible objects dynamically: Manage the complex dynamics of a towel - unhooking it from the arm, repositioning it for cleaning, and whipping it over the shoulder to free its hands.
+Perform complex bimanual manipulation: Pick up a bin with both hands and hold it while scooping blocks from a table into the container.
+Use whole-body strategies for efficiency: Tuck a container under one arm to free both hands for picking up toys.
+Execute dynamic object throws: Toss a pillow back onto a couch with a fast, controlled motion.
+Perform in-hand reorientation for precise tasks: Pick up a remote, reorient it in-hand, and press the correct button to turn off the TV.
+Reorganize tools during motion: Temporarily stow a towel under an arm while transitioning between tasks.
+Navigate tight spaces with precise foot placement: Side-step through the narrow gap between a coffee table and couch while continuing manipulation.
+Why This Matters
+Tidying a living room combines locomotion, dexterous manipulation, tool use, and real-time planning in a constantly changing environment.
+Helix handles all of these behaviors with the same general-purpose architecture used for previous tasks. Rather than engineering specialized controllers for each behavior, the system learns the strategies directly from data.
+As more tasks are added, Helix continues to expand its repertoire—building toward a future where a single humanoid system can perform the wide range of everyday work required in homes and workplaces.
+This is another step toward scalable humanoid intelligence: a single model that learns new capabilities simply by seeing more examples of the world.

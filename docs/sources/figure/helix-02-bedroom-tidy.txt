@@ -1,0 +1,36 @@
+SOURCE ARCHIVE (fdp docs/sources)
+URL: https://www.figure.ai/news/helix-02-bedroom-tidy
+Title: Helix 02 Bedroom Tidy
+Page date: 2026-05-08
+Fetched: 2026-09-14 via curl (UA: desktop Chrome), HTML → text extraction (tags stripped, nav/footer removed)
+Raw HTML sha256: 517f0f50683dd7ad3cc60fae59734ca60dbe2d46fbdd126141d06b2b27c6a72d
+Raw HTML bytes: 44313
+Rights: © the publishing company; archived verbatim for citation/verification only, not for redistribution.
+========================================================================
+
+Helix 02 Bedroom Tidy
+Helix-02 Bedroom Tidy
+May 08, 2026
+Helix 02 Makes the Bed
+Most useful work in the real world happens in shared spaces: homes, warehouses, factories, and other environments where people, objects, and other robots are constantly moving. That means robots of the future will need more than isolated skills. They will need to act in scenes shaped by other agents; watching what others are doing, reacting in real time, and depending on each other’s actions to make progress toward a shared goal.
+In February 2025 we showed two Figure robots running a single learned Vision-Language-Action system coordinating to put away groceries. Today we're demonstrating a major step in that direction. Two Helix-02-equipped humanoids reset a bedroom in under two minutes, opening doors, hanging clothes, putting away headphones, closing a book, taking out trash, pushing a chair under a desk, and working together to make a bed. They run a single learned Vision-Language-Action policy. There is no shared planner between them, no message passing, no central coordinator: each robot reads the room through its own cameras and infers its partner's intent the way two people do when they fold a sheet, from motion alone.
+To our knowledge, this is the first demonstration of a single learned neural network performing multi-humanoid collaborative locomanipulation, directly from pixels to actions.
+Key Results
+In this video, we see Helix carry out behaviors that demand the full integration of locomotion, dexterity, and sensing just by adding new data. With no changes to its core algorithm, Helix-02 learned to:
+Open doors with whole-body coordination: Localize a lever handle, depress it, pull the door inward while maintaining balance, and reposition the body as the door swings.
+Push furniture using stance and balance: Grasp an office chair with both hands and push it under a desk, generating controlled forces through foot placement and body posture rather than arm motion alone.
+Drape clothing onto narrow fixtures: Carry a garment across the room and hang it on a coat tree with both hands, managing fabric that can fold over itself and obscure contact points.
+Place objects with in-hand reorientation: Pick up a pair of headphones, reorient them mid-air, and seat the headband over a narrow vertical stand.
+Close a book with dexterous bimanual control: Pick up an open book and flip the cover closed, handling a hinged object whose pages flex and whose mass shifts as it folds shut.
+Operate a trash can foot pedal with single-leg balance: Pick up a piece of trash, shift weight onto one leg, depress a trash bin's foot pedal with the opposite foot to open the lid, and drop the item in, using the foot as an end-effector while balancing dynamically.
+Coordinate two humanoids around a shared object: Take complementary positions on opposite sides of a bed and act on the same large deformable object without interfering.
+Manipulate bedding with bimanual whole-body motions: lift, unfurl, spread, fold, and smooth a comforter, correcting wrinkles and bunched edges as the fabric settles after each pull.
+Why This Is Hard
+Three things compound on each other:
+Two humanoids in one room is more than two single-robot problems running in parallel. Every action one robot takes redefines the problem the other is solving. Each is reading its partner's intent from motion alone, in real time, while its own actions are simultaneously changing what the partner sees.
+The central object is deformable. The comforter has no fixed pose, no rigid geometry, no canonical grasp. There is no natural seam between "your half" and "mine." Each robot has to commit to a contact point while predicting what the other will do, then update both predictions tens of times per second as the fabric folds, drapes, and slides under shared tension.
+The whole sequence runs in two minutes. This bedroom reset requires whole-room locomanipulation: the robot walks naturally between locations, balances dynamically on one leg, and switches between rigid, deformable, articulated, and collaborative manipulation, without scripted handoffs between subtasks. At policy rate, that's thousands of consecutive correct decisions, every one conditioned on a fast-moving scene that includes a second humanoid acting under the same constraints.
+Why This Matters
+We think this is an important first demonstration of a future we hope becomes common: intelligent humanoids coordinating with each other to solve shared goals in human environments.
+Helix handles this setting without task-specific controllers. It is a single learned system that continues to expand as we add more data. The same underlying approach that learned logistics tasks, laundry folding, kitchen cleanup, and living room tidying now performs collaborative bedroom reset.
+If you want to help build it, we're hiring.

@@ -54,7 +54,7 @@ GEN-1 博客（2026-04-02）抓取成功：预训练 50 万小时**无机器人�
 
 ### 全部博客一手补充（2026-09-14）
 
-generalistai.com/blog 全部 10 篇（2025-06-17 研究预览至 2026-08-19 GEN-1.5）已 curl 直抓，精读见 [research-four-routes.md](research-four-routes.md) §4。本文此前缺的一手事实：GEN-0 预训练数据来自**多家数据代工伙伴**，按 Class 1/2/3 分类做 8 种预训练集消融，指标为验证 MSE + 反向 KL（低 MSE + 低反向 KL 利于 SFT，高 MSE + 低反向 KL 利于 RL 后训练）；真机 A/B 用 5.6 h（1%）任务数据后训练，最高 99% 需大预训练 + 550+ h 任务数据；GEN-1「约 99% 参数从零训练」、含 RL 与自研 paged attention、「更准确地说是一个系统」；《Beyond World Models & VLAs》明确 VLM 预训练是数据不足时的「拐杖」；物理常识文论证遥操作破坏感知-动作闭环、事后加速造成动力学不匹配；千手文给出末端微调 ΔW 按传感/推理/执行分解（2.5%–11.4%）并据此决定采集干预（U-38）；GEN-1.5 上下文 30 s、8 个月连续预训练三阶段、10 步微调改变权重 <0.15%、提示可来自仿真或人手、两条提示可拼接。
+generalistai.com/blog 全部 10 篇（2025-06-17 研究预览至 2026-08-19 GEN-1.5）已 curl 直抓、归档于 [sources/generalist/](sources/MANIFEST.md)，精读见 [research-four-routes.md](research-four-routes.md) §4。本文此前缺的一手事实：GEN-0 预训练数据来自**多家数据代工伙伴**，按 Class 1/2/3 分类做 8 种预训练集消融，指标为验证 MSE + 反向 KL（低 MSE + 低反向 KL 利于 SFT，高 MSE + 低反向 KL 利于 RL 后训练）；真机 A/B 用 5.6 h（1%）任务数据后训练，最高 99% 需大预训练 + 550+ h 任务数据；GEN-1「约 99% 参数从零训练」、含 RL 与自研 paged attention、「更准确地说是一个系统」；《Beyond World Models & VLAs》明确 VLM 预训练是数据不足时的「拐杖」；物理常识文论证遥操作破坏感知-动作闭环、事后加速造成动力学不匹配；千手文给出末端微调 ΔW 按传感/推理/执行分解（2.5%–11.4%）并据此决定采集干预（U-38）；GEN-1.5 上下文 30 s、8 个月连续预训练三阶段、10 步微调改变权重 <0.15%、提示可来自仿真或人手、两条提示可拼接。
 
 ## 2. dora-rs（DORA：Dataflow-Oriented Robotic Architecture）
 

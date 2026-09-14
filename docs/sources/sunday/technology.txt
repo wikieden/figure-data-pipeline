@@ -1,0 +1,23 @@
+SOURCE ARCHIVE (fdp docs/sources)
+URL: https://www.sunday.ai/technology
+Title: Technology | Sunday Robotics（产品页）
+Page date: 页面无日期
+Fetched: 2026-09-14 via curl (UA: desktop Chrome), HTML → text extraction (tags stripped; product page: kept only prose lines of 4+ words, deduplicated)
+Raw HTML sha256: 52463750dbce77e0ff6d155773850fcf01b2b8e99429d5b2e7d899aa4e241485
+Raw HTML bytes: 2775650
+Rights: © the publishing company; archived verbatim for citation/verification only, not for redistribution.
+========================================================================
+
+Technology | Sunday Robotics | The helpful robotics company
+Pioneering AI, pragmatic engineering.
+Memo, the fastest learning robot
+The world’s richest movement library
+The infrastructure behind the intelligence
+Real-world ready, technically proven
+We start by carefully recruiting an ever-growing community of data contributors we call Memory Developers (MDs).
+This community represents a wide diversity of US households who are curious and eager to shape the future of helpful robotics.
+We guide our Memory Developers (MDs) to take on almost any household chore - all while wearing our Skill Capture Gloves for sensory rich data.
+All data undergoes a rigorous, task-specific rating and multiple rounds of QA — ensuring our models learn only from the highest-quality data.
+We perpetually fine-tune our models, experimenting with data recipes, weighting, and augmentation to achieve our ideal model performance.
+Our patented Skill Capture Glove is a one-to-one representation of Memo's hand and enables anyone to teach Memo nearly any skill. What you can do wearing the Skill Capture Glove, Memo can learn.
+Memory Developers (MDs) are data collectors who use our Skill Capture Gloves to train our models on a wide diversity of tasks. Our MDs represent households across the US and collect from their lived-in homes, rather than warehouses.

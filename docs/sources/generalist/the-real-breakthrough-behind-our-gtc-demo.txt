@@ -1,0 +1,47 @@
+SOURCE ARCHIVE (fdp docs/sources)
+URL: https://generalistai.com/blog/the-real-breakthrough-behind-our-gtc-demo
+Title: The Real Breakthrough Behind Our GTC Demo
+Page date: 2026-03-24
+Fetched: 2026-09-14 via curl (UA: desktop Chrome), HTML → text extraction (tags stripped, nav/footer removed)
+Raw HTML sha256: 3925e33d2a6673940caa06f391afc2926fc698cc8931e43bb98fdd9a07efae00
+Raw HTML bytes: 30115
+Rights: © the publishing company; archived verbatim for citation/verification only, not for redistribution.
+========================================================================
+
+Generalist - The Real Breakthrough Behind Our GTC Demo
+Story
+March 24, 2026
+Generalist Team
+4 min read
+Table of Contents
+Introduction
+A step-change in the speed of generalization
+The timeline leading up to GTC
+Generalization for free
+A future where robots show up and just work
+The Real Breakthrough Behind Our GTC Demo
+We ran a live demo at GTC last week, but the real story is how quickly we got it running.
+GEN-0 has given us a step-change in the speed of generalization
+Last week at NVIDIA GTC, we did a live demo of our GEN-0 foundational model. This was our first public live demo! We ran it nonstop during all open hours of the conference. The energy at the booth was awesome. We were amazed at how actively people sought us out and how quickly word spread. Thank you to all who stopped by!
+But for us, what’s most notable is not the demo itself but how quickly we were able to put it together. GEN-0 models have proven to be so capable at generalizing to new robots and new environments, that we said yes to doing a demo knowing that we’d only have a few days to prepare with an entirely new type of robot. This would have been impossible even just a few months ago.
+The timeline leading up to GTC: brand new robot, only in our office for a handful of days
+We were fortunate to be asked by Universal Robots, the world’s #1 cobot manufacturer by volume, to join them in their booth to live demo our GEN-0 model on their new mobile manipulation platform.
+This new mobile manipulation platform—consisting of UR7e arms on a MiR base and mounted together by a Vention frame—did not previously exist!
+Despite not having ever seen or touched this robot in person, only about a month before the conference, we said yes to doing the demo.
+Due to shipping time, robot setup, and other delays, in truth we only ended up having a small number of days to set up and prepare the demo.
+Here’s the robot the day it showed up in our Boston office.
+Two days later, running the demo task in our office.
+Your browser does not support the video tag.
+This is a challenging multi-step task that emphasizes motion precision (tight tolerances of the components of the box) as well as force precision (it is especially challenging to not crumple the different paper and cardboard components).
+We then shipped the robot to our SF office, where we had everything running within a day of arrival and just three full work days to do final prep of the demo before sending it to GTC.
+First box packed in SF, within a day of the robot’s arrival.
+Generalization for free
+At GTC, we unpacked the robot, booted it up, and its performance was identical to operating in our offices. Of course, since there wasn’t time, we used no data from inside the GTC exhibition hall.
+First-run of the system in the UR booth at GTC.
+Your browser does not support the video tag.
+The demo ran for every hour of the exhibit (no limited or scheduled times) and we brought out the hockey stick to demonstrate the model’s resilience.
+Your browser does not support the video tag.
+A future where robots show up and just work
+We took a robot platform that didn’t exist and had a live, public demo of GEN-0 running on the system within a handful of days.
+This is a preview of a world where robots can just show up and work. It validates the power of GEN-0 as a true foundational model enabling things that were simply not possible before.
+Reach out to partnerships@generalistai.com if you are interested in working together!

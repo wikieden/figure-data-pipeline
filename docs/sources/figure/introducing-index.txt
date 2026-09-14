@@ -1,0 +1,34 @@
+SOURCE ARCHIVE (fdp docs/sources)
+URL: https://www.figure.ai/news/introducing-index
+Title: Introducing Index: Building The World’s Largest and Most Diverse Physical Dataset
+Page date: 2026-08-25
+Fetched: 2026-09-14 via curl (UA: desktop Chrome), HTML → text extraction (tags stripped, nav/footer removed)
+Raw HTML sha256: edb8f2c6e7f75d048c47afe315685ed45d323cc0f160a487249ebf92b4e71f01
+Raw HTML bytes: 48004
+Rights: © the publishing company; archived verbatim for citation/verification only, not for redistribution.
+========================================================================
+
+Introducing Index: Building The World’s Largest and Most Diverse Physical Dataset 
+Introducing Index: Building The World’s Largest and Most Diverse Physical Dataset
+August 25, 2026
+Today we're coming out of stealth with the most diverse robot training dataset ever built. The data needed to scale a truly general purpose robot doesn't exist on the internet - it has to come from the real world: a global sampling of physics captured across every environment on earth.
+For the last 4 months, we’ve been building a Figure-exclusive pipeline to scale data collection at higher throughputs, with broad diversity and strict quality standards. 
+While in stealth, we've crossed 264,000 app downloads across 100+ countries with over 44,000 weekly active users
+Our Creators, the network of individuals building this data, have uploaded over 16M videos to our app 
+The app is processing 30 minutes of video uploads every second; 4.9 years of human work every day uploaded
+We’ve paid out $15M to Creators to date that have contributed to our data 
+We are now on a path to 100x, and are committed to spend over $1B the next 12 months on data and compute
+Generalization is a Data Problem
+Our AI stack, Helix, gets more capable the same way every learned system does: with data. That's not a new idea in machine learning, it's the central finding of the last decade of AI research, and one worth restating plainly for robotics.
+The generalization results we're seeing internally are already validating this thesis, and we will be sharing more in detail on this soon.
+Index
+Index is our answer to the data problem: the largest useful robot training dataset in the world. Four months ago, we launched an app in stealth to test the idea: could we collect the physical data Helix needs directly from humans, at scale? Today we’re rebranding this as Index and launching on Google Play and the App Store. 
+Prior to this we tried buying data. Vendors couldn't hit the throughput, diversity, or quality bar Helix requires, so we built the pipeline ourselves: a Figure-exclusive system for sourcing real-world physical data at scale. 
+Our efforts have crossed 264,000 downloads across 108 countries, with over 44,000 weekly active users contributing data. The app is processing 30 minutes of video uploads every second. Per 1,000 hours collected, Index contains 373 unique tasks, 1,146 unique manipulated objects, and 116 unique environments. The data inherits its diversity directly from the people generating it. Every new Creator brings an unseen environment, unfamiliar objects, and their own idiosyncratic way of completing a task, the kind of long-tail variation that's nearly impossible to define upfront. 
+To date, Creators have earned $15M. We're collecting across the full diversity of human tasks: cooking, cleaning, laundry, and other household chores at home, as well as inside businesses such as logistics centers, restaurants, factories, and offices. We’ve seen tasks as obscure as cleaning kitty litter, changing oil, busing restaurant tables, and we welcome the diversity
+Anyone can become a Creator and start recording real tasks in their own home or workplace: making beds, folding laundry, serving guests at a local cafe, stocking retail shelves. Or, you can book a Creator through the app who comes to you to help with daily tasks and chores. We'll even send one to your business.
+Using Human Data for Helix Training 
+Ingesting 30 minutes of video every second from Creators around the world required rebuilding our data infrastructure around constraints more typical of a consumer app: 24/7 availability, continuous large-scale compute for processing, and real-time feedback to users that helps improve future collections.
+The pipeline has five stages: filtering, fraud review, deduplication, rebalancing, and annotation. Automated filters first screen for technical, visual, and semantic quality. Human analysts then audit samples at the user level for deliberate attempts to evade them. To maintain diversity, we embed each video segment and discard those above a similarity threshold with previously accepted data. We rebalance the remainder using task quotas—based on how well each submission matches its selected task—and embedding-based clusters that capture variation beyond task labels. Finally, we generate hierarchical text captions associated with every episode.
+Next Steps
+Index is laying the groundwork for ordering robots as a service. Today, you have people coming to help clean your house; eventually, a robot will do everything for you.

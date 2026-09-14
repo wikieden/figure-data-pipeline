@@ -1,0 +1,34 @@
+SOURCE ARCHIVE (fdp docs/sources)
+URL: https://www.figure.ai/news/project-go-big
+Title: Project Go-Big: Internet-Scale Humanoid Pretraining and Direct Human-to-Robot Transfer
+Page date: 2025-09-18
+Fetched: 2026-09-14 via curl (UA: desktop Chrome), HTML → text extraction (tags stripped, nav/footer removed)
+Raw HTML sha256: 7ac5c72d5b8cdd4345fcc257b8a23a35bc91331fc67aa42815a211c63e8ca9d9
+Raw HTML bytes: 46795
+Rights: © the publishing company; archived verbatim for citation/verification only, not for redistribution.
+========================================================================
+
+Project Go-Big: Internet-Scale Humanoid Pretraining and Direct Human-to-Robot Transfer
+Project Go-Big: Internet-Scale Humanoid Pretraining and Direct Human-to-Robot Transfer
+September 18, 2025
+A Major Step Forward
+The path to human-level intelligence in the home requires robots that learn from the world at scale. Today, we’re announcing two pivotal advances for Helix, Figure’s Vision-Language-Action (VLA) model for generalist humanoid control:
+Project Go-Big: Internet-Scale Humanoid Pretraining. Figure is building the world’s largest and most diverse humanoid pretraining dataset, accelerated by an unprecedented partnership with Brookfield, which owns over 100,000 residential units worldwide. 
+Zero-shot human video-to-robot transfer. Helix has achieved a new learning milestone: after training exclusively on egocentric human video, Figure robots can now navigate cluttered real-world spaces from natural language commands like "go to the fridge"—a first in humanoid robotics. 
+Video 1: Human video collection can efficiently cover real-world spaces, capturing valuable skills that can be transferred directly to Helix.Internet-Scale Humanoid Pretraining
+The biggest breakthroughs in machine learning have come from pretraining large neural networks on massive, diverse datasets: ImageNet for vision, Wikipedia for language, or YouTube for generative video models. Unlike vision or language, robotics lacks a large-scale equivalent—no "YouTube for robot behaviors."
+Traditionally, teaching robots new skills required costly demonstrations, hand-coded programs, or tightly staged environments that fail to capture the messiness of the real world. Humanoid robots, however, offer a unique structural advantage: their perspectives and kinematics mirror our own, making it possible to transfer knowledge directly from everyday human video (Video 1).
+Video 2: Helix is now trained on egocentric human video, showing how people intelligently solve goals at massive scale and diversity.This is the vision behind Project Go-Big, Figure’s large-scale humanoid pretraining data-collection initiative (Video 2). Yesterday, we announced a first-of-its-kind partnership with Brookfield Asset Management. Brookfield's $1 trillion global asset base—over 100,000 diverse residential units, 500 million square feet of commercial office space, and 160 million square feet of logistics space—will help accelerate Project Go-Big by capturing human goal-directed behavior at an unprecedented scale and diversity of real-world environments. 
+Figure has already begun data collection efforts in Brookfield environments and will continue to scale this program in the coming months.
+Video 3: After training on 100% human video only, Helix has learned to navigate cluttered spaces from natural language input.Direct Human Video-to-Robot Transfer
+Helix previously focused on upper-body manipulation tasks like laundry folding, dishwasher loading, and package reorientation. But in addition to manipulation, humanoids need to be able to intelligently navigate to be useful in homes—finding paths through clutter, repositioning for tasks, and moving fluidly around people and objects.
+We’re excited to share that Project Go-Big has already delivered a promising initial learning result for Helix: direct transfer from human video to robot behavior. Using 100% egocentric human video data, collected passively as people do behaviors in real Brookfield homes, we trained Helix to translate human navigation strategies directly into robot control. Remarkably, this approach required no robot demonstrations whatsoever.
+The results:
+Speech-to-nav: Helix now responds intuitively to conversational commands such as "Walk to the kitchen table" or "Go water the plants," autonomously generating closed-loop control from pixels to navigate complex, cluttered home environments (Video 3).
+A single, unified model: One Helix network now outputs both high rate dexterous manipulation and navigation commands—eliminating the need for separate, task-specific or data source-specific systems (Figure 1).
+Zero-shot human-to-robot transfer: To our knowledge, this is the first time a humanoid robot has learned end-to-end—from images and language to low-level SE(2) velocity commands—using only human video. No robot-specific data or training was required.
+Figure 1: A single Helix neural network now outputs both manipulation and navigation, end-to-end from language and pixel input.
+Conclusion
+We're rapidly approaching a future where humanoid robots understand and interact with homes in fundamentally human ways—navigating, manipulating objects, and reasoning through complex environments with natural language as the primary interface.
+Our partnership with Brookfield positions us to explore the full potential of internet-scale embodied datasets for locomotion and manipulation. We’re already seeing the benefits: a first-of-its-kind, zero-shot cross-embodiment transfer from human video to robotic navigation in the real world.
+If you’d like to help build the data pipelines, models, and systems that will scale Helix to millions of robots, join us. The future of humanoid robotics begins in the home, and we're building that future now.

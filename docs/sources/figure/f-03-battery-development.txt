@@ -1,0 +1,44 @@
+SOURCE ARCHIVE (fdp docs/sources)
+URL: https://www.figure.ai/news/f-03-battery-development
+Title: F.03 Battery Development
+Page date: 2025-07-17
+Fetched: 2026-09-14 via curl (UA: desktop Chrome), HTML → text extraction (tags stripped, nav/footer removed)
+Raw HTML sha256: 6ab63ed7187ab3a6a540780ebcb6b5b8e987db1bdf529e10d0ddb8cf4039e8ed
+Raw HTML bytes: 61412
+Rights: © the publishing company; archived verbatim for citation/verification only, not for redistribution.
+========================================================================
+
+F.03 Battery Development
+F.03 Battery Development
+July 17, 2025
+Introducing F.03 Battery
+Today, we are presenting the Figure 03 (F.03) battery — a significant advancement in our core humanoid robot technology roadmap. With battery technology at the heart of our electromechanical humanoid platform, we decided to engineer and manufacture the battery system in-house at BotQ. Starting from F.01, we have built custom battery packs for our application. F.01 used bulky rectangular modules and components that only fit in an external backpack. Through advancements across three generations of battery technology, we have increased the energy density by 94%, integrated the battery directly into the torso, and dramatically improved safety and abuse tolerance.
+The F.03 battery pushes the bounds across all key battery attributes:
+Run Time: 2.3 kWh enables 5 hours of run time at peak performance
+Mass & Volume Efficiency: Significant energy density improvements packaged into our most compact robot to date
+Fast Charge: 2 kW fast charge with active cooling
+Battery Management System (BMS): Custom BMS to maintain battery health, optimize performance, and prevent fault conditions
+Safety: Innovative multi-layer safety architecture targeting both UN & UL safety certification
+Reliability: Survives rigorous environmental, mechanical and electrical test suite
+Cost: 78% reduction in cost over F.02
+Scale: Mass production components and final assembly processes
+The Optimal Robot Battery Architecture
+For the F.03 battery, we took on the challenge of dramatically increasing gravimetric and volumetric energy density while raising the bar for safety and reliability. In order to accomplish this, we had to think carefully about every design decision and rapidly analyze, design, test and iterate. The F.03 battery employs a number of novel design strategies including:
+Multi-Function Components: Multiple functions were integrated into nearly every part, resulting in a high cell-to-pack ratio, lower cost, and lower complexity.
+Structural Battery: The battery enclosure is constructed of high strength stamped steel, die cast aluminum and structural adhesives. This enables the battery to survive a variety of demanding structural requirements, such as being dropped 1 meter onto concrete from any orientation. Furthermore, this enables the battery to serve as a structural member of the robot torso, which saves mass and volume at the robot level.
+Active Cooling System: Cooling components are directly integrated into the die casting. By minimizing thermal resistances and local heat generation, fast charge can be achieved with simple forced convection cooling.
+Anti-Propagation & Flame Containment System: In the event that one cell goes into thermal runaway from abuse conditions, the pack features a number of safety measures to prevent the thermal runaway from propagating to adjacent cells and to prevent flame from exiting the pack. Anti-propagation is achieved by using a thermally insulative potting compound in concert with a rapid heat distribution strategy. Flame containment is accomplished with a multi-function flame arrestor pack vent and a patented technology to prevent an external flame from exiting the pack.
+Raising the Bar for Robot Battery Safety
+At Figure, achieving a high level of safety is a non-negotiable. The F.03 battery pushes the bounds for robot battery safety by implementing multiple lines of defense against battery abuse or malfunction. The layers of safety include:
+Battery Management System (BMS) Protections: The custom BMS includes an array of sensors, switches and fuses to prevent fault conditions such as overcharge, overdischarge, over temperature and external short circuit.
+Cell Protections: The cell itself has been certified to numerous UN, UL and IEC safety standards ensuring tolerance for abuse conditions such as crush, impact, overcharge, heating, etc. The cell also includes 2 mechanisms of internal fusing in the event of short circuit.
+Interconnect Protection: The cell-to-cell wirebond interconnect geometry is tuned to act as a fusible element to serve as an additional layer of short circuit protection.
+Pack Protections: In the event of severe abuse conditions, the anti-propagation and flame quench system can contain a thermal runaway event and ensure a safe outcome.
+As part of Figure’s commitment to differentiate our humanoid as the leader in robot safety, we specified that the battery system of F.03 must not emit flames should a catastrophic failure of a single cell occur. This critical decision underscores our deep commitment to product safety. One sample of the fault injection test result is shown below. We intentionally induced failure by heating a cell to the point of thermal runaway. The F.03 battery is able to prevent external flame and attenuate cell-to-cell thermal propagation. The team achieved this goal by developing a number of proprietary technologies over the course of a year using thermodynamic modeling, characterization, methodical physical testing and iteration.
+The F.03 battery is also the first humanoid robot battery in process to be certified to both UN38.3 and UL2271 battery safety standards. Since the robot battery safety standard did not exist, Figure had to work with OSHA Nationally Recognized Testing Laboratory (NRTL) to develop an appropriate UL standard for a humanoid robot application. Figure has invested thousands of hours designing a battery system capable of passing the twenty-three primary tests outlined in the standard. This rigorous standard covers requirements such as mechanical stress, charge-discharge cycling, temperature stress, and electromagnetic interference immunity, ensuring battery risks are minimized in both normal and many abnormal situations.
+High Volume Battery Production at BotQ
+The F.03 battery was built to support BotQ’s first generation manufacturing line capable of manufacturing up to 12,000 humanoids per year. In order to achieve the target production rate, we switched our component manufacturing strategy from high cost and complex machining processes to low cost, high volume tooled processes such as die casting, stamping, injection molding, and dip molding.
+For F.03, we brought battery manufacturing in-house. During early development stages, this has enabled us to rapidly iterate on design concepts and develop novel strategies like our flame containment system quickly. Now that we are in the manufacturing ramp stage, this has enabled us to implement rigorous process control and automation to ensure we will deliver a high-performing, reliable battery. We have also tapped into the BotQ infrastructure including Product Lifecycle Management (PLM), Enterprise Resource Planning (ERP), Warehouse Management Systems (WMS), and Manufacturing Execution System (MES) to ensure consistency and quality control across all battery processes. The flow chart below details the manufacturing process flow developed for the F.03 battery.
+Conclusion
+We have presented the F.03 battery, a cutting-edge suite of technologies powering our next-generation humanoid robot platform manufactured at BotQ. It pushes the boundaries for all robot battery performance attributes including energy density, safety, reliability, cost and scale. F.03 also sets a new benchmark for safety as the first robot battery certified to a UL safety standard, innovating across multiple layers of protection. This advancement represents a major leap forward in humanoid robot energy systems.
+If you’re interested in supporting the design, manufacturing, or production teams at Figure, click here and apply.

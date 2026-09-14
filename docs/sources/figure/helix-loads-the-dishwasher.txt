@@ -1,0 +1,25 @@
+SOURCE ARCHIVE (fdp docs/sources)
+URL: https://www.figure.ai/news/helix-loads-the-dishwasher
+Title: Helix Loads the Dishwasher
+Page date: 2025-09-03
+Fetched: 2026-09-14 via curl (UA: desktop Chrome), HTML → text extraction (tags stripped, nav/footer removed)
+Raw HTML sha256: 8cc18dd89e5d88509201f26dd66bdd05c7668078f5e712585b5abf9a4d6fba02
+Raw HTML bytes: 33824
+Rights: © the publishing company; archived verbatim for citation/verification only, not for redistribution.
+========================================================================
+
+Helix Loads the Dishwasher
+Helix Loads the Dishwasher
+September 03, 2025
+Helix, Figure’s Vision Language Action (VLA) model, has shown it can adapt to dramatically different real-world challenges with nothing more than new data. After folding laundry and rearranging packages, Helix is now taking on another everyday task: loading a dishwasher.
+At first glance, loading a dishwasher sounds like a simple task - just pick up each object and place it in the dishwasher. But in reality, dishwasher loading bundles together many difficult problems in robotics: dishes often need to be isolated from cluttered stacks, reoriented, or handed off between two arms working in sync; slippery or fragile items demand fingertip-level precision; and dishwasher racks provide only centimeter-scale tolerance for error. On top of that, every load is different - novel objects, messy starting states, and unexpected collisions mean the system must constantly adapt and recover while maintaining robust performance.
+Key Results
+The same Helix model that folded towels and sorted packages can now load a dishwasher. No new algorithms, no special-case engineering, just new data.
+With that, Helix learned to:
+Singulate stacked plates and load them in order.
+Pick up a glass with one hand, reorient it, and place it carefully with the other.
+Adjust its strategy to account for messy starting configurations.
+Recover gracefully from errors like misgrasps or collisions.
+Why This Matters
+Dishwasher loading, package logistics, and towel folding may seem worlds apart, yet Helix handles all with the same general-purpose architecture. This represents another step toward scalable humanoid intelligence: a single system that can incrementally learn new capabilities with additional data, building toward broader applicability without special-case engineering.
+Join us on our mission to bring general purpose learning humanoid robots into the home and global workforce.

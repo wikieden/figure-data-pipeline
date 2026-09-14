@@ -1,0 +1,125 @@
+SOURCE ARCHIVE (fdp docs/sources)
+URL: https://generalistai.com/blog/gen-1
+Title: GEN-1: Scaling Embodied Foundation Models to Mastery
+Page date: 2026-04-02
+Fetched: 2026-09-14 via curl (UA: desktop Chrome), HTML → text extraction (tags stripped, nav/footer removed)
+Raw HTML sha256: 7bea19b70805a8a72fbec7665cd878a6afad9cd830620f91166d3d43be305cbd
+Raw HTML bytes: 63270
+Rights: © the publishing company; archived verbatim for citation/verification only, not for redistribution.
+========================================================================
+
+Generalist - GEN-1: Scaling Embodied Foundation Models to Mastery
+Research
+April 2, 2026
+Generalist Team
+14 min read
+Table of Contents
+Introduction
+Scaling the Pretraining Era of Embodied Intelligence
+Introducing GEN-1
+Defining Mastery
+Capabilities
+Reliability
+Speed
+Improvisational Intelligence
+Limitations
+Rethinking Alignment for Embodied Intelligence
+Looking Ahead
+General Intelligence Born from the Physical World
+Citation
+More Videos
+We’ve created GEN-1, our latest milestone in scaling robot learning. We believe it to be the first general-purpose AI model that crosses a new performance threshold: mastery of simple physical tasks. It improves average success rates to 99% on tasks where previous models achieve 64%, completes tasks roughly 3x faster than state of the art, and requires only 1 hour of robot data for each of these results. GEN-1 unlocks commercial viability across a broad range of applications—and while it cannot solve all tasks today, it is a significant step towards our mission of creating generalist intelligence for the physical world.
+At Generalist we are building towards physical AGI and making it useful to everyone. Today, we introduce our latest model, GEN-1. It is a large multimodal model that emits actions in real-time. It demonstrates several advanced capabilities compared to our previous models, and is a significant step towards our mission.
+Five months ago, with GEN-0, we showed for the first time that scaling laws1 exist in robotics–bringing physical AI models into the pretraining era, which has analogously underpinned predictable progress in language models.2 GEN-0 was made possible by a new multimodal architecture trained on our own (world’s largest) robotics pretraining dataset, and it demonstrated the ability to quickly learn new tasks, adapt to new environments,3 and display moments of physical commonsense.4
+Today, we announce GEN-1, which through further scaling of GEN-0’s foundation, and accelerated by algorithmic advances, is starting to show a significant shift in what these models can deliver. GEN-1 can begin to master simple tasks – on several tasks the model now exceeds 99% success rates (reliability), can complete tasks up to ~3x faster than the prior SOTA (speed), and exhibits a broad range of emergent behaviors to recover in unexpected scenarios (improvisation). In each case, these results require only approximately 1 hr of robot data.
+We believe GEN-1 to be the first general physical AI model to cross a key threshold: unlocking commercial viability across a broad range of tasks—with a level of generality that is impossible to match with traditional automation, and at performance levels previously thought to be out of reach for robotics models. We previously created the first wave of embodied foundation models,5 including VLAs6 and world models,7 and we knew they were far from perfect. The progress of GEN-1 follows our own full redesign of embodied foundation models built for the real world, and is trained from scratch on our dataset of now half a million hours of real-world data.
+GEN-1 represents a step change in capabilities, but it does not solve all tasks. It strengthens our view that continued scaling of our models with physical experience will continue to yield discoveries that unlock broader physical intelligence, expand the range of viable tasks, and open new application areas.
+We are excited by these results, but we are still early in the journey. We believe the true nature of generalist intelligence involves the ability to achieve high levels of mastery across all physical work, and GEN-1 clarifies how we evaluate progress. GEN-1 shows early signs of new levels of mastery, which we define as the combination of reliability, speed and improvisation. Below, we detail these new capabilities from GEN-1, including videos of robots doing several different dexterous tasks hundreds of times in a row for hours.
+Scaling the Pretraining Era of Embodied Intelligence
+Previously, with GEN-0, we showed for the first time that scaling laws exist in robotics. Importantly, it demonstrated that it was possible to scale up robot learning in a generalized way – every zero-shot task we tracked would simultaneously improve. However, its performance was not sufficient to be used in commercial settings. Now with GEN-1, through further scaling of data and compute, and accelerated by algorithmic advances, we are starting to see some tasks cross the level of performance needed to be deployed in economically useful settings.
+This parallels what has underpinned progress in large language models (LLMs) as they have been scaled over the past 8 years. GPT-28 showed a scalable path for multitask learning, but struggled to be deployed in economically valuable or useful software products. Scaling the model to GPT-39 showed the scaling laws held, new capabilities emerged, and the model became economically viable for certain tasks, such as copywriting for ads. As LLMs have scaled, each subsequent model generation has brought forth new capabilities that meet the performance requirements for a new set of tasks. Similarly, GEN-1 can begin to master simple tasks, but the more important concept supported by scaling is that we can expect each new generation of model to result in a new set of increasingly complex tasks that can be mastered.
+Notably, this progression also validates the data engine behind these models. Previous general models in robotics that surpass 90% success have depended on enormous teleoperation datasets that are expensive and difficult to scale. Instead, for GEN-0 and GEN-1 the base foundation model is trained without any robot data—it instead uses data from low-cost wearable devices on humans doing millions of activities, and provides an existence proof that this pretraining can lead to high levels of mastery without requiring large teleoperation or simulation datasets.
+Introducing GEN-1
+GEN-1 comprises innovations across pre-training advances, post-training techniques, learning from experience (RL), multimodal human guidance, as well as new inference-time techniques. The pre-training advances have contributed to shifting the curve of compute efficiency of pretraining intelligence, and the others all contribute to unlocking higher performance for any given task. In addition to these advances, GEN-1 has also been scaled significantly since our previous model, GEN-0: this includes more compute and more data, trained on our dataset which now includes over half a million hours of high-fidelity physical interaction data.
+While we may call GEN-1 a model, it is even more accurate to refer to GEN-1 as a system. Just as with frontier LLM chatbots and APIs, there are many system-level components across inference and model harnessing that critically advance its performance beyond being just a set of model weights.
+GEN-1 is a data-efficient learner: in some tests, GEN-1 can achieve comparable performance to GEN-0 with 10x less task-specific data and fine tuning steps. Additionally, each of the results shown are built with only approximately one hour of robot data. The pretraining dataset contains no robot data, so when GEN-1 adapts to a new task, it is simultaneously adapting to that robot embodiment and to that task for the first time.
+Defining Mastery
+Embodied foundation models should be reliable, fast, and able to recover from unexpected scenarios. We use the term mastery to refer to the combination of all of: reliability, speed, and improvisational intelligence. While reliability and speed are more straightforward to measure, we believe it is improvisational intelligence that has most critically been missing from robotics before.
+Reliability. The ability to reliably accomplish tasks is table stakes for real-world deployment. Traditional systems have performed repetitive motions reliably for decades, but this has evaded end-to-end robotics models. When high performance has been achieved, it is typically through resource-intensive teleoperation data on a specific system, limited to a narrow set of tasks, or achieved at the expense of complexity. The real challenge is not just achieving high performance once, but delivering robust, repeatable performance across tasks, systems, and environments.
+Speed. Robotics has long suffered from a speed barrier: demo videos of dexterous general-purpose models are too slow. But breaking this speed barrier is not so simple. As speeds increase, the world becomes less quasi-static: velocity terms rise, friction dynamics change, motions blur, and there are increasing constraints on the precision, reactivity, and inference. What matters, too, is not how quickly the motors are moving, but how quickly the task is accomplished.
+Improvisation. To thrive in unstructured environments, robots must have the ability to creatively improvise solutions in unexpected scenarios–to respond and adapt rather than rely on predefined behaviors. As we have previously discussed, we believe that physical commonsense is essential to achieving this type of freestyle problem solving. Without it, robots may execute routines well, but struggle when the world departs from the script.
+Reliability and speed have been core to industrial robotics since the early 1960’s–but that history is built on precision and tightly controlling the robot’s environment, not intelligence. Instead, general physical AI models take a very different approach, via intelligence instead of restriction. As William James (late 19th century founding father of modern psychology) wrote, intelligence is the ability to reach the same goal by different means. Improvisational intelligence enables robots to thrive in unstructured environments, and also fuels better reliability and speed for generalist models.
+When evaluating mastery, it is also essential to consider how much data is required to reach that performance for any given task.
+Capabilities
+Reliability
+GEN-1 can perform several tasks at high levels of reliability over long durations without intervention. We show here 6 tasks: kitting auto parts for more than an hour, folding t-shirts 86 times in a row, servicing robot vacuums over 200 times in a row, packing blocks over 1,800 times in a row, folding boxes over 200 times in a row, and packing phones over 100 times in a row.
+Kitting Auto Parts
+1x speed, fully autonomous
+One hour without intervention (50x)
+T-Shirt Folding
+1x speed, fully autonomous
+86 times in a row without intervention (50x)
+Servicing Robot Vacuum
+1x speed, fully autonomous
+200+ times in a row without intervention (50x)
+Figure 1: Servicing Robot Vacuums. GEN-1 achieves 99% success rates, notably higher than GEN-0 (50%) or a from-scratch version of GEN-0 with no pretraining (2%).
+Packing Blocks
+Packing blocks 1,800 times in a row without intervention (50x)
+Folding Boxes
+200 times in a row without intervention
+Figure 2: Folding Boxes. GEN-1 achieves 99% success rates, notably higher than either GEN-0 (81%) or a from-scratch version of GEN-0 with no pretraining (13%).
+Packing Phones
+100 times in a row without intervention
+Figure 3: Packing Phones. GEN-1 achieves 99% success rates, notably higher than either GEN-0 (62%) or a from-scratch version of GEN-0 with no pretraining (42%). Note: these are apples-to-apples comparisons against our November 2025 version of GEN-0 models. In March 2025 at GTC, on a similar task, we showed a GEN-0 pretrained model with additional advances since November 2025.
+Without pretraining, tasks trained from scratch exhibit very poor performance (average 19%). GEN-0 models finetuned on these tasks achieves better, but not production-ready success rates (average 64%), GEN-1 crosses into production-level success rates (average 99%).
+Speed
+These videos are at 1x speed and fully autonomous. They are not sped up:
+Packing Phones
+GEN-0
+⏱️0.0s
+⏱️0.0s
+GEN-1
+Folding Boxes
+GEN-0
+⏱️0.0s
+⏱️0.0s
+GEN-1
+Figure 4: Speed comparisons for folding boxes, comparing GEN-1 to the previous SOTA. To simplify and enable a comparison, we only count the time spent folding the box, from the moment of touching it for the purpose of folding to the moment folding is complete. For the previous SOTA, both GEN-0 (source),10 and π0 (source)11 used identical boxes and took roughly 34 seconds, similarly to π*0.6 (source)12 on a comparable but distinct box. Instead, GEN-1 is 2.8x faster, able to achieve box folds in ~12 seconds.
+On two challenging dexterous tasks, GEN-1 enables task completion speeds at roughly ~3x the state of the art. Importantly, GEN-1 can improve task completion speeds to be faster than demonstrations, and can react to new object physics at those speeds accordingly. GEN-1 can assemble a box in 12.1 seconds – this is 2.8x faster than prior SOTA (GEN-0 and π0 both took roughly ~34 seconds on identical boxes). GEN-1 can also pack a phone into a case in 15.5 seconds, at 2.8x the speed of GEN-0.
+Several components enable these speed levels. For one, the models learn from experience to achieve these speeds. Additionally, GEN-1 introduces an evolution of the way we do inference with Harmonic Reasoning. Further, due to our data collection devices, the models have access to a wide array of pretraining data of completing various other tasks at high speeds (and thus transfer knowledge from general exposure to the dynamics involved), in contrast with traditional teleoperation systems that naturally produce slower, less fluid data due to the lack of force feedback, latency issues, and visibility challenges.
+Improvisational Intelligence
+We see a notable shift in how these models respond creatively to unexpected scenarios. In a long-horizon automotive kitting example, if a washer is bumped so far that it’s no longer held properly, the robot can either set it back down to regrasp it, or partially insert it into the slit to leverage extrinsic dexterity for regrasping, or even decide to use its other hand to enable bimanual in-hand regrasping. For the large deformable objects, if they end up in very unexpected configurations, the model figures out how to recover. These behaviors are well outside the training distribution, and directly contribute to recovering from unexpected long-tail events.
+Limitations
+GEN-1 is not without limitations. For instance, while we have shown several dexterous tasks at 99%+ success rates, not all tasks that we have attempted are able to hit these rates. Furthermore, some tasks would require even higher success rates or speeds to be useful in real settings. Nevertheless, we expect the next generation of models to unlock a broader range of more complex tasks that can be mastered, and we expect per-task data requirements to reduce over time as the base models improve.
+Rethinking Alignment for Embodied Intelligence
+One notable observation is that although pretraining on large-scale interaction data unlocks emergent improvisation (e.g. shaking a bag to seat an object, reorganizing misplaced items, or reaching for falling objects), these are physical actions with real consequences. The definition of success in robotics is not universal—it is task-specific, workflow-specific, and ultimately user-defined.13 It is not only about what the robot must do, but also (perhaps, more importantly) what it should not do. Hence, emergent behaviors can be a strength (e.g. recovery behaviors not explicitly trained for), but also at times a liability. As embodied foundation models grow to become more capable out of the box, we aim to improve our methods of alignment, and precisely steer them into delivering the behaviors that users actually want.
+Looking Ahead
+Building GEN-1 was not easy—we re-designed our distributed training infrastructure to support petabytes of physical interaction data as a first-class citizen. We spent months improving training stability, building custom kernels, inventing new forms of paged attention to enable real-time inference, honing post-training techniques (alongside foundations in theoretical RL and multimodal human guidance), and hardening controls to be even more smooth and precise. We designed new hardware and shipped thousands of robot hands across new geographies for exposure to unique physical activities. Nevertheless, we believe these advances will lay the groundwork for future research as we continue to scale our data engine into the next phase of capabilities.
+General Intelligence Born from the Physical World
+For us, GEN-1 is more than just a model. It captures an important part of artificial intelligence that we think is missing from the chatbots that we have today. It’s the intuition and open-ended problem-solving skills born from acting in the real world—combining knowledge that is grounded in real physics, with a deep understanding of how space and time matters, and that actions lead to consequences. It’s what affords the autonomy to recover from the unexpected (before it gets much worse), rather than having to be nudged along by a human every step of the way to avoid irreversible failures. For machines, we believe it is only through experiencing the physical world, that all the knowledge on Wikipedia can finally make sense.
+We are still early in the journey, and we are excited about the next frontiers of embodied intelligence and beyond. Early access partners will have access to GEN-1 starting today. If you’d like to use our models, please email partnerships@generalistai.com. If you’re interested in joining us on our mission, please visit generalistai.com/careers.
+Citation
+Please cite this work as
+Generalist Team, “GEN-1: Scaling Embodied Foundation Models to Mastery”, Generalist AI Blog, Apr 2026.
+Or use the BibTeX citation:
+@article{generalist2026gen1,
+author = {Generalist Team},
+title = {GEN-1: Scaling Embodied Foundation Models to Mastery},
+journal = {Generalist AI Blog},
+year = {2026},
+note = {https://generalistai.com/blog/gen-1},
+}
+More Videos
+1Scaling Laws in Robotics with GEN-0 (Generalist, 2025)
+2Scaling Laws for Neural Language Models (Kaplan and McCandlish et al., 2021)
+3The Real Breakthrough Behind Our GTC Demo (Generalist, 2026)
+4Physical Commonsense (Generalist, 2026)
+5PaLM-E: An Embodied Multimodal Language Model (Driess et al., 2023)
+6RT-2: Vision-Language-Action Models (Brohan et al., 2023)
+7Video Language Planning (Du et al., 2023)
+8Language Models are Unsupervised Multitask Learners (Radford et al., 2019)
+9Language Models are Few-Shot Learners (Brown et al., 2020)
+10GEN-0 Box Folding Demo (Generalist, 2025)
+11π0: A Vision-Language-Action Flow Model for General Robot Control (Black et al., 2024)
+12π*0.6 Box Assembly (Hausman, 2025)
+13Inference-Time Policy Steering through Human Interactions (Wang et al., 2025)

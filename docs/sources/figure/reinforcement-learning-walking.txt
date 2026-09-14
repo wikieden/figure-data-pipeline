@@ -1,0 +1,37 @@
+SOURCE ARCHIVE (fdp docs/sources)
+URL: https://www.figure.ai/news/reinforcement-learning-walking
+Title: Natural Humanoid Walk Using Reinforcement Learning
+Page date: 2025-03-25
+Fetched: 2026-09-14 via curl (UA: desktop Chrome), HTML → text extraction (tags stripped, nav/footer removed)
+Raw HTML sha256: a9596163b9fd4205b3b728d2b1dad7ec6589833d02105ffde3f7327b4720000d
+Raw HTML bytes: 43129
+Rights: © the publishing company; archived verbatim for citation/verification only, not for redistribution.
+========================================================================
+
+Natural Humanoid Walk Using Reinforcement Learning
+Natural Humanoid Walk Using Reinforcement Learning
+March 25, 2025
+Introducing Learned Natural Walking
+We are excited to introduce our end-to-end neural network, trained with reinforcement learning (RL), for humanoid locomotion.
+Leveraging Reinforcement Learning: RL uses trial-and-error in simulation to teach Figure 02 humanoid robot how to walk like a human.
+Trained in Simulation: Our robot learns to walk similar to a human via a high fidelity physics simulator. We simulate years of data in only a few hours.
+Sim-to-Real Transfer: By combining domain randomization in simulation with high-frequency torque feedback on the robot, policies trained in sim transfer zero-shot to real hardware without additional tuning.
+Our Approach
+Reinforcement Learning (RL) is an AI approach where a controller learns through trial and error, optimizing behaviors based on a reward signal. 
+Figure trained our RL controller in high-fidelity simulations, running thousands of virtual humanoids with varied parameters and scenarios. This diverse exposure allows our trained policy to transfer directly (“zero-shot”) from simulation to Figure 02 robots, providing robust and human-like walking. Figure’s RL-driven training shortens development cycles and consistently delivers robust real-world performance. 
+Below we will dive into engineering our robots to walk like humans, the training process in simulation, and how we zero-shot to the real robot. 
+Reinforcement Learning Training
+We trained our new walking controller fully in a GPU accelerated physics simulation using reinforcement learning, collecting years worth of simulated demonstrations in a few hours. 
+In our simulator, thousands of Figure 02 robots are simulated in parallel, each with unique physical parameters. These robots are then exposed to a wide range of scenarios they might encounter, and a single neural network policy learns to operate them all. This includes encountering various terrains, changes in actuator dynamics, and responses to trips, slips, and shoves.
+Engineering Robots That Walk Like Humans
+The benefit of a humanoid robot is one general hardware platform that can do human-like applications. And over time, we want our robot to move more like a human through the world. 
+A policy learned using RL might converge to sub-optimal control strategies that do not capture the stylistic attributes that define human walking. This includes walking with a human-like gait, with heel-strikes, toe-offs and arm-swing synchronized with leg movement. We inject this preference into our learning framework by rewarding the robot to mimic human walking reference trajectories. These trajectories establish a prior over the walking styles the policy is allowed to generate, while additional reward terms optimize for velocity tracking, power consumption and robustness to external perturbations and variations in terrain. 
+Sim-to-Real Transfer
+The final step is getting the policy out of simulation and into a real humanoid robot. A simulated robot is, at best, only an approximation of a high-dimensional electro-mechanical system, and a policy trained in simulation is guaranteed to work only on these simulated robots.
+To bridge this “sim-to-real gap” we use a combination of domain randomization in simulation and a kHz-rate torque feedback control on the robot. Domain randomization bridges the sim-to-real gap by randomizing the physical properties of each robot, simulating a breadth of systems the policy may have to run on. This helps the policy to generalize zero-shot to a physical robot without any additional fine-tuning. 
+We additionally run the policy output through kHz-rate closed-loop torque control to compensate for errors in actuator modeling. The policy is robust to robot-to-robot variations, changes in surface friction and external pushes, producing repeatable human-like walking across the entire fleet of Figure 02 robots. This is highly encouraging, as it indicates our technology can scale effectively across the entire fleet, without any additional engineering effort, supporting broader commercial operations.
+Here you can see 10 Figure 02 robots that are all operating on the same RL neural network with no tweaks or changes. This gives us hope this process can scale to thousands of Figure robots in the near future. 
+Conclusion
+We have presented a natural walking controller learned purely in simulation using end-to-end reinforcement learning. This enables the fleet of Figure robots to quickly learn robust, proprioceptive locomotion strategies and enables rapid engineering iteration cycles.
+These initial results are exciting, but we believe they only hint at the full potential of our technology. We’re committed to extending our learned policy to handle every human-like scenario the robot might face in the real world. If you’re intrigued by the possibilities of scaling reinforcement learning and the future of dexterous humanoid robotics, we invite you to join us on this journey.
+Consider joining our team to help scale Embodied AI to millions of robots. Check out our open roles here.

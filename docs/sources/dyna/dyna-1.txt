@@ -1,0 +1,92 @@
+SOURCE ARCHIVE (fdp docs/sources)
+URL: https://www.dyna.co/research/dyna-1
+Title: Dynamism v1 (DYNA-1) Model: A Breakthrough in Performance and Production-Ready Embodied AI
+Page date: 2025-06-24
+Fetched: 2026-09-14 via curl (UA: desktop Chrome), HTML → text extraction (tags stripped, nav/footer removed)
+Raw HTML sha256: 602d5b50f0f6b8e6c32048f16f46054ba7689ae751b6c7e77bbbb067273d8299
+Raw HTML bytes: 309683
+Rights: © the publishing company; archived verbatim for citation/verification only, not for redistribution.
+========================================================================
+
+Dynamism v1 (DYNA-1) Model: A Breakthrough in Performance and Production-Ready Embodied AI — DYNA
+[ Research ]
+Dynamism v1 (DYNA-1) Model:
+A Breakthrough in Performance and Production-Ready Embodied AI
+Category:
+Company
+Author:
+Dyna Team
+Date:
+June 2025
+Overview
+At DYNA, our single mandate is to deliver robot performance in the real-world, out-of-the-box. Today we're unveiling Dynamism v1 (DYNA-1)—our first foundation model built for round-the-clock, high-throughput dexterous autonomy. This model demonstrates that, for the first time, dexterous manipulation is now commercially viable.
+DYNA-1 is battle-tested to upscale-restaurant standards. In a 24-hour run, it folded 850+ napkins autonomously, sustaining ~60% of human speed while holding a 99.4% success rate—zero interventions, full shift reliability.
+[ Success Rate ]
+99.4%
+Task success across a 24-hour autonomous run
+Zero interventions, full-shift reliability
+[ Throughput ]
+850+
+Napkins folded autonomously in 24 hours
+Sustained ~60% of human speed
+[ Autonomy ]
+24h
+Continuous round-the-clock dexterous operation
+Battle-tested to upscale-restaurant standards
+[ Human Speed ]
+~60%
+Of human folding speed, held for a full shift
+Production-grade fold quality
+This sustained performance is a step-change for embodied AI. Conventional pipelines—bigger models plus broader datasets—still stall at ~80% single-episode success on hard dexterity tasks. Most of the models drift into unrecoverable states after 30+ minutes of demo-runs. We've witnessed it firsthand: even our best baselines look solid at first, then after an hour or two lose context and can't self-correct.
+Our best internal VLA baseline quickly encounters catastrophic failure states and fails to make further progress. How can we unlock robot foundation models built for round-the-clock dexterous autonomy?
+In this blog, we will present our unique approach and some of our results on unlocking real-world robustness and autonomy, with early evidence of generalization across skills.
+Representative DYNA-1 execution in 1x speed over the courses of 24-hr continuous deployment. See below for how DYNA-1 robustly handles extremely rare states.
+Our Insights and Approach
+"Don't practice until you get it right. Practice until you can't get it wrong."
+At Dyna, we have developed a generalizable recipe for unlocking robust and autonomous robot foundation models, with a crucial component being an accurate reward model (RM) capable of providing nuanced feedback across a diverse range of robot experiences. Building upon our prior research, we have successfully developed the first scalable foundation reward model for robotics.
+This model far outperforms previous approaches and can reliably estimate task progress on challenging dexterity tasks, like napkin folding. This capability unlocks a host of production-critical capabilities, such as:
+01
+Autonomous Exploration: Enabling the robot to intelligently explore its action space and discover effective strategies.
+02
+Intentional Error Recovery: Allowing the robot to identify and autonomously recover from mistakes during task execution.
+03
+High-Quality Dataset Creation and Curation: Facilitating the generation of valuable training data through autonomous operation.
+DYNA Reward Model can accurately estimate task progress for challenging bi-manual dexterous tasks like napkin folding.
+A unique challenge we run into at Dyna is how can we make best use of the large amount of data autonomously collected by DYNA-1 during deployment? In continuous deployment settings, robot data does not naturally come with episodic boundaries. We have also developed an approach that can automatically segment the streaming data and provide accurate progress estimation and subtask labeling to enhance the model's task understanding.
+Continual Improvement, Robustness, and Quality
+By scaling our RM-in-the-loop training, DYNA-1 has leapt forward in just a few weeks:
+Week 1: Base model can complete single success, but falls apart after 5 minutes
+Week 2: Ran 1 hours unaided, but compounding errors make recovery impossible
+Week 3: Ran 8 hours, but executed only 6-7 napkins per hour (~10 mins per fold)
+Week 4: Completed our first 24-hour run—but managed only ~200 folds at low quality and speed
+Week 5: Completed 24+ hours with ~350 folds at decent production-grade quality
+Week 6: Sustained 24+ hours with ~800 folds and high production-grade quality
+DYNA-1 Throughput Over Time
+Towels folded per hour across deployment weeks
+DYNA-1
+Internal VLA Baseline
+In continuous deployment settings, robot data does not naturally come with clear episodic boundaries. Our approach can also naturally segment the streaming data and provide accurate progress estimation and subtask labeling to enhance the model's task understanding.
+Robustness. Over this learning process, DYNA-1 iteratively becomes much better at handling extremely difficult and out-of-distribution situations. Napkin folding is particularly challenging because:
+01
+Single-pull precision: Extracting exactly one napkin from a tall stack demands fine control and rapid feedback; otherwise the gripper drags out multiple napkins, causing misfolds and chaos (as you can see in our videos below).
+02
+Flattening: When a multi-pull leaves napkins crumpled, the policy must (1) detect that multiple sheets were removed, (2) locate corners folded inward, and (3) separate & flatten overlapped layers before refolding. All of which are nontrivial dexterous endeavors
+03
+Rapid self-recovery: Once in an out-of-distribution state, the robot must untangle the mess and resume folding fast enough to keep throughput intact. Every extra second spent on edge cases erodes throughput, so the policy needs to find the quickest remedy.
+DYNA-1's ability to handle chaotic scenarios even surprised us. There are too many to list, but here are a few highlights:
+DYNA-1 can recover from extremely bad states and progress forward with the task. This level of extreme robustness makes DYNA-1 production-ready.
+Quality. DYNA-1 achieved an unprecedented level of robustness for robot foundation models. But at Dyna, we hold ourselves to an even higher standard: production-grade quality (grades 4 or 5 out of 5 point scale). While 98% of folds reach near-perfect quality (grade ≥3), only 75% hit our rigorous quality bar. What's the difference? Less than ⅓ inch precision on the initial fold separates perfection (grade 5) from near-perfection (grade 3).
+Our customers demand perfection—not near perfection—and we deliver. Tiny differences define commercial-grade quality at Dyna. This level of precision also raises the bar of our research, as every research idea is rigorously vetted to ensure measurable and significant real-world performance improvement.
+Grade 5 (left) vs. Grade 3 (right)DYNA-1 finished napkins
+Environment Generalization and Adaptation
+DYNA-1 achieves zero-shot environment generalization for long-horizon dexterity. Although diverse training data can help simple pick-and-place skills transfer, long-horizon dexterity demands not just perceptual (environment and object diversification) generalization but also robust action generalization. Through its extensive runtime experience, DYNA-1 has encountered and learned from an immense variety of distinct actions and their consequences, guided by our reward model. This has enabled it to successfully apply its napkin folding skill in a real customer environment without any prior training in that specific setting.
+DYNA-1 can out-of-box perform napkin folding on unseen customer environment.With small amount of on-site learning, DYNA-1 then becomes a fluent continual napkin folder.
+That said, zero-shot generalization often sees quality and throughput drop. With additional on-site training, DYNA-1 quickly improves and becomes adept at continuous folding at a real restaurant site. This milestone represents a significant step towards our vision of delivering performance, out of the box.
+Additional Skills
+By focusing on dexterity and real-world robustness, we're seeing strong positive transfer to other tough commercial tasks, such as laundry folding and, at a client's request, cup-filling. DYNA-1 can autonomously fold many shirts of different sizes and materials in a row and also fill ingredient cups with utmost precision. Cup-filling is perhaps the hardest "no-reset" task I've encountered: delicate pickup, precise placement, handover, tool use—one slip ends the run. Though not perfect yet, DYNA-1 can clear every step while our internal baselines fail to move beyond the first step consistently, and we achieved this with just 0.7% of our full training dataset under 2 weeks from initial task discovery to model validation.
+DYNA-1 folding many shirts of different fabrics and sizes in a row. Continual deployment and production-grade execution is central to all our development efforts.DYNA-1 attempting the extremely challenging cup-filling tasks; model view perspectives are shown deliberately to better illustrate the fine-grained control aspects of this task.
+Next Steps
+DYNA-1 now folds napkins for paying customers, and we're unlocking more skills to ship into more commercial environments in the coming weeks & months. Mastering napkin folding won't transform daily life, but it's a pivotal step toward making embodied AI commercially viable.
+At Dyna, we tackle embodied AI's toughest problem: scalable, production-ready robot foundation models. Our goal is to bring this capability to businesses of every size, and unlock embodied AI for everyone. If you are obsessed about pushing the boundaries of embodied AI and building truly capable robots that are ready for production, we encourage you to reach out. We are actively hiring across AI research and engineering for both full-time and internship positions.
+[Sound]
+Next →DYNA Closes $120M Series A

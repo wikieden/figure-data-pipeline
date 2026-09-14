@@ -1,0 +1,58 @@
+SOURCE ARCHIVE (fdp docs/sources)
+URL: https://generalistai.com/blog/beyond-world-models
+Title: Going Beyond World Models & VLAs
+Page date: 2026-04-07
+Fetched: 2026-09-14 via curl (UA: desktop Chrome), HTML → text extraction (tags stripped, nav/footer removed)
+Raw HTML sha256: 595032007c83d3cc9189b22bc4d1dde4267f5286a3aabeb527d9a2921ec80e42
+Raw HTML bytes: 36824
+Rights: © the publishing company; archived verbatim for citation/verification only, not for redistribution.
+========================================================================
+
+Generalist - Going Beyond World Models & VLAs
+Going Beyond World Models & VLAs
+Idea
+April 7, 2026
+Pete Florence
+and the Generalist Team
+6 min read
+Table of Contents
+Introduction
+Goals are more important than the labels on your tools
+How far can we go?
+Building for the world that’s coming
+Towards physical AGI
+In GEN-1,1 approximately 99% of the parameters are trained from scratch.
+Previously, this might be considered wild. For Generalist, it’s a deliberate choice. It follows our strong conviction — pursued for two years — that when you have enough data, you can move faster at pushing the frontier by having complete control over the fundamental model.
+GEN-1 is not a fine-tuned vision-language model with robot actions bolted on, nor is it just a world model. It is a first-class-citizen, native foundation model for physical interaction. And there is growing evidence that if you have enough data and compute, training from scratch always wins.2
+World models are having their moment in early 2026. VLAs had theirs from 2023 to 2025. Bandwagons are part of the nature of academic research.
+At Generalist, we’ve never referred to our models as either VLAs or world models. This is not an accident. We co-invented VLAs,3 have been publishing on world models in robotics4 since 2023, and working on them for a couple years longer than that.
+So why no label? For one, your goals are more important than the labels on your tools. And, because you don’t necessarily call a rectangle a square. And, because the supply side will change. We’ll unpack each of these below.
+Goals are more important than the labels on your tools
+First and foremost, goals are more powerful than methods. John Schulman articulated the comparison well several years ago in a piece5 comparing idea-driven vs. goal-driven research: idea-driven research follows the trends and improves on the latest method, while goal-driven research picks a concrete outcome and solves whatever problems stand in the way. The distinction matters because it shapes what you build and, critically, what you don’t get distracted by. As Schulman argues and I’ve found myself the same, typically goal-driven is the more powerful path.
+The current discourse around world models is idea-driven. These are genuinely exciting techniques. But building a world model might not actually be the goal, even for those working on world models. The real question is, what’s your goal?
+One example long-term goal we think is worthwhile is to fully zero-shot robotics: entire categories of tasks that a robot has never seen, executed at high success rates and high speeds, with no task-specific data at all. If the tasks are varied, complex, and valuable enough, this can be considered as requiring full physical AGI.
+But there are also concrete milestones before that, which can build a progressive path: instead of fully zero-shotting, allow a small amount of robot data for a particular task — call it X — and execute that task at high levels of performance. Then the goal-driven roadmap becomes clear: keep decreasing X while pushing performance higher. For example, broadly achieving 99%+ success rates with roughly one hour of robot data, will have broad commercial viability. That is a concrete, measurable, goal-driven milestone that is independent of methods.
+Also, as I’ve found before, choosing concrete, yet ambitious, goals in research is actually more productive as a springboard for branching out into a wider set of goals. Oddly, this can be even more productive than picking a method that feels like it could have a wide set of goals. Case in point: one of the first multimodal language models6 was created for a robotics-driven goal. It was, among other things, evaluated on medical benchmarks.7 This came out of a solve-whatever-is-needed mentality, not from hanging onto methods. Instead, being goal-driven affords you the agility to consider any method that gets you to your goal.
+How far can we go?
+Second, it is limiting to constrain machine learning via questions of “or” (e.g. choosing strictly between method A or method B). A deeper truth lies in asking “how far we can go?”, or even better, developing a deeper understanding of the objectives and constraints.
+It is very natural to think that things must fit into categories, or that an approach or source must be “picked”. Every discipline can fall in this trap. To give some close-to-home examples, at previous points in robotics, the view has been that one must work on “perception or control”. Or another example is product managers at AI companies thinking in the early 2020s that every little application is destined to have their own specialized model, not realizing the benefits of vast cotraining.
+But instead, the real question is, given what is achievable subject to the constraints, how far can we go? And which of the constraints can be removed? How far can we really go? To give one example, the Chinchilla8 paper was a truly lovely contribution that comes out of this type of thinking, one of those papers both celebrated at NeurIPS (Outstanding Paper) and with immediate massive impact in industry.
+Most of the time, a question of “or” can be converted to a question of “and”, then to a question of “how much of each”, then eventually to a deeper question about the broader objectives and constraints.
+Over the past two years, we have been revising our training methods with this philosophy in mind. For over a year, we have been experimenting with combining ideas from across what you might call VLAs, world models, and beyond. The more a model combines capabilities from different disciplines, the harder it is to categorize. And at the end of the day, what matters is: how far does it go?
+Building for the world that’s coming
+Third, the supply side will change. You have to think about not only the current constraints, but how those constraints will inevitably change. This is more important the faster the constraints are changing.
+One current constraint, some say, is that there is not a lot of robotics data. This is not a long-term view. Now with over half a million hours of physical interaction data, we are able to ask questions without this constraint.
+Similarly, a big part of the motivation for bringing vision-language training into robotics was that we didn’t have enough data inside robotics itself. So, in some sense, all of the vision-language training can be a helpful crutch while we don’t have enough robotics data. Sure there are more bytes of video that exist in the world than language, but still, it’s another crutch. What’s after the crutch? Will you still want the crutch?
+Towards physical AGI
+Goals are more powerful than methods, optimize given the constraints instead of picking lanes in categories, and those constraints themselves will inevitably change.
+We’ve been committed to rethinking everything for physical AGI since day one of Generalist. This is what led to GEN-1, a model trained from scratch on our (world’s largest) dataset of physical interaction. Every aspect of the architecture, its training, and how inference is done was designed and iterated on without being constrained by decisions someone else made for a different purpose.
+We’ve already shown glimpses of what it’s capable of — from scaling laws in robotics, generalizing to new environments and embodiments in hours, to improvisational intelligence emerging from large-scale pretraining. And this is just the beginning.
+More soon.
+1GEN-1: Scaling Embodied Foundation Models to Mastery (Generalist, 2026)
+2Knowledge Distillation: A Good Teacher is Patient and Consistent (Beyer and Zhai et al., 2022)
+3RT-2: Vision-Language-Action Models (Brohan et al., 2023)
+4Video Language Planning (Du et al., 2023)
+5An Opinionated Guide to ML Research (Schulman)
+6PaLM-E: An Embodied Multimodal Language Model (Driess et al., 2023)
+7Med-PaLM M (Tu et al., 2023)
+8Training Compute-Optimal Large Language Models (Hoffmann et al., 2022)

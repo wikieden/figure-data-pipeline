@@ -1,0 +1,30 @@
+SOURCE ARCHIVE (fdp docs/sources)
+URL: https://www.figure.ai/index-app
+Title: Index | Figure（产品页，数字随时间更新）
+Page date: 页面无日期
+Fetched: 2026-09-14 via curl (UA: desktop Chrome), HTML → text extraction (tags stripped, nav/footer removed)
+Raw HTML sha256: 3f5c6f76043bfe786eb7b8d2933862712c827289c7c7ae2f4fb1a779399c1815
+Raw HTML bytes: 90577
+Rights: © the publishing company; archived verbatim for citation/verification only, not for redistribution.
+========================================================================
+
+Index | Figure
+INTRODUCING
+A network of creators building the largest humanoid dataset ever assembled
+GLOBAL EFFORT TO CAPTURE REAL-WORLD TASKS
+Updating in real time, each point of light represents a real world contribution to our data set.
+WE COME TO YOUR HOME
+Book a skilled creator to help with your daily tasks & chores.
+RECORD YOUR DAY
+Sign up and receive a recording device and get paid by the minute while you do your tasks.
+HAVE US COME TO YOUR BUSINESS
+We’re here to deploy labor across all businesses including logistics, restaurants, factories, offices, etc.
+App Downloads264K
+Video Uploads16M
+Countries108
+Paid to Contributors$15M
+JOIN INDEX
+Download the Index app and start contributing. Book services or capture everyday tasks to get paid.
+CONTRIBUTE & EARN
+Download the app and sign-up for full access
+TODAY, SERVICES ON DEMAND. SOON, ROBOTS ON DEMAND.

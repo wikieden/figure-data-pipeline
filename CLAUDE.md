@@ -47,7 +47,7 @@ M1（采集与格式）：recorder/ingest/export/viz 均为占位 stub，schema.
 ## 约定
 
 - `data/` 不进 git（.gitignore 已配），采集/导出产物一律落在这里；`configs/` 存 yaml 配方与阈值（`configs/mixtures/` 为训练配方），改动配方=新版本，不覆盖旧文件。
-- 涉及 Figure 或其他公司的事实性宣称（数字、能力）时引用 docs/research-*.md 的已核查条目，不凭记忆写；引用他家数字必须标注来源属性（官方确认 / 第三方 / 公司自报 ⚠️），依赖自报数字的设计决策登记进 docs/governance.md 的 D 表。
+- 涉及 Figure 或其他公司的事实性宣称（数字、能力）时引用 docs/research-*.md 的已核查条目，不凭记忆写；research 文档本身引用公司一手页面时必须指向 `docs/sources/<company>/<slug>.txt` 的归档文本（清单与归档规则见 docs/sources/MANIFEST.md），未归档的先归档再引用；引用他家数字必须标注来源属性（官方确认 / 第三方 / 公司自报 ⚠️），依赖自报数字的设计决策登记进 docs/governance.md 的 D 表。
 - 引入任何模型/算法依赖前先查 docs/cleaning-algo-selection.md 的 license 列：非商用许可（DOVER/FAST-VQA/pyiqa 等）只允许出现在研究分支，⚠️待核查项不得进入默认路径。
 - 隐私：清洗是标记不是删除，raw 永存的唯一例外是隐私脱敏与合法删除请求（docs/compliance-and-security.md）。
 - 提交信息与文档日期用绝对日期（YYYY-MM-DD）。
