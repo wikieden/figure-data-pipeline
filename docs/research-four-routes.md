@@ -1,6 +1,6 @@
 # Figure / Dyna / Sunday / Generalist 四家技术路线精读（2026-09-14）
 
-> **来源规则**：本文每条事实后面都带一手资料引用，指向仓库内归档的原文文本 [docs/sources/](sources/MANIFEST.md)（38 篇，2026-09-14 curl 直抓，每个文件头部有 URL、页面日期、原始 HTML sha256）。记法：`[F:slug]` = `sources/figure/slug.txt`，`[D:slug]` = `sources/dyna/`，`[S:slug]` = `sources/sunday/`，`[G:slug]` = `sources/generalist/`；引用带英文原句片段时可直接在文件里 grep。**没有一手引用的句子只有两类**：标 ⚠️ 的第三方转述（给 URL）和标"判读"的本文推断。四家性能数字全部为公司自报，无独立复现；登记 governance D-25–D-27。Dyna 的 DYNA-2 模型与基础设施精读在 [research-dyna-comparison.md](research-dyna-comparison.md)，其引用的 dyna.co 页面同样已归档为 [D:dyna-2]、[D:dyna-2-infrastructure]、[D:dyna-1]。
+> **来源规则**：本文每条事实后面都带一手资料引用，指向仓库内归档的原文文本 [docs/sources/](sources/MANIFEST.md)（38 篇，2026-09-14 curl 直抓，每个文件头部有 URL、页面日期、原始 HTML sha256）。记法：`F:` = `sources/figure/`，`D:` = `sources/dyna/`，`S:` = `sources/sunday/`，`G:` = `sources/generalist/`，键与文件的对应见文首定义块；引用带英文原句片段时可直接在文件里 grep。**没有一手引用的句子只有两类**：标 ⚠️ 的第三方转述（给 URL）和标"判读"的本文推断。四家性能数字全部为公司自报，无独立复现；登记 governance D-25–D-27。Dyna 的 DYNA-2 模型与基础设施精读在 [research-dyna-comparison.md](research-dyna-comparison.md)，其引用的 dyna.co 页面同样已归档为 [D:dyna-2]、[D:infra]、[D:dyna-1]。
 
 [F:helix]: sources/figure/helix.txt
 [F:helix-logistics]: sources/figure/helix-logistics.txt
