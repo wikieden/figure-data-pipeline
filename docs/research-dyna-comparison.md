@@ -104,6 +104,9 @@ CEO 的一句话定调了他们的数据观："客户从没问过成功率，只
 
 ## 4. Skild AI：omni-bodied 仿真 + 互联网视频 + S1 上下文学习
 
+> 2026-09-14 晚：skild.ai 已可达，全部 11 篇博客归档于 [sources/skild/](sources/MANIFEST.md)，逐条核对与新增内容见 [research-skild.md](research-skild.md)；本节数字经核对与一手一致（66% / 9%、380 条、$1:$3），并补充 seen 任务 96%、2,000 条后 VLA 86%、L1–L5 扰动阶梯。
+
+
 | 项 | 事实 | 来源 · 属性 |
 |---|---|---|
 | 融资/商业 | A 轮 $300M（2024-07）；C 轮 $1.4B、估值 $14B、SoftBank 领投（2026-01）；2026-09-09 宣布 **$100M ARR**，首次商用部署后 10 个月；2025 年营收约 $30M；**60+ 付费客户、数百台机器人**；收购 Zebra 机器人部门（原 Fetch）；与 ABB、UR、MiR、NVIDIA、Foxconn（Blackwell 装配：双臂装母线、拧 16 颗螺丝） | Skild 博客列表 + Bloomberg/TNW 转述 · 官方/第三方 |
