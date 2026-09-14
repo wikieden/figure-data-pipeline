@@ -6,11 +6,12 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent
 LINK_RE = re.compile(r"!?\[[^\]]*\]\(([^)\s]+)(?:\s+\"[^\"]*\")?\)")
+REF_RE = re.compile(r"^\[[^\]]+\]:\s*(\S+)", re.MULTILINE)  # reference-style link definitions
 FORBIDDEN = ("технический", "único", "18,561", "三轨")
 
 
 def main() -> int:
-    files = list((ROOT / "docs").glob("*.md")) + [
+    files = sorted((ROOT / "docs").rglob("*.md")) + [
         ROOT / "README.md",
         ROOT / "CLAUDE.md",
     ]
@@ -20,7 +21,7 @@ def main() -> int:
         for word in FORBIDDEN:
             if word in text:
                 broken.append(f"{md.relative_to(ROOT)}: forbidden token {word!r}")
-        for target in LINK_RE.findall(text):
+        for target in LINK_RE.findall(text) + REF_RE.findall(text):
             if target.startswith(("http://", "https://", "mailto:", "#")):
                 continue
             path = target.split("#", 1)[0]
