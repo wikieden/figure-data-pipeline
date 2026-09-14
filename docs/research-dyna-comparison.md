@@ -1,6 +1,6 @@
 # Dyna Robotics 模型与数据方案调研，及与 Generalist / Skild / 其他厂商 / 学术界的对比（2026-09-14）
 
-> 抓取说明：dyna.co 经 WebFetch 被拦截，但 2026-09-14 11:16 用 curl 直接抓到研究页（dyna.co/dyna-2，31 min 长文）、DYNA-1 页（dyna.co/research/dyna-1）与基础设施页（dyna.co/research/dyna-2-infrastructure）三份一手全文；本文 §2 数字已按一手页面核对并修正（第三方转述的 6.3→16.4% 实为 6.7→15.9%、"13 分钟"实为"约 10 分钟"、"+133%"未见于一手页）。generalistai.com、humanoidsdaily.com 仍被拦截。Generalist 一手条目沿用 [research-generalist-dora.md](research-generalist-dora.md)，本次新增 GEN-1 博客一手数字。Skild 一手博客超时，数字来自 The Robot Report、NVIDIA 博客、unite.ai、Humanoids Daily 对博客的转述。所有性能数字均为公司自报⚠️，无独立复现；已登记 governance D-22–D-24。
+> 抓取说明：dyna.co 经 WebFetch 被拦截，但 2026-09-14 11:16 用 curl 直接抓到研究页（dyna.co/dyna-2，31 min 长文）、DYNA-1 页（dyna.co/research/dyna-1）与基础设施页（dyna.co/research/dyna-2-infrastructure）三份一手全文；本文 §2 数字已按一手页面核对并修正（第三方转述的 6.3→16.4% 实为 6.7→15.9%、"13 分钟"实为"约 10 分钟"、"+133%"未见于一手页）。generalistai.com、humanoidsdaily.com 仍被拦截。Generalist 一手条目沿用 [research-generalist-dora.md](research-generalist-dora.md)，本次新增 GEN-1 博客一手数字。Skild 一手博客超时，数字来自 The Robot Report、NVIDIA 博客、unite.ai、Humanoids Daily 对博客的转述。所有性能数字均为公司自报⚠️，无独立复现；已登记 governance D-22–D-24。 Dyna 的产品化页面《Not Just a Model, But a Product》（2026-08-27）与 DYNA-1i / DYNA-1 预训练两篇短文的精读见 [research-four-routes.md](research-four-routes.md) §2。
 
 ## 0. 一句话结论
 
