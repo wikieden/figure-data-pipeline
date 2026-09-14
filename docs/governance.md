@@ -1,6 +1,6 @@
 # 治理登记：风险 · 未决决策 · 自报数字
 
-> 2026-09-08 建立，2026-09-09 增补（战略路线图引出的 U-23–U-33 / R-14–R-19 / D-13–D-21，U-11 表 23–30 行）；同日逐项裁决 data-strategy-roadmap §6 的 10 项决策（U-03/U-23/U-24/U-25/U-27/U-28/U-30/U-32 closed，U-26 部分裁决，U-29 拆表后逐项待 LEGAL）；同日追加裁决 U-09/U-22/U-31/U-33；2026-09-12 增 U-34–U-36（采集设备五件套）。来源为全局 review 三路审计（一致性 / 覆盖缺口 / 风险与未决项）的合并结果。三张表是活文档：每条有 owner（按角色，非人名）与复检时点；状态字段只有 `open / mitigating / closed / accepted`。新增风险、新增依赖他家数字的设计决策、新增待裁决项都必须先在这里登记再写进设计文档（CLAUDE.md 约定）。
+> 2026-09-08 建立，2026-09-09 增补（战略路线图引出的 U-23–U-33 / R-14–R-19 / D-13–D-21；2026-09-14 增补 U-37 / R-20 / D-22–D-24，U-11 表 23–30 行）；同日逐项裁决 data-strategy-roadmap §6 的 10 项决策（U-03/U-23/U-24/U-25/U-27/U-28/U-30/U-32 closed，U-26 部分裁决，U-29 拆表后逐项待 LEGAL）；同日追加裁决 U-09/U-22/U-31/U-33；2026-09-12 增 U-34–U-36（采集设备五件套）。来源为全局 review 三路审计（一致性 / 覆盖缺口 / 风险与未决项）的合并结果。三张表是活文档：每条有 owner（按角色，非人名）与复检时点；状态字段只有 `open / mitigating / closed / accepted`。新增风险、新增依赖他家数字的设计决策、新增待裁决项都必须先在这里登记再写进设计文档（CLAUDE.md 约定）。
 
 角色缩写：**DATA** 数据层（recorder/ingest/export/schema）、**CUR** 策展层、**TRAIN** 训练层、**HW** 采集硬件、**PLAT** 数据平台/运维、**LEGAL** 法务合规、**PM** 项目管理。
 
@@ -29,6 +29,7 @@
 | R-17 | 评测 | 世界模型代理评测在 off-expert 动作区失效（WorldSimProbe/WorldEcho），误判策略排序 | 高 | 代理与真机 Pearson <0.8 连续两季度（止损门 G4） | 代理必须附"可观测模拟器契约"测试；只在专家动作分布内使用；三层（孪生→代理→真机）相关性每季度重估 | TRAIN | M3 起每季度 | open |
 | R-18 | 数据/合规 | 端上脱敏损伤手部可见率与动作伪标签（脱敏是 raw 永存唯一例外，且因旁观者诉讼必须前置） | 中 | 脱敏后 MPJPE 差 >10% 或手部可见率降 >5pt | 脱敏工具链选型消融（U-32）；脱敏前帧哈希留存 90 天；损伤指标进 QC | CUR + LEGAL | H0 末 | open |
 | R-19 | 商业 | 对外策展/评测服务的客户即竞争者（训练场自建策展）；开源工具与商业服务自我冲突 | 低 | 客户流失到自建；开源阈值被要求公开 | **2026-09-09 裁决**：PL3 策展即服务为对外首条产品线（M2 后，12 个月内 2 家训练场）；契约与报告器免费、估值与评测校准数据收费；方法公开、阈值与配方版本化不公开（open-source-strategy §5） | PM | 对外首单前 | mitigating |
+| R-20 | 商业/闭环 | 部署车队不产生自加速飞轮：Dyna 联创 York Yang（2026-05）自述 10 个月、多客户、每天 16 h 运营"部署没有自我加速"，并称全行业同此（research-dyna-comparison §2.4） | 高 | L7 回流小时数增长但"干预段 → 下一版本成功率增量"转化率不升；PL5 收入假设失据 | **2026-09-14 新增**。对策：闭环层 KPI 改为转化率而非回流小时；D5 只固化干预/OOD 段；G5 门加转化率阈值；PL5 商业假设按 Dyna 反证打折 | 数据负责人 | G5 |
 
 ---
 
@@ -72,6 +73,7 @@
 | U-34 | D1 触觉阵列与光学触觉传感器选型（并排共装、供应商、许可） | 指尖阵列 5×10 力矢量或 12×12 压力 + 一路光学式并排；存 (N,6) 点集；供应商待询价 ≥3 家（[capture-devices-design.md](capture-devices-design.md) §1） | 500 h 对照集的跨传感器迁移结果；单价与交期 | H1 EVT 前 | 触觉对照集只绑定单一型号 | HW | open |
 | U-35 | D2 头戴 EVT 双目全局快门模组与 SoC 选型 | 双目灰度 1080p@60 全局快门 + 主 RGB 1440p@60；RK3588 级 SoC 只做编码/预检/脱敏；同步脉冲输出（capture-devices-design §2） | 手部可见率、同步残差、功耗与 4 h 续航实测 | H1 EVT 前 | EVT 规格漂移，配对采集无时钟源 | HW | open |
 | U-36 | D4 数据手套选型：MANUS 级 vs 低成本 IMU 手套 | ≥200 Hz 为硬约束（T-800 >100 Hz 能量）；H0 先用 Quest 手追，H1 选型（capture-devices-design §4） | 手套↔本体复现的重定向误差；单价（$3–6k vs $300–800） | H1 前 | 逐指真值缺失，灵巧任务对齐集不可用 | HW + TRAIN | open |
+| U-37 | 训练层是否纳入世界-动作模型（WAM）目标：next-frame 与 next-action 协同预测作为 Stage B/C 可选分支 | 已有 Dyna-2、NVIDIA DreamZero、AgiBot GE-Act 2.0、Cosmos Policy 四家独立验证，满足 CLAUDE.md 决策 7 的 ≥2 家门槛；倾向纳入为可选分支，不改数据层，只要求 export 保留连续帧对（research-dyna-comparison §8.1） | Dyna-2 "数据与目标都重要"消融的外部复现；自家 human 轨上 next-frame 协同 vs 仅 next-action 的消融 | 训练负责人 | M3 前 |
 
 ### U-11 license 核查追踪表
 
@@ -137,6 +139,9 @@
 | D-19 | Figure Index：16M 视频、44k WAU、$15M 已付、373 任务/1,146 物体/116 环境 per 1,000 h；官方文与 App Store 隐私标签无旁观者脱敏声明，人工审核在用户级看原始样本 | Figure 官方博客 + Humanoids Daily 转述；无第三方复现 | index-replica-plan 对标基线；compliance 差异化设计（审核员只见脱敏流、上传即脱敏） | Index 若已做脱敏则差异化点消失（合规仍必需） | 差异化不依赖 Index 是否脱敏；数字只作分母量级 | H1 |
 | D-20 | Gemini Robotics 2：新具身 <200 条示范/数小时适配 | DeepMind 官方博客自述 | 北极星 24 个月目标（≤5 真机小时）量级 | 目标量级失据 | 目标为占位，M2 初按自家曲线重定；Riemann "3 h/任务"（论文）作第二锚点 | M2 |
 | D-21 | Dexset：操作员 $28–60/h、熟练 25–40 vs 新手 8–12 可用集/h、QA 拒收 10–30% | 供应商博客，"来自自有采集车间"，带营销目的 | §1.2 遥操作成本基线、robot 轨 ≤$100/h 目标、H1 "< 遥操作 1/5" 判据的分母 | 分母偏低或偏高一档 | H0 完成 ≥3 家询价后以询价替换；RCSV $118/h 作第三方交叉 | H0 末 |
+| D-22 | Dyna-2：1K→1M h 人类视频幂律（零样本机器人 Acc 6.3→16.4%，MSE 指数 −0.0713）；后训练 20→53%；客户质检 46→87%；1.55× vs DYNA-1；13 min 拧瓶盖 | PR Newswire 官方稿 + 研究页经第三方转述（dyna.co 被拦截未见一手）；单实验室 14 任务、每任务 10 次、无同行评审 | 战略 §1.1 "人类视频为预训练主轴"、U-37 WAM 分支 | 主轴判断仍有 HumanScale/ZimaBlue/GR00T N1.7 支撑；U-37 退回可选实验 | 抓到一手研究页后核对指数；G2 自家 human 轨缩放消融 | G2 |
+| D-23 | Skild S1：未见任务逐步成功率 66% vs VLA 9%（10 万 h）；1 条演示 ≈ 380 条遥操作；$1 采集配 $3 质控 | Skild 博客经 Robot Report/NVIDIA/Humanoids Daily 转述；内部基准、逐步而非端到端成功率 | eval-protocol 少样本三刻度；program-plan 策展/采集预算比 | 预算比按自家 G2 数据重定；换算只作量级 | G2 前用自家数据复核质控比 | G2 |
+| D-24 | Generalist GEN-1：三任务 99%（GEN-0 64%、无预训练 19%）；每任务 ~1 h 机器人数据；50 万 h 无机器人数据预训练；速度 ~3× π0/π*0.6 | 官方博客一手，自报；参数量/算力未披露 | 战略 §2.3 北极星 12/24 月目标量级；D-07 补充 | 北极星目标为占位（同 D-20） | M2 初按自家曲线重定 | M2 |
 
 ---
 
@@ -155,4 +160,5 @@
 | research-twindex.md | index-replica-plan §1.0、device-landscape §5、U-04 | 2026-09-04 |
 | device-landscape.md | index-replica-plan §1、robot-track-teleop §1 | 2026-09-04 |
 | research-simfoundry.md | sim-track §1–§3/§5、eval-protocol §2/§5、governance U-20/U-11 | 2026-09-09 |
+| research-dyna-comparison.md | governance U-37/R-20/D-22–D-24（已登记）；training-pipeline §2 WAM 分支；data-format-contract §3 连续帧对与 grasp_aperture；eval-protocol §3 少样本三刻度；program-plan §4 质控预算比 | 2026-09-14（登记，设计文档回写待 M2/M3） |
 | data-strategy-roadmap.md（战略层，含 225 条扫描证据） | 回写清单见其 §7.2：data-format-contract（契约 0.3）、curation（段级/估值）、architecture §2.3、sim-track（优先级）、training（conditioning）、eval-protocol（分级/序贯/代理）、compliance（脱敏前置/同意图）、program-plan（组织/预算/止损门）；本次已改 research-opensource、research-generalist-dora、U-03、R-10 | 2026-09-09 |

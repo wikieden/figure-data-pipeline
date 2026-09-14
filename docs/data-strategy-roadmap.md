@@ -47,7 +47,7 @@
 | Riemann-1.0：230K+ h，其中 200K+ h 第一视角人类视频、12K h 手持穿戴、20K h 机器人；每个真机任务仅 3 h | arXiv:2608.27033 | 论文 |
 | HumanScale：同为 5,000 h，经过滤/标注的人类视频预训练比遥操作数据验证损失低 24%、未见任务 OOD +90%，对数线性未饱和 | arXiv:2606.20521 | 论文 |
 | ZimaBlue：具身视频预训练扩到 12 万 h，真机零样本 36.1%→77.8% 未见饱和 | arXiv:2609.00188 | 论文 |
-| Dyna-2：100 万 h 人类第一视角视频、零机器人数据预训练，自称"首个真正的机器人 scaling law" | PR Newswire | 自报⚠️ |
+| Dyna-2：100 万 h 人类第一视角视频、零机器人数据预训练，自称"首个真正的机器人 scaling law"；零样本机器人 Acc 6.3→16.4%、后训练 20→53%（详见 [research-dyna-comparison.md](research-dyna-comparison.md)） | PR Newswire + 研究页转述 | 自报⚠️（D-22） |
 | Figure Index：WAU 99（05-01）→69,943（09-04，Adcock X 帖）、入库 35 分钟/秒、已付 Creator $15M；官方称未来 12 个月在**数据 + 算力**上投入 >$1B（不是 Creator 报酬池）；Nscale 协议最多 10 万张 Vera Rubin GPU，官方称"受数据与算力双重约束" | Humanoids Daily 转述 Adcock；figure.ai/news/introducing-index、figure-and-nscale | 自报⚠️（WAU/入库/付款）+ 官方（Nscale、$1B 口径） |
 | Figure Index 官方口径（补漏检索 2026-09-09，一手页面）：16M 视频、30 分钟/秒、"每天上传 4.9 年的人类工作"、"Generalization is a Data Problem"、"走向 100×"；App Store 页：Business 类、**18+ 年龄分级**、EN + 10 语言、5 条评分；Creator 流程为"申请 → 收到录制设备 → 按分钟计酬"，并已开放"预约 Creator 上门"双边侧；**费率、接受率、设备规格均未公开** | figure.ai/index-app、apps.apple.com（id6800436796） | 官方（数字自报⚠️） |
 | 反例：ActiveMimic 指出人类视频劣于机器人数据的原因是丢弃了主动感知（相机运动即动作）；GRA 指出生成视频"几何幸存、控制信号丢失"，伪动作只能监督视觉不能监督动作头 | arXiv:2606.06194、2606.24448 | 论文 |
