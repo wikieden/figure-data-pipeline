@@ -133,6 +133,12 @@ episode 级元数据（`EpisodeMeta` 全量 JSON）写入 `meta/episodes/*.parqu
 
 未在表中的键：读侧忽略（前向兼容），写侧禁止（`extra="forbid"` 只对写路径开启）。
 
+### 3.1 契约 0.3 待入项（2026-09-14 增补）
+
+- **`grasp_aperture`**（human 轨伪动作，浮点 0–1 或 mm，可空）：拇指-食指开合度作为与 device 轨 `gripper_width` 同义的连续抓取信号（Dyna-2 伪动作口径；U-23 裁决的"手部状态"显式化）。D2+D1 同戴配对（capture-devices-design §7 ①）用它做伪标签校准。
+- **连续帧对导出**：视频流的训练态抽帧不得只保留关键帧；`export` 需支持按 `frame_pair_stride` 输出 (t, t+Δ) 帧对索引，供 WAM 目标（training-pipeline §1.3，U-37）消费。MCAP 采集态不变。
+- 其余 0.3 项（逐帧 subtask/plan/progress/reward 列、tactile (N,6)、wrench frame_id、effort measured/estimated、段级表、同意/来源图）见 data-strategy-roadmap §7.2。
+
 ## 4. 版本迁移政策
 
 - `schema_version` 采用 `major.minor`；minor 升级只允许**新增可选字段**或**放宽约束**，必须能无损读 0.x 旧数据；major 升级允许删字段，但要提供迁移函数并保留旧 reader 一个里程碑周期。

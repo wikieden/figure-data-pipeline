@@ -34,6 +34,7 @@
 ### 1.3 明确不抄的东西（负设计）
 
 - Harmonic Reasoning 统一异步流：仅 Generalist 一家、细节未公开 → 观察名单
+- 世界-动作模型（WAM）目标（next-frame 与 next-action 协同预测）：**2026-09-14 从观察名单升为可选分支（U-37）**——Dyna-2、NVIDIA DreamZero、AgiBot GE-Act 2.0、Cosmos Policy 四家独立验证，满足 ≥2 家门槛；仍不做默认路径，因四家都未公开与纯动作目标的可控消融。Stage B/C 各留一条 `objective: next_action | next_action+next_frame` 配方开关，数据层唯一要求是 export 保留连续帧对（data-format-contract §2.1 备注）。见 [research-dyna-comparison.md](research-dyna-comparison.md) §7.2/§8.1
 - 自回归离散动作做部署头：π0 论点 + 实时性证据充分 → 弃
 - 每具身独立 MLP 头（GR00T 式）：与我们"新增采集形态=新增 track 值不改 schema"哲学冲突，掩码槽位更干净
 
@@ -94,4 +95,4 @@ Stage D RL 闭环     奖励分类器（QC 成功/失败/介入标记直接当�
 1. **两段动作课程的切换成本**（token→flow 迁移期性能坑）：Wall-OSS/RDT2 论文附录为准，Stage B 前做小规模预演。
 2. **物理提示是否在 M 档（2–4B）涌现**：GEN-1.5 未公布参数量，可能需要 L 档才出现——fewshot-bench 从 Stage B 起持续测，不等 L 档。
 3. **相机系增量动作对移动底座任务的适配**（相机自身在动）：通义已含移动底座配置，抄其处理；不行则退回世界系。
-4. 观察名单：Harmonic Reasoning 细节披露、V-JEPA 2-AC 后续（世界模型当策略）、GR00T N2 若改统一动作空间则重新评估。
+4. 观察名单：Harmonic Reasoning 细节披露、V-JEPA 2-AC 后续（世界模型当策略）、GR00T N2 若改统一动作空间则重新评估；WAM 分支（U-37）等 Dyna-2"数据与目标都重要"消融的外部复现或自家 G2 消融再定默认与否。
