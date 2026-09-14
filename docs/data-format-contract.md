@@ -10,6 +10,8 @@
 - 写入参数：chunk 大小 4 MB、压缩 zstd（level 3）、每个 chunk 带 CRC、chunk 索引与消息索引在文件尾（recorder 崩溃时尾部缺失，ingest 走线性扫描恢复，见 [recorder-sync-and-storage.md](recorder-sync-and-storage.md) §3）。
 - 文件名与目录：`data/raw/<track>/<date>/<session_id>/<episode_id>.part-<n>.mcap`。
 
+**外部验证（2026-09-14）**：Dyna 在百万小时规模上把 episode 容器从 H5 逐帧 JPEG 换成 canonical MCAP + H.264，并按训练样本的读取模式把 topic 分组（相机流一组、本体感知 + 动作一组），各组时间主序写入、组间不共 chunk（topic-group chunking）：存储 −68%、样本读延迟 2.9×、chunk 抓取 3.4× 更少；GOP 按消费模式调（WAM 长序列可用大 GOP，VLA 短窗口需小 GOP）（[research-dyna-comparison.md](research-dyna-comparison.md) §2.3）。本节 chunk 规则据此补一条：**入湖态 MCAP 写出时按读取模式分组 topic，视觉流与信号流不共 chunk，组内时间主序**；这与决策 3 的分层采样率天然一致；chunk 时长与训练态抽帧步长对齐（U-12 验证钩子），GOP 长度作为 export 参数随消费目标（next_action / +next_frame）切换。
+
 ### 1.2 Channel / topic 命名
 
 | topic | schema 名 | 消息编码 | 频率 | 说明 |
