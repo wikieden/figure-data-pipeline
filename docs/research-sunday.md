@@ -16,6 +16,21 @@
 
 **在采集矩阵中的位置**：与 TwinDEX（[research-twindex.md](research-twindex.md)）同属"人穿机器人的手"的穿戴孪生路线，但落在更低的成本档位：软手套 + 简化三指夹爪，非外骨骼、非逐指灵巧手。单价 $200（Bain / humanoid.guide）或 $400（Sacra），口径不一；对比遥操作装备约 $20k，投资方称"资本效率高两个数量级"。
 
+### 1.1 官方图片观察（2026-09-14，图片已归档，观察为本文推断）
+
+![Skill Capture Glove（左）与 Memo 的手（右）](assets/sources/sunday/sunday-glove-vs-memo-hand.jpg)
+*图 S-1　ACT-1 博客配图，页面原 caption「Skill Capture Glove (left) and Memo's hand (right)」（来源与原图哈希见 [sources/MANIFEST.md](sources/MANIFEST.md) 图片表；原文 [sources/sunday/no-robot-data.txt](sources/sunday/no-robot-data.txt)）*
+
+![戴手套握橙子](assets/sources/sunday/sunday-glove-holding-orange.jpg) ![手套特写](assets/sources/sunday/sunday-glove-closeup-screw.jpg)
+*图 S-2 / S-3　技术页照片（无 alt/caption）：戴 Skill Capture Glove 握橙子；手套特写，捏着一枚螺钉。*
+
+从三张官方图能看到、而官方文字没写的（均为图片观察 ⚠️，非一手文字）：
+- **手套与机器人手同构**得到图像印证：左右两侧的接触面形状、黑色弹性体接触面、相机吊舱的位置与朝向一致，与原文「exact same geometry and sensor layout」相符。
+- **相机装在手上而不只在头上**：腕侧有一个短支臂吊舱，含一枚镜头和一个长条形开口（第二个传感器，是否为深度/红外未知）。它指向抓取区，属「手内视角」，与 UMI 腕装鱼眼、Figure 掌心相机同一类；结合相机帽（站点 OG 图中帽檐也有镜头 + 长条开口），Sunday 的观测是**头戴 + 手内双视角**。
+- **接触面形态**：可见两片宽平的软垫（拇指侧一片、对掌侧一片）加圆弧挡边；照片里人的四指并入一侧、拇指驱动另一侧，看起来更接近「两瓣宽平夹爪」，第三方所称「三指」在图上无法确认（存疑 ⚠️）。宽平接触面与原文「widening the range of objects the hand can grasp… handles and strings」一致。
+- 手套本体有腕带固定、无外骨骼，与「软手套、非外骨骼」判断一致；未见触觉阵列或力传感的外露件（不能据此断定没有）。
+- 同类「手持/穿戴夹爪 + 手内相机」形态见 [device-landscape.md](device-landscape.md)（UMI、Data Hands、TwinDEX 等）与 [research-skild.md](research-skild.md) §2 的四源三轴表（UMI 一行）。
+
 ## 2. 关键设计
 
 1. **手套优先，机器人围绕手套设计**（与 TwinDEX 方向相反）：官方称 Memo 的手被"co-designed to be a perfect mirror of the glove's shape and sensors"；第三方称手套迭代约 100 版后才定型 Memo 的手。手的优化目标：扩大可抓物体范围、可靠的工具使用（喷壶、电钻）、把手与绳线类日常物。逻辑是先让人戴着舒服且采得到高质量数据，再让机器人手迁就手套与制造现实。
