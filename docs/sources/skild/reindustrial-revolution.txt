@@ -1,0 +1,36 @@
+SOURCE ARCHIVE (fdp docs/sources)
+URL: https://www.skild.ai/blogs/reindustrial-revolution
+Title: The Reindustrial Revolution: Partnering with ABB Robotics, Universal Robots, and NVIDIA
+Page date: 2026-03-19
+Fetched: 2026-09-14 via curl (UA: desktop Chrome), HTML → text extraction (tags stripped, nav/footer removed)
+Raw HTML sha256: fbd4b602544167b693279f25605b014c1342f052e072f1e10f40ec8c68af96b4
+Raw HTML bytes: 36280
+Rights: © the publishing company; archived verbatim for citation/verification only, not for redistribution.
+========================================================================
+
+The Reindustrial Revolution: Partnering with ABB Robotics, Universal Robots, and NVIDIA | Skild AI← All postsThe Reindustrial Revolution: Partnering with ABB Robotics, Universal Robots, and NVIDIA
+By Skild AI Team · Mar 19, 2026
+Skild AI is partnering with ABB Robotics and Universal Robots to deploy its omni-bodied Skild Brain across industries and applications, from factory floors to collaborative systems, without task-by-task reprogramming.
+At Skild AI, we are laser-focused on a long-term mission to build general-purpose intelligence grounded in the physical world. We are developing a unified foundation model for Physical AI that can control any machine that moves. This foundation model, Skild Brain, displays what we call an omni-bodied intelligence – any robot, any task, one brain.
+Being omni-bodied, the Skild brain can ingest data from different robots and use it to improve itself, which in turn helps scale additional deployments that generate even more data. This forms a self-sustaining data flywheel where existing robots in the field help gather data to train the next improved generation.
+This is, however, a catch-22 : robots need data to improve, but only capable robots can be deployed to gather it. We solve this with a phased approach: first deploy in semi-structured settings (industries, factories, etc.), which yield data for deploying in less structured ones (hospitals, hotels etc.), eventually leading to general-purpose robots which work everywhere, including fully unstructured environments such as homes.
+Today, we start a new chapter in taking the Skild Brain to mass deployments across industries by partnering with major robotics OEMs (original equipment manufacturers): ABB Robotics, Teradyne Robotics' Universal Robots (UR) and Mobile Industrial Robots (MiR). Our partnership with these robotics OEMs will not only accelerate the large-scale deployment but also enable the establishment of the biggest data flywheel ever created for general-purpose physical AI.
+Deploying Generalized Robot Intelligence With ABB Robotics and Universal Robots
+Conventionally, industrial robots must be carefully programmed by human experts, task by task, and require extremely precise sensing. These hand-designed custom solutions are expensive: neither practical for industries where product changes regularly nor scalable to millions of small to medium businesses (SMBs).
+Our omni-bodied AI brain offers a fundamentally different approach: learning directly from data. For any new industrial task, the base Skild Brain model, which is an end-to-end neural network, will be finetuned with a small amount of task data in a process called post-training. This enables the shift from programming tasks to building systems that continuously learn and improve, even during deployment.
+By partnering with ABB Robotics and Universal Robots, our goal is to integrate the omni-bodied Skild Brain into their robot portfolios. By embedding the Skild Brain's shared intelligence layer into widely deployed industrial robots, manufacturers can extend automation into more dynamic, highly variable, and complex applications without needing to build task-specific code for every workflow. This could potentially revolutionize automation across SMBs.
+"At ABB Robotics, we see more autonomous and versatile robotics (AVR™) as the enabler for the next era of flexible and efficient manufacturing," said Marc Segura, President, ABB Robotics. "Integrating Skild AI's generalized robot intelligence into our portfolio will help customers scale industrial-grade automation more quickly and address increasingly complex application scenarios across a broad range of industries."
+"Universal Robots was founded to make automation simple and accessible," said Jean-Pierre Hathout, CEO, Universal Robots. "Working with Skild AI and NVIDIA allows us to bring advanced AI capabilities to our cobots — enabling them to handle more dynamic, variable tasks across industries."
+Partnership with NVIDIA in Building Omni-Bodied Intelligence
+Training a robotic foundation model requires a large diversity of data, a process known as pretraining. But in robotics, there is no equivalent "Internet of robot data." We get around this problem by leveraging internet-scale human videos and large-scale robot simulations for pretraining.
+We have been working closely with NVIDIA to enable this pretraining at scale through NVIDIA Isaac Lab and Isaac Sim to create physically accurate simulations and NVIDIA Cosmos to generate and augment synthetic data, improving robustness and sim-to-real transfer.
+Today, we take this partnership further for deploying the Skild Brain in high-precision assembly for NVIDIA Blackwell systems with Foxconn.
+"Physical AI is transforming the world's largest industries," said Deepu Talla, Vice President of Robotics and Edge AI at NVIDIA. "Built on NVIDIA's open robotics platform and accelerated computing, Skild AI's generalized robot brain demonstrates how foundation models trained in simulation can be deployed on real robots at scale."
+Early Success in Advanced Manufacturing
+In partnership with NVIDIA and Foxconn, we will ship our omni-bodied brain to control dual robotic arms on NVIDIA's Blackwell GPU production lines, performing complex assembly operations requiring precise manipulation and adaptability.
+This is a complex, long horizon task demanding precision. The robot needs to pick and place a busbar, followed by a limit block, then drill 16 screws in succession, and finally remove the limit block. This is a real task, currently done by humans at a line in a Foxconn factory. Automating this with current automation solutions is extremely costly and requires extensive hand engineering.
+In the video above, we instead accomplish this with a fully end-to-end network. The Skild Brain is fine-tuned with a small amount of robot data (not necessarily even from a real robot). In-context memory allows for long-horizon task execution spanning several minutes.
+This approach completely removes the need for step by step programming by hand. If you watch closely, you will see the robot needs to adjust the drill and placement on the fly due to disturbances in the setup. Recovery behaviors like these are hard to program by hand, but are critical for completing the task reliably.
+What's Next?
+Today's announcement with our OEM collaborators marks a key milestone in moving this technology toward generating real-world economic value and establishing an ever-growing data flywheel for physical AI.
+The Skild Omni-Bodied Brain will continue learning and compounding efficiency with every industry it enters. And this is only the beginning.

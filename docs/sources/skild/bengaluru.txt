@@ -1,0 +1,35 @@
+SOURCE ARCHIVE (fdp docs/sources)
+URL: https://www.skild.ai/blogs/bengaluru
+Title: Skild AI Expands Global Footprint To Bengaluru
+Page date: 2026-02-19
+Fetched: 2026-09-14 via curl (UA: desktop Chrome), HTML → text extraction (tags stripped, nav/footer removed)
+Raw HTML sha256: 682476dffecc0a35deb634f345acb09e144e55d4d94adda83595db28c0f183be
+Raw HTML bytes: 24756
+Rights: © the publishing company; archived verbatim for citation/verification only, not for redistribution.
+========================================================================
+
+Skild AI Expands Global Footprint To Bengaluru | Skild AI← All postsSkild AI Expands Global Footprint To Bengaluru
+By Skild AI Team · Feb 19, 2026
+We are proud to announce that we've officially opened our newest office in Bengaluru, India. This marks our first expansion beyond the US from one "Silicon Valley" to another.
+With established teams in California and Pennsylvania, this opening extends our international footprint and enables us to tap into India's immense talent pool.
+Why Bengaluru?
+Our goal is omni-bodied intelligence – any robot, any task, one brain. To accomplish that, we need a high density of technical talent.
+Bengaluru is one of the world's strongest ecosystems for AI research, infrastructure, and software engineering. The city has a unique blend of startup velocity and deep academic rigor, a combination that's critical when you're pushing the boundaries of physical AI.
+But we didn't want to collaborate at arm's length.
+We wanted to build inside the ecosystem.
+Establishing a presence here allows us to:
+Recruit world-class robotics engineers, AI scientists, and systems engineers
+Increase the diversity of thinking across model architecture and deployment strategy
+Strengthen our infrastructure for large-scale, real-world deployments
+Building Omni-Bodied Intelligence
+At Skild AI, we're developing an omni-bodied brain that can operate any robot to perform any task.
+This requires:
+Novel algorithms, such as the emergence of in-context learning in robotics
+Large-scale data pipelines
+Data flywheel and feedback loops from real-world deployments
+Expanding into Bengaluru increases our capacity to experiment, stress-test, and refine core components of the brain, from perception and control policies to evaluation and deployment infrastructure.
+A Globally Unified Engineering Org
+With teams now spanning the West Coast, the East Coast, and India's leading technology hub, we're building a tightly integrated engineering organization to leverage worldwide talent and a wide array of skill sets.
+More engineers. Faster iteration. Stronger systems.
+India, we're here.
+And we couldn't be more excited to start building with you.

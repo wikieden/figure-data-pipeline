@@ -1,0 +1,27 @@
+SOURCE ARCHIVE (fdp docs/sources)
+URL: https://www.skild.ai/blogs/series-c
+Title: Announcing Series C
+Page date: 2026-01-14
+Fetched: 2026-09-14 via curl (UA: desktop Chrome), HTML → text extraction (tags stripped, nav/footer removed)
+Raw HTML sha256: b32d83ad605e7fb6ec3083896c25b1a4812535983cb41110d5ef7345f59a7216
+Raw HTML bytes: 26386
+Rights: © the publishing company; archived verbatim for citation/verification only, not for redistribution.
+========================================================================
+
+Announcing Series C | Skild AI← All postsAnnouncing Series C
+By Skild AI Team · Jan 14, 2026
+Today, we are thrilled to announce a milestone in our journey at Skild AI: we have raised $1.4 billion. This massive investment, led by SoftBank with participation from NVentures (NVIDIA), Macquarie Capital (entities administered by Macquarie Capital), and Jeff Bezos (via Bezos Expeditions), catapults our valuation to over $14 billion. Lightspeed, Felicis, Coatue, and Sequoia Capital have doubled down on their investments. Several strategic investors have also come on board, including LG, Schneider Electric, CommonSpirit, and Salesforce Ventures. Other investors include Disruptive, 1789 Capital, IQT, TF Capital, Andra Capital, Palo Alto Growth Capital, Alpha Square, Mirae Asset, and Destiny.
+We are entering a new phase in our mission to build a single, general-purpose brain that can control any robot for any task.
+The Vision: Omni-Bodied Intelligence
+Since our founding in 2023, we've been obsessed with a single goal: omni-bodied intelligence. Traditionally, robotics startups have focused on bespoke solutions that are engineered from scratch and work only on particular robots and tasks.
+The Skild Brain takes a different approach. It is the industry's first unified robotics foundation model that generalizes across tasks and robot hardware. Our omni-bodied model can control any robot without prior knowledge of its body form, including quadrupeds, humanoids, tabletop arms, and mobile manipulators. It enables robots to handle everything from simple household chores like cleaning, loading a dishwasher, making an egg, to physically demanding challenges such as navigating slippery terrain. If there is a machine that can move, the omni-bodied Skild Brain will operate it.
+The Skild Data Flywheel
+As the Skild Brain is deployed across more robots and environments, it improves its general capabilities. Each deployment contributes to a growing data flywheel, helping improve performance across the fleet and adaptability to new scenarios. Over the last few years, our team has built a unique data infrastructure that allows the Skild Brain to learn from four sources:
+Pretraining:
+Large-scale Simulation: Generating trillions of synthetic experiences using approximate simulations.
+Internet Videos: Leveraging billions of human action videos to teach the brain how objects should be manipulated.
+Post-training:
+Teleoperation: The richest form of data mapping images and proprioception to a sequence of joint torques being scaled through smart interfaces and scalable operations.
+Real-world Deployments: Our robots are deployed across various sectors like security, construction, delivery, data centers, warehouses, and factory assembly. These deployments then continuously generate more data for post-training. This has made us one of the fastest-growing robotics companies. Live revenue grew from zero to about $30M in just a few months in 2025, and is growing rapidly with multiple customers.
+Scaling the Future
+This new capital will be used to massively scale up each of the data sources above. We will double down on our foundational research on model architectures, algorithms, and data collection. Crucially, we will focus on real world deployments that generate economic value.

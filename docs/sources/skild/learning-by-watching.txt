@@ -1,0 +1,24 @@
+SOURCE ARCHIVE (fdp docs/sources)
+URL: https://www.skild.ai/blogs/learning-by-watching
+Title: Learning by watching human videos
+Page date: 2026-01-12
+Fetched: 2026-09-14 via curl (UA: desktop Chrome), HTML → text extraction (tags stripped, nav/footer removed)
+Raw HTML sha256: de256ae15a5081dda46fcfcd51423f5efba699041f240088ada1e3f6dcf5e1c8
+Raw HTML bytes: 24517
+Rights: © the publishing company; archived verbatim for citation/verification only, not for redistribution.
+========================================================================
+
+Learning by watching human videos | Skild AI← All postsLearning by watching human videos
+By Skild AI Team · Jan 12, 2026
+In the race to build truly general-purpose robotics, the industry has hit a familiar wall: the data bottleneck. While Large Language Models (LLMs) flourished by scraping the vast expanse of the internet, robotics has struggled to find its "Common Crawl." The prevailing strategy has been to scale teleoperation—human operators manually guiding robots to collect precise motor-torque sequences.
+However, at Skild AI, we believe teleoperation alone cannot bridge the gap to foundation-model scale. It faces two fatal challenges:
+Diversity: Teleoperation is tethered to physical presence. Most data is trapped in sterile labs or specific environments where a robot is already deployed, missing the messy, infinite variety of the real world.
+Scale: Teleoperation happens in real-time. Even if we mobilized a global workforce to "drive" robots 24/7, the time required to reach the trillions of tokens equivalent to an LLM is mathematically unfeasible.
+Learning by Watching
+If we look at biological intelligence, the solution is hiding in plain sight. Humans don't learn to make tea by being told the exact Newton-meters of force to apply to a kettle. We learn through observational learning. We possess a foundation of kinematics and dynamics that allows us to watch a visual demonstration, internalize the intent, and map those actions onto our own bodies. This data—human video—is already abundant. From first-person "egocentric" headcam footage to the millions of instructional videos on YouTube, the "internet-scale" dataset for robotics already exists. It just isn't "robot-native."
+The Embodiment Gap
+The reason the industry hasn't shifted entirely to video data is that it's technically daunting. Unlike text, video data for robotics suffers from:
+Missing Signals: Videos don't show the underlying forces, torques, or tactile feedback.
+The Embodiment Gap: A human hand, a 7-DOF industrial arm, and a quadruped all have vastly different morphologies. Mapping a human's "grasp" to a robot's "actuation" is a massive translation problem.
+The Skild AI Solution: Omni-bodied Learning
+Bridging embodiment is a core capability of our model, enabling new skills to be learned directly from video demonstrations. We finetune our model to perform new skills by watching videos alone, and only a small amount of robot data (<1 hr). We believe this fundamentally changes the robotics data bottleneck, making scalable task learning for foundation models feasible.

@@ -1,6 +1,6 @@
 # 一手资料归档清单（docs/sources）
 
-> 全部于 2026-09-14 用 curl 直抓（WebFetch 对四站均被拦截），HTML 去标签后存为纯文本；每个文件头部记录 URL、页面日期、抓取日期、原始 HTML 的 sha256 与字节数。原始 HTML 未入库（Sunday 技术页 2.7 MB、Dyna 研究页 2.1 MB），需要复核时按 sha256 重新抓取比对。用途：让 research-*.md 里每条事实都能指向一份可 grep 的本地一手文本；引用格式 `sources/<company>/<slug>.txt`。版权归各公司，仅作引用与核对，不再分发。
+> 全部于 2026-09-14 用 curl 直抓（WebFetch 对各站均被拦截；skild.ai 白天超时、晚间可达），HTML 去标签后存为纯文本；每个文件头部记录 URL、页面日期、抓取日期、原始 HTML 的 sha256 与字节数。原始 HTML 未入库（Sunday 技术页 2.7 MB、Dyna 研究页 2.1 MB），需要复核时按 sha256 重新抓取比对。用途：让 research-*.md 里每条事实都能指向一份可 grep 的本地一手文本；引用格式 `sources/<company>/<slug>.txt`。版权归各公司，仅作引用与核对，不再分发。
 
 | 公司 | 文件 | 标题 | 页面日期 | URL | 文本字符 | HTML sha256 前 12 位 |
 |---|---|---|---|---|---|---|
@@ -43,7 +43,29 @@
 | generalist | [`generalist/towards-machines-with-a-thousand-hands.txt`](generalist/towards-machines-with-a-thousand-hands.txt) | Towards Machines with a Thousand Hands | 2026-07-23 | https://generalistai.com/blog/towards-machines-with-a-thousand-hands | 8,907 | `de0d67349743` |
 | generalist | [`generalist/gen-1.5.txt`](generalist/gen-1.5.txt) | GEN-1.5: Embodied Foundation Models are One-Shot Learners | 2026-08-19 | https://generalistai.com/blog/gen-1.5 | 25,195 | `b56d7a36a497` |
 
-共 38 篇：Figure 18、Dyna 6、Sunday 4、Generalist 10。
+| skild | [`skild/announcing-our-300m-series-a.txt`](skild/announcing-our-300m-series-a.txt) | Announcing our $300M Series A Funding | 2024-07-09 | https://www.skild.ai/blogs/announcing-our-300m-series-a | 5,675 | `0c3bcecd6847` |
+| skild | [`skild/building-the-general-purpose-robotic-brain.txt`](skild/building-the-general-purpose-robotic-brain.txt) | Building the general-purpose robotic brain | 2025-07-29 | https://www.skild.ai/blogs/building-the-general-purpose-robotic-brain | 6,908 | `7f327e46fcfd` |
+| skild | [`skild/one-policy-all-scenarios.txt`](skild/one-policy-all-scenarios.txt) | One Model, Any Scenario: End-to-end Locomotion from Vision | 2025-08-06 | https://www.skild.ai/blogs/one-policy-all-scenarios | 4,710 | `938452222827` |
+| skild | [`skild/omni-bodied.txt`](skild/omni-bodied.txt) | The case for an omni-bodied robot brain | 2025-09-24 | https://www.skild.ai/blogs/omni-bodied | 6,161 | `bf95b609b739` |
+| skild | [`skild/learning-by-watching.txt`](skild/learning-by-watching.txt) | Learning by watching human videos | 2026-01-12 | https://www.skild.ai/blogs/learning-by-watching | 2,573 | `de256ae15a50` |
+| skild | [`skild/series-c.txt`](skild/series-c.txt) | Announcing Series C | 2026-01-14 | https://www.skild.ai/blogs/series-c | 3,295 | `b32d83ad605e` |
+| skild | [`skild/bengaluru.txt`](skild/bengaluru.txt) | Skild AI Expands Global Footprint To Bengaluru | 2026-02-19 | https://www.skild.ai/blogs/bengaluru | 2,155 | `682476dffecc` |
+| skild | [`skild/reindustrial-revolution.txt`](skild/reindustrial-revolution.txt) | The Reindustrial Revolution: Partnering with ABB Robotics, Universal Robots, and NVIDIA | 2026-03-19 | https://www.skild.ai/blogs/reindustrial-revolution | 6,668 | `fbd4b6025441` |
+| skild | [`skild/skild-zebra.txt`](skild/skild-zebra.txt) | Skild AI Acquires Zebra Technologies' Robotics Arm | 2026-04-15 | https://www.skild.ai/blogs/skild-zebra | 3,806 | `2b785a385635` |
+| skild | [`skild/s1.txt`](skild/s1.txt) | Introducing S1: In-Context Learning for Robotics | 2026-08（页面只写月份；100M ARR 文说 S1 发布于其两周前，即约 2026-08-27） | https://www.skild.ai/blogs/s1 | 23,821 | `18fb93bfaec8` |
+| skild | [`skild/skild-crosses-100m-arr.txt`](skild/skild-crosses-100m-arr.txt) | The Hidden Pillar of Robotics (Skild AI crossed $100 million in ARR) | 2026-09-10 | https://www.skild.ai/blogs/skild-crosses-100m-arr | 8,357 | `39535a1a56af` |
+共 49 篇：Figure 18、Dyna 6、Sunday 4、Generalist 10、Skild 11（skild.ai 于 2026-09-14 晚间可达，全部博客归档）。
+
+## 图片归档（docs/assets/sources/）
+
+只归档研究文档需要观察其硬件细节的官方图片；文件缩到 ≤1600 px 以控制仓库体积，原图 sha256 记录在此供复核。
+
+| 公司 | 文件 | 所在页面 | 原图 URL | 原图 sha256 前 12 位 | 体积 | 说明 |
+|---|---|---|---|---|---|---|
+| sunday | [`assets/sources/sunday/sunday-glove-vs-memo-hand.jpg`](../assets/sources/sunday/sunday-glove-vs-memo-hand.jpg) | https://www.sunday.ai/blog/no-robot-data | https://cdn.sanity.io/images/1omys9i3/production/6fdf2cb073bd2830ef2bac165afa4c14ad848d36-1920x1080.png | `aec5ae3578f8` | 109 KB（缩到 ≤1600 px JPEG，原图 549 KB） | ACT-1 博客配图，页面 caption："Skill Capture Glove (left) and Memo's hand (right)" |
+| sunday | [`assets/sources/sunday/sunday-glove-holding-orange.jpg`](../assets/sources/sunday/sunday-glove-holding-orange.jpg) | https://www.sunday.ai/technology | https://cdn.sanity.io/images/1omys9i3/production/69317e0507b6454687e7d0ae1d36f611e141f1c8-4000x2668.jpg | `26cb83ec3857` | 217 KB（缩到 ≤1600 px JPEG，原图 836 KB） | 技术页照片（无 alt/caption）：戴着 Skill Capture Glove 握橙子 |
+| sunday | [`assets/sources/sunday/sunday-glove-closeup-screw.jpg`](../assets/sources/sunday/sunday-glove-closeup-screw.jpg) | https://www.sunday.ai/technology | https://cdn.sanity.io/images/1omys9i3/production/c0de3a6e4eb0140002e7b058cd05786c67511865-4000x2668.jpg | `9a2e6f0e1e22` | 242 KB（缩到 ≤1600 px JPEG，原图 941 KB） | 技术页照片（无 alt/caption）：手套特写，相机吊舱与两片接触面，捏着一枚螺钉 |
+| sunday | [`assets/sources/sunday/sunday-og-head-camera.jpg`](../assets/sources/sunday/sunday-og-head-camera.jpg) | https://www.sunday.ai/technology | https://cdn.sanity.io/images/1omys9i3/production/319392a9e6c83e4b9f7c2158c5b10fa6f75e84c1-2400x1260.png | `34ee61edfdc7` | 190 KB（缩到 ≤1600 px JPEG，原图 1919 KB） | 站点 OG 图（无 alt）：头戴帽檐上的相机镜头与长条开口 |
 
 ## 归档规则
 

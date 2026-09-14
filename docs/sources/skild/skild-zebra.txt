@@ -1,0 +1,27 @@
+SOURCE ARCHIVE (fdp docs/sources)
+URL: https://www.skild.ai/blogs/skild-zebra
+Title: Skild AI Acquires Zebra Technologies' Robotics Arm
+Page date: 2026-04-15
+Fetched: 2026-09-14 via curl (UA: desktop Chrome), HTML → text extraction (tags stripped, nav/footer removed)
+Raw HTML sha256: 2b785a385635292030bf8992b2b8bc568d739d0859a957aab0f76ed26494ed0a
+Raw HTML bytes: 25669
+Rights: © the publishing company; archived verbatim for citation/verification only, not for redistribution.
+========================================================================
+
+Skild AI Acquires Zebra Technologies' Robotics Arm to Bring Omni-Bodied Intelligence to Warehouses | Skild AI← All postsSkild AI Acquires Zebra Technologies' Robotics Arm to Bring Omni-Bodied Intelligence to Warehouses
+By Skild AI Team · Apr 15, 2026
+Skild AI has acquired the robotics division of Zebra Technologies (formerly Fetch Robotics) to deploy our omni-bodied brain across warehouses. This will unlock massive productivity gains and add yet another piece to our data flywheel.
+Warehouses are a key component of the modern economy, almost every physical product you buy is routed through a warehouse at some point. Logistics is a complex problem: these buildings are massive, and orders must be rapidly and accurately fulfilled.
+Most warehouse robotics solutions are classical, replacing parts of the fulfillment pipeline that can be automated with such approaches - such as navigation and routing. But these approaches have limitations, and many parts are still human-bottlenecked such as moving objects between receptacles.
+Today, we're announcing our acquisition of the robotics division of Zebra Technologies', previously known as Fetch Robotics. They have one of the most battle-tested warehouse robotics platforms in the industry. We will deploy our omni-bodied brain to automate and streamline the end-to-end warehouse fulfillment process, unlocking massive productivity gains across multiple domains.
+This will also accelerate our data flywheel and bring in more diverse data to train our omni-bodied brain.
+The Challenge of Warehouse Logistics
+Classically, robotics deployments have always been brittle. Task-oriented programming built around a specific embodiment, tuned to that robot's exact kinematics. Change the hardware, and you're largely starting from scratch. We built the Skild Brain to break that dependency. It doesn't require prior knowledge of a robot's body form to operate it. Quadrupeds, humanoids, tabletop arms, mobile manipulators, the same underlying model generalizes across all of them. That's what omni-bodied intelligence actually means at the architecture level: a foundation model that transfers across embodiments without retraining from zero.
+What Zebra brings to the table is another major piece of the puzzle. Their Symmetry Fulfillment orchestration platform already coordinates tasks between robots and frontline workers using real-time data from Zebra wearable devices. Its robot and orchestration software is already proven in logistics environments where reliability isn't optional. Adding the Skild Brain to that foundation means the robots in those environments don't just follow instructions, they can actually make informed decisions.
+What This Means for the Industry
+Logistics and the 3PL ecosystem have needed this kind of integration for a long time. Warehouses today are a patchwork of systems that don't fully talk to each other. We're building toward something cleaner: a platform where robots of any type, operating in any environment, are coordinated by a single intelligence layer.
+The Symmetry platform will expand beyond its current footprint into new verticals, new use cases, and a much wider range of robot form factors.
+The goal isn't incremental improvement. It's a fundamentally different kind of operation that can plug into any existing warehouse infrastructure.
+What Comes Next
+Our rapidly expanding scale of deployments into this space is one of the developments we're most excited for in the coming months. This acquisition accelerates our ability to get intelligent robotics into the real environments where they need to be: warehouses, fulfillment centers, and beyond.
+If you're working on warehouse automation or want to understand how the Skild Brain integrates with existing infrastructure, reach out to [email protected].

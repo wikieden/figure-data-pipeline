@@ -1,0 +1,33 @@
+SOURCE ARCHIVE (fdp docs/sources)
+URL: https://www.skild.ai/blogs/one-policy-all-scenarios
+Title: One Model, Any Scenario: End-to-end Locomotion from Vision
+Page date: 2025-08-06
+Fetched: 2026-09-14 via curl (UA: desktop Chrome), HTML → text extraction (tags stripped, nav/footer removed)
+Raw HTML sha256: 938452222827aa17418404a4008162a2c9658d5b3ac481a117ca881ced86e0f5
+Raw HTML bytes: 32671
+Rights: © the publishing company; archived verbatim for citation/verification only, not for redistribution.
+========================================================================
+
+One Model, Any Scenario: End-to-end Locomotion from Vision | Skild AI← All postsOne Model, Any Scenario: End-to-end Locomotion from Vision
+By Skild AI Team · 6 Aug, 2025
+We’ve seen humanoid robots perform impressive acrobatics, like cartwheels, backflips, and even complex dance routines, for decades. Yet, hardly any can reliably climb any type of staircase or difficult obstacles (like stepping stones) in the wild. This is a classic example of Moravec’s Paradox: things that come easily to humans are hard for robots and vice versa.
+Stair climbing, for instance, demands intricate coordination between visual perception and motor control. The robot must interact precisely with the physical structure of the stairs, adapting dynamically to variations in step height and geometry. In contrast, acrobatics and dancing are typically performed in free space and can often be executed blind without any visual input, relying solely on proprioception and internal motor sensing.
+Skild Brain: A General Vision-based Robot Model
+If you ask someone, “How many steps are there in the stairs leading from the street to their apartment?”, they probably wouldn’t know. Unlike today’s humanoid solutions, humans don’t build detailed terrain maps. We navigate complex terrain effortlessly, not by mapping and pre-planning every step, but by seeing and reacting in the moment.
+Skild Brain, as revealed in our previous blog post, follows a hierarchical architecture: (1) a low-frequency high-level action policy which provides inputs to a (2) high-frequency low-level action policy. In this release, we do a deep dive into the low-level control capabilities of Skild Brain, which enables fully end-to-end locomotion control driven entirely by online vision and proprioception.
+From raw images and joint feedback, the model directly outputs low-level motor commands. This single neural network enables humanoid robots to seamlessly walk across flat ground, climb stairs, and step over obstacles without any planning, mapping, or manual switching between behaviors.
+To test our model, we took our robot out into the real world - through city parks and streets, up fire escapes, and over obstacles - all environments and objects it had never seen before. For all of our testing, we deployed the robot in each new environment without any prior planning or mapping. We took off the humanoid’s shoes so you can hear it.
+Versatility from Online Vision
+Using camera images, our model reacts dynamically to the scene around the robot. Every step is decided in the moment, and this enables our model to adapt instinctively to new terrain, informed by the latest observations. The user, or high-level portion of the Skild Brain, can give a general direction to go in, and the robot figures out how to navigate obstacles on its own.
+To test this adaptability, we constructed an obstacle course with unstable pallets, gaps, and uneven steps and clutter. As with all of our testing, the robot has never seen these obstacles before and none of its movements are pre-planned. At each new obstacle, the model adjusts foot placement, balance, and timing on the fly to suit each terrain feature.
+A striking aspect of our model is that it is not just robust, but it is also adaptive and graceful. There is no “stair mode” or “step-over mode”: the transition between walking behaviors is smooth, continuous, and instinctive, just as it is for humans. The gait shifts fluidly based on what the robot sees and feels, rather than switching between a fixed set of behaviors.
+Reliability in the Real World
+Real-world deployment demands reliability. Our model is capable of traversing endless sets of stairs without stumbling.
+We also tested reliability in the presence of external forces. When subjected to considerable pushes and pulls on stairs, the robot quickly corrects its footing and maintains balance.
+Precise Footwork
+Our model enables walking with precision. Even with stairs just 3cm deeper than the foot of the robot, the model ensures the humanoid places its feet in precisely the correct position, without ever having to hesitate or slow down.
+Carrying payloads
+Robots often need to carry payloads across non-flat surfaces. Our robot can adapt to carrying boxes up / down stairs.
+One Policy, Broad Capability
+Our approach to training AI models enables robots to adapt their movements to what they see in the world around them. This is suitable not just for humanoid walking, but for training all types of robot behaviors on different types of robots.
+Stay tuned: we will be sharing more results that showcase how our end-to-end learning pipeline not only supports a range of platforms but adapts to new embodiments at a superhuman pace.
