@@ -1,0 +1,38 @@
+SOURCE ARCHIVE (fdp docs/sources)
+URL: https://www.skild.ai/blogs/omni-bodied
+Title: The case for an omni-bodied robot brain
+Page date: 2025-09-24
+Fetched: 2026-09-14 via curl (UA: desktop Chrome), HTML → text extraction (tags stripped, nav/footer removed)
+Raw HTML sha256: bf95b609b739d779823bb354e27ba32ad2fdab41568bf86ab284f88c689f94e1
+Raw HTML bytes: 35463
+Rights: © the publishing company; archived verbatim for citation/verification only, not for redistribution.
+========================================================================
+
+The case for an omni-bodied robot brain | Skild AI← All postsThe case for an omni-bodied robot brain
+By Skild AI Team · 24 Sep, 2025
+Life is unpredictable – for robots and humans alike. This is why we see many videos of robots doing impressive things, but next to no robots in the real world.
+Videos are shot under clean, controlled conditions and create an illusion of competence. This illusion shatters when robots are put into the real world – something unexpected happens, and they inevitably fail. Why is this the case?
+The answer lies in how robots are programmed. Consider robotic locomotion – most controllers are trained for a specific robot. The AI controlling it memorizes, or “overfits” to, the locomotion strategy for that robot. This is a bit like memorizing the answer to a test – great for passing, but unhelpful for learning how to arrive at the answer. When the AI faces a situation it has never seen before, like jammed motors, broken limbs, or a completely new body, the memorized solution is useless and the AI doesn’t know how to fix it. The robot fails.
+How do we fix this? We must design a “test” that the AI cannot game. One way to do this is to train the AI to control not just one robot, but a whole multiverse of robots with different bodies. It cannot memorize the solution for one body, it must find a strategy that works across all of them. When faced with unpredictable scenarios, the AI can now use the strategies it learnt during training and keep going.
+We created a universe with 100,000 different robots and trained our AI to control them all. After a millenia of simulated time, what emerged was a remarkably resilient, omni-bodied brain. We were often surprised with its ability to adapt to scenarios that were very different from what it saw at training time.
+Here is a showcase of some of these capabilities, all from the same model without any fine-tuning specific to a scenario. Note that for all these experiments, we excluded all these robots from our dataset – the model is never trained on any of these robots and is tested zero-shot.
+Learns from failures
+In precarious scenarios, it is impossible to adapt fast enough before failure occurs. We take a quadruped robot and turn on the brain when the robot is in an upright position. When the brain wakes up, it has no idea what kind of body it is inhabiting - it could be in any one of the 100K it was trained on. Unexpectedly, the brain decides to treat this robot as a small humanoid instead of a quadruped.
+This makes matters worse, however, since this is not an ordinary humanoid – ones that have ankle motors and a wide foot for stability. Our ersatz humanoid only has a passive knob for a leg with a single point of contact with the ground. The window of time in which our model must figure out the body type and stabilize is too short – the robot falls.
+Fortunately, our brain can learn from failures. The next time we wake up the robot, we prepend the previous trial as a prompt – the robot uses it to improve its behavior, and finally succeeds on the third try.
+This phenomenon, called in-context learning, is also observed in large language models, and is one of the reasons behind their general usefulness.
+Loss of limbs
+We cut the calf of the robot to its thigh to simulate the robot losing its limbs. This removes 4 degrees of freedom and lowers the limb length, something our AI model has never seen before. Initially, the robot is unable to move effectively and simply steps in place and struggles. However, after 7-8s of adaptation, it discovers that large amplitude swings are required at the thigh joint and is able to locomote effectively. Interestingly, a specialist controller that is only trained for a single robot, fails catastrophically and flips over.
+Broken legs
+We simulated joint failure by locking the knees of the robot in software. This converts the quadruped into a three legged robot, which it was never trained on. The robot initially tips forwards but learns to shift its weight backward onto three legs and is even able to walk after 2-3s of adaptation. Similar behavior occurs on a wheeled quadruped: when one or two legs are locked, the brain adapts gait to redistribute load, preserving balance and mobility.
+Jammed wheels and payloads
+We jam the wheels of the robot without warning. This instantly converts the robot from a wheeled one to a legged one. Our brain detects this change, since sending commands to the wheel no longer has the effect of moving the robot forward. It then switches to a walking gait like in a standard legged biped. At some point the wheels are again unlocked, and the brain switches back to the more efficient rolling behavior.
+Walking on stilts
+We attach stilts to the robot's legs, increasing the effective leg-to-body length ratio beyond what was seen during training. This raises the center of mass of the robot, making it more unstable. Initially, the robot takes a few unstable steps, but quickly adjusts step timing and foot placement to account for the longer legs and is then able to walk forward stably and confidently.
+Conclusion: In-context Learning for Robotics
+A few things are notable about this omni-bodied brain:
+Despite never training on these robots, the model can zero-shot control them and adapt even to extreme morphological changes.
+In-context learning occurs within milliseconds to minutes, depending on the severity of the change.
+The capabilities in the videos above are a result of forcing the same model to control wildly different robot bodies – it cannot cheat by memorizing, it must learn to adapt. In biology, the same thing happens: life is unpredictable, and only those who can adapt are the ones who survive.
+AGI that works reliably in the physical world must be similar – it must adapt instead of memorizing. We believe the way to get there is to train a model that controls not just a single body, or a few bodies (cross-embodied), but all bodies – an omni-bodied brain.
+We believe these results show early sparks of intelligence in the world of atoms – building towards robots that will one day reliably assist humans in factories, hospitals, homes, and more.

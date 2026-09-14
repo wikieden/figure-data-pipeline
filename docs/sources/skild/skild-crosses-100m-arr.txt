@@ -1,0 +1,69 @@
+SOURCE ARCHIVE (fdp docs/sources)
+URL: https://www.skild.ai/blogs/skild-crosses-100m-arr
+Title: The Hidden Pillar of Robotics (Skild AI crossed $100 million in ARR)
+Page date: 2026-09-10
+Fetched: 2026-09-14 via curl (UA: desktop Chrome), HTML → text extraction (tags stripped, nav/footer removed)
+Raw HTML sha256: 39535a1a56af8b27bd488427bb7e536400102e9dc1878ce71eddab7f5dba8586
+Raw HTML bytes: 38811
+Rights: © the publishing company; archived verbatim for citation/verification only, not for redistribution.
+========================================================================
+
+The Hidden Pillar of Robotics | Skild AIThe Hidden Pillar of Robotics
+The Hidden Pillar of Robotics
+Skild AI crossed $100 million in ARR, ten months after our first commercial deployment.
+Deepak Pathak and Abhinav Gupta · Sep 10, 2026
+First of all, thank you to every member of our team and every partner who made it possible.
+This took an extraordinary amount of effort from a lot of great people. In ten months, we’ve scaled to 60+ paying customers across moving goods, making deliveries, inspecting sites, providing security, preparing food, as well as operating inside warehouses, factories, and data centers. Mobility accounts for 10% of our revenue, including AMR solutions (Zebra/Fetch Robotics acquisition) that account for 4%. The remaining ~90% comes mainly from manipulation tasks. We have crossed 100M ARR (recurring revenue run rate). And 50M has already been recognized since starting deployments 10 months ago.
+Together with NVIDIA and Foxconn, we are deploying the Skild Brain on dual-arm manipulators for high-precision assembly of NVIDIA Blackwell systems — work that changes with every product cycle and used to mean reprogramming every robot on the line.
+At Sumitomo Wiring Systems, we are working towards deploying S1 to automate processes in wire harness manufacturing that were considered “impossible” to automate.
+With Mitsui & Co., whose supply chains serve 1.4 million meals a day across Japan, we are piloting general-purpose robots powered by S1 in commercial kitchens.
+From the beginning, we have focused on deployment as a core part of the technology itself and not the outcome of it.
+The Hidden Pillar
+There’s a line of thinking in robotics that goes something like this: we’ll train a super-intelligent model, build superhuman hardware, and then one day—boom—robots everywhere.
+By analogy to language models, this sounds right. Years of research, then ChatGPT. An estimated 100 million monthly users within two months. From the outside, deployment seemed to arrive all at once, after the hard part was done.
+In robotics, you cannot leave deployment until the end.
+How will the supply chain work? Who installs it? Who owns the integration? Who fixes it when it breaks? Who updates it when the process changes? You don’t fully understand these questions until you’re there.
+Deployment is the hidden pillar of robotics research because it’s where robotics happens. There is no substitute.
+Deployments inform Skild’s frontier research direction. Let us give you some examples.
+Demos vs deployment
+Watching demo videos has become a common way to measure progress in physical AI. You watch a video and think, “It looks like it’s working!”
+The problem is that a successful clip from a robot with 5%, 10%, or 99% accuracy can look exactly the same. Even if you’re 10% accurate, you can just keep shooting until it works.
+We taught our model to make eggs last year. It took a week to cook the first egg, then two months to make it work reliably with different eggs and in different setups.
+This is why seeing is not believing in robotics. Deployment is what matters. The amount of effort to squeeze the last 5% of performance greatly exceeds that of the first 95%.
+Speed vs Accuracy
+From a research perspective, accuracy can look like the main metric. From a deployment perspective, you immediately have to ask: how fast can the robot work at that accuracy?
+Imagine a factory line with ten stations—five operated by robots and five by people. Every station must finish within roughly the same cycle time. If one station is slower, it constrains the throughput of the entire line.
+A robot that is 99.9% accurate but ten times too slow is not almost deployable. It’s not deployable.
+A deployment-first company optimizes for success under time constraints from the beginning.
+Adaptation to Change
+A hard lesson we learned early in deployment: change is the only constant.
+A supplier changes a component. A factory rearranges a workstation. A customer changes the assembly sequence. The system you deployed has to adapt.
+If every change requires collecting a new dataset and running another round of post-training, you’re signing up to repeat that work for as long as the robot is deployed. This is not scalable.
+These findings, learned the hard way from deployments, made us focus our research efforts on S1, our latest model, released two weeks ago.
+We built S1 to learn from a single video example through in-context learning. An operator can record a new demonstration and give it to the robot as a prompt, without updating the model’s weights. S1 is built on NVIDIA AI infrastructure, which gives us the accelerated computing foundation needed to train at scale across our diverse mix of robotics data.
+View post on XWould this have become such a priority if we had stayed in research land? We don’t think so. Deployment taught us to ask this of ourselves, and S1 is our answer.
+Culture
+Demos can also be harmful. It’s very difficult to sustain a demo culture and a deployment culture at the same time within a single company.
+You can cherry-pick a good demo from a robot with 50% accuracy. To deploy, you have to work on the other 50%—which is much, much harder.
+If you publicly celebrate these “advanced” demos, the people working on them are encouraged. The people working on the under-appreciated 50% get less attention, even though their work is what makes the robot useful.
+Having the resources to do both doesn’t make those incentives disappear.
+You can try to fight them internally by rewarding real deployment work. But then the smart people ask, “Why am I spending my time on demos when the real work is in deploying?” — and the demo culture dies anyway.
+If demos are what a company rewards, demos are what people will work on. We chose to reward deployment.
+Physical RSI
+Deployment is a pillar of research. It’s a pillar of evaluation. And it forces us to confront cultural incentives that can pull a company away from useful work.
+It’s also how we think about physical RSI: recursive self-improvement.
+There are two common views of deployment data. One says deployment will become the ultimate source of training data for robotics. The other says deployment data is too narrow to improve a general model, because a deployed robot repeats the same task again and again. Both views are partly right.
+If a specialized robot already opens a particular bottle cap reliably, collecting thousands of additional examples of the same successful motion may add little. The specialized system already knows its task. The value appears when learning from many specialized systems is brought back into a general base model.
+Start with a foundation model trained across different robots, tasks, and embodiments. It is broadly capable, but perfect at nothing.
+Deploy it into different applications. In-context learning lets it adapt without requiring a new training run for every change. Where further training is needed for production-level speed and reliability, deployment data can help specialize the system. Each deployment becomes better at its own task.
+Bring data from across those deployments back into the general model. Experience that adds little to a specialist that has mastered one task can still be valuable to a generalist learning many different tasks. The next deployment starts from a stronger model.
+The analogy we use is my own education.
+In high school, we knew physics, chemistry, and mathematics at a decent level. Then we specialized in AI. We know far more about AI today than my high-school self did, but we have forgotten much of the chemistry we once knew.
+Now imagine we could take our high-school self and, in a parallel universe, do a PhD in chemistry. Another in physics. Another in mathematics. Then imagine distilling all of that specialized knowledge back into the student we started as.
+That’s our strategy. By deploying, we’re making the “high-school self”—S1—better and better. The more the generalist learns, the less specialization the next deployment should need. This is the deployment data flywheel.
+The era of demos is over; the era of deployment has begun.
+Written byDeepak PathakCo-founder and CEO, Skild AI
+Abhinav GuptaCo-founder and President, Skild AI
+Get new research, product updates, and deployment stories from Skild AI.
+Email addressSign up
+For queries, contact [email protected]
