@@ -1,6 +1,6 @@
 # 治理登记：风险 · 未决决策 · 自报数字
 
-> 2026-09-08 建立，2026-09-09 增补（战略路线图引出的 U-23–U-33 / R-14–R-19 / D-13–D-21；2026-09-14 增补 U-37 / R-20 / D-22–D-24，U-11 表 23–30 行）；同日逐项裁决 data-strategy-roadmap §6 的 10 项决策（U-03/U-23/U-24/U-25/U-27/U-28/U-30/U-32 closed，U-26 部分裁决，U-29 拆表后逐项待 LEGAL）；同日追加裁决 U-09/U-22/U-31/U-33；2026-09-12 增 U-34–U-36（采集设备五件套）。来源为全局 review 三路审计（一致性 / 覆盖缺口 / 风险与未决项）的合并结果。三张表是活文档：每条有 owner（按角色，非人名）与复检时点；状态字段只有 `open / mitigating / closed / accepted`。新增风险、新增依赖他家数字的设计决策、新增待裁决项都必须先在这里登记再写进设计文档（CLAUDE.md 约定）。
+> 2026-09-08 建立，2026-09-09 增补（战略路线图引出的 U-23–U-33 / R-14–R-19 / D-13–D-21；2026-09-14 增补 U-37 / R-20 / D-22–D-24，U-11 表 23–30 行）；同日逐项裁决 data-strategy-roadmap §6 的 10 项决策（U-03/U-23/U-24/U-25/U-27/U-28/U-30/U-32 closed，U-26 部分裁决，U-29 拆表后逐项待 LEGAL）；同日追加裁决 U-09/U-22/U-31/U-33；2026-09-12 增 U-34–U-36（采集设备五件套）；2026-09-14 增 U-38 / D-25–D-27（四家路线精读 research-four-routes.md）。来源为全局 review 三路审计（一致性 / 覆盖缺口 / 风险与未决项）的合并结果。三张表是活文档：每条有 owner（按角色，非人名）与复检时点；状态字段只有 `open / mitigating / closed / accepted`。新增风险、新增依赖他家数字的设计决策、新增待裁决项都必须先在这里登记再写进设计文档（CLAUDE.md 约定）。
 
 角色缩写：**DATA** 数据层（recorder/ingest/export/schema）、**CUR** 策展层、**TRAIN** 训练层、**HW** 采集硬件、**PLAT** 数据平台/运维、**LEGAL** 法务合规、**PM** 项目管理。
 
@@ -74,6 +74,7 @@
 | U-35 | D2 头戴 EVT 双目全局快门模组与 SoC 选型 | 双目灰度 1080p@60 全局快门 + 主 RGB 1440p@60；RK3588 级 SoC 只做编码/预检/脱敏；同步脉冲输出（capture-devices-design §2） | 手部可见率、同步残差、功耗与 4 h 续航实测 | H1 EVT 前 | EVT 规格漂移，配对采集无时钟源 | HW | open |
 | U-36 | D4 数据手套选型：MANUS 级 vs 低成本 IMU 手套 | ≥200 Hz 为硬约束（T-800 >100 Hz 能量）；H0 先用 Quest 手追，H1 选型（capture-devices-design §4） | 手套↔本体复现的重定向误差；单价（$3–6k vs $300–800） | H1 前 | 逐指真值缺失，灵巧任务对齐集不可用 | HW + TRAIN | open |
 | U-37 | 训练层是否纳入世界-动作模型（WAM）目标：next-frame 与 next-action 协同预测作为 Stage B/C 可选分支 | 已有 Dyna-2、NVIDIA DreamZero、AgiBot GE-Act 2.0、Cosmos Policy 四家独立验证，满足 CLAUDE.md 决策 7 的 ≥2 家门槛；倾向纳入为可选分支，不改数据层，只要求 export 保留连续帧对（research-dyna-comparison §8.1） | Dyna-2 "数据与目标都重要"消融的外部复现；自家 human 轨上 next-frame 协同 vs 仅 next-action 的消融 | 训练负责人 | M3 前 |
+| U-38 | 消融切分器是否加「微调权重位移按模块分解」报告（Generalist 任务向量分析：ΔW 按传感/推理/执行分解，定位该多采哪类数据） | 训练层工具，属「数据层承载创新」的边界外；倾向 M3 作为可选报告，不进 M2 验收 | 自家 Stage B 微调实验上 ΔW 分解与采集干预的因果验证（research-four-routes §6.8） | TRAIN | M3 |
 
 ### U-11 license 核查追踪表
 
@@ -142,6 +143,9 @@
 | D-22 | Dyna-2：1K→1M h 人类视频幂律（零样本机器人 Acc@0.5 0.067→0.159、MSE 0.180→0.117，指数 +0.139/−0.0713）；后训练 20→53%；客户质检 46→87%；1.55× vs DYNA-1；约 10 min 拧瓶盖；joint 目标 39/39 任务胜 action-only | dyna.co 研究页一手（2026-09-14 curl 核对，修正了第三方转述的 6.3→16.4% 与 13 min）；单实验室 14 任务、每任务 10 次盲测、VLA 基线按 VLA 管线调参、无同行评审 | 战略 §1.1 "人类视频为预训练主轴"、U-37 WAM 分支 | 主轴判断仍有 HumanScale/ZimaBlue/GR00T N1.7 支撑；U-37 退回可选实验 | 抓到一手研究页后核对指数；G2 自家 human 轨缩放消融 | G2 |
 | D-23 | Skild S1：未见任务逐步成功率 66% vs VLA 9%（10 万 h）；1 条演示 ≈ 380 条遥操作；$1 采集配 $3 质控 | Skild 博客经 Robot Report/NVIDIA/Humanoids Daily 转述；内部基准、逐步而非端到端成功率 | eval-protocol 少样本三刻度；program-plan 策展/采集预算比 | 预算比按自家 G2 数据重定；换算只作量级 | G2 前用自家数据复核质控比 | G2 |
 | D-24 | Generalist GEN-1：三任务 99%（GEN-0 64%、无预训练 19%）；每任务 ~1 h 机器人数据；50 万 h 无机器人数据预训练；速度 ~3× π0/π*0.6 | 官方博客一手，自报；参数量/算力未披露 | 战略 §2.3 北极星 12/24 月目标量级；D-07 补充 | 北极星目标为占位（同 D-20） | M2 初按自家曲线重定 | M2 |
+| D-25 | Sunday ACT-2：泛化差距（域内−域外）随预训练规模 82→10→8→4→0；高质量子采样 12.5%/25%/50% → 75.6/87.9/92.3% vs 均匀 43.8/53.6/64.1%；785 次 99.1%±0.3、每户零适配；单条示例 SFT 教会可泛化折法 | sunday.ai ACT-2 预览一手（2026-09-14 curl）；自评标注（两轮独立、评分表事前固定）、单任务族、模型架构与数据小时数未披露 | eval-protocol 泛化差距指标与 Solve 声明格式；curation §7 高质量子采样消融目标量级；L3 估值排序器（D-14）价值预期 | 策展增益量级不复现 → 估值线降级（G5） | 自家 human/device 轨复现同一消融，目标只作量级 | M2 |
+| D-26 | Dyna 生产指标：DYNA-1 35 条/h、75% 达标 → DYNA-2 95 条/h、93% 达标（1,590/天）；新站点 3 天达 ROI；车队每站每天 >1 TB；鼎泰丰全门店扩张、2027 上半年数百台 | dyna.co《Not Just a Model, But a Product》一手；单客户单任务族，无第三方 | data-platform 容量模型（1 TB/站/天）；R-20 飞轮反证的对照面；D5 触发式固化「两家验证」状态 | 容量模型分母偏高一档 | 容量按自家 D5 码率重算；D5 状态不依赖 Dyna 商业数字 | M3 |
+| D-27 | Figure 产能与车队：350+ 台 F03、1 台/小时、末端首检良率 >80%、电池线 99.3%、9,000+ 执行器；BMW 1,250 h / 9 万件 / 3 万台 X3、KPI 84 s / >99% / 零干预；Index 周活 69,943、35 min/s（第三方 ⚠️） | figure.ai 一手（产能、BMW）；Humanoids Daily 转述（周活） | 战略 §1.1 对标分母；robot-track-teleop §6 车队 KPI 模板（周期/精度/干预三项） | 无设计依赖，仅作量级 | — | H1 |
 
 ---
 
@@ -151,14 +155,15 @@
 
 | research 文档 | 回灌目标 | 最近一次同步 |
 |---|---|---|
-| research-figure.md | architecture §1–§2、CLAUDE.md 决策 3/6 | 2026-09-08（Figure 03 数字回填 §5） |
+| research-figure.md | architecture §1–§2、CLAUDE.md 决策 3/6 | 2026-09-14（一手补充指向 research-four-routes §1） |
 | research-opensource.md | architecture §7 选型、CLAUDE.md 决策 1/5 | 2026-09-08（版本回填、DexMimicGen） |
-| research-generalist-dora.md | architecture §6.5、index-replica-plan §1.0、training §1.2-6 | 2026-09-04 |
+| research-generalist-dora.md | architecture §6.5、index-replica-plan §1.0、training §1.2-6 | 2026-09-14（一手补充指向 research-four-routes §4） |
 | research-vla-pretraining.md | training-pipeline §1.1/§2、curation §5 | 2026-09-08（Stage/阶段命名与档位门槛统一） |
 | research-qwen-robotics.md | curation §1.4b/§4.1、cleaning §1.6–1.7、training §1.2 | 2026-09-08（Ego2Robot 数字统一） |
-| research-sunday.md | architecture §2.3、index-replica-plan §1.0、device-track-umi §4 | 2026-09-08（具身转换进架构） |
+| research-sunday.md | architecture §2.3、index-replica-plan §1.0、device-track-umi §4 | 2026-09-14（ACT-2 一手补充指向 research-four-routes §3） |
 | research-twindex.md | index-replica-plan §1.0、device-landscape §5、U-04 | 2026-09-04 |
 | device-landscape.md | index-replica-plan §1、robot-track-teleop §1 | 2026-09-04 |
 | research-simfoundry.md | sim-track §1–§3/§5、eval-protocol §2/§5、governance U-20/U-11 | 2026-09-09 |
+| research-four-routes.md | governance U-38/D-25–D-27（已登记）；eval-protocol §1/§3（泛化差距、Solve 声明、槽位探针、反向 KL）；curation §4.1/§7（失败模式本体、高质量子采样消融）；robot-track-teleop §1/§6 + data-format-contract（视觉自标定、hardware_health）；capture-devices-design D5 状态（已改） | 2026-09-14（登记 + D5 状态，其余待 M2） |
 | research-dyna-comparison.md | governance U-37/R-20/D-22–D-24（已登记）；training-pipeline §2 WAM 分支；data-format-contract §3 连续帧对与 grasp_aperture；eval-protocol §3 少样本三刻度；program-plan §4 质控预算比 | 2026-09-14（登记，设计文档回写待 M2/M3） |
 | data-strategy-roadmap.md（战略层，含 225 条扫描证据） | 回写清单见其 §7.2：data-format-contract（契约 0.3）、curation（段级/估值）、architecture §2.3、sim-track（优先级）、training（conditioning）、eval-protocol（分级/序贯/代理）、compliance（脱敏前置/同意图）、program-plan（组织/预算/止损门）；本次已改 research-opensource、research-generalist-dora、U-03、R-10 | 2026-09-09 |
