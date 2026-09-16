@@ -26,6 +26,7 @@
 [D:dyna-2]: sources/dyna/dyna-2.txt
 [D:infra]: sources/dyna/dyna-2-infrastructure.txt
 [D:product]: sources/dyna/scaling-customer-deployments.txt
+[D:home]: sources/dyna/home.txt
 [S:act-1]: sources/sunday/no-robot-data.txt
 [S:series-b]: sources/sunday/series-b.txt
 [S:act-2]: sources/sunday/act-2-preview.txt
@@ -51,7 +52,7 @@
 | 预训练主语料 | Index 众包视频 16M 条、30 min/s [F:index]；Go-Big 人类第一视角视频 [F:go-big] | 100 万+ h 头戴人类视频，零机器人 [D:dyna-2] | 手套采的"传感化人类数据"，零遥操作 [S:act-1][S:act-2]；2,000+ 采集员 ⚠️（[Humanoids Daily](https://www.humanoidsdaily.com/news/sunday-unveils-memo-a-wheeled-domestic-robot-that-learns-from-200-gloves)） | 50 万+ h 手持夹爪人类数据，零机器人 [G:gen-1]、零仿真 [G:gen-1.5] |
 | 动作真值 | 遥操作 [F:helix]；人类视频提取 head & hand tracks（Index 管线图，见 [research-figure.md](research-figure.md) §3.1） | 3D 手姿 → 腕位姿 + 拇食开合度 [D:dyna-2] | 手套硬件真值 + Skill Transform 抹人 [S:act-1] | 手持夹爪硬件真值（"pair of handheld grippers"）[G:gen-1.5] |
 | 模型 | S2 7B VLM 7–9 Hz + S1 80M 200 Hz [F:helix] + S0 10M 1 kHz [F:helix-02] | Qwen3-VL-4B MoT VLA（DYNA-1）→ 视频扩散骨干 MoT + 流匹配 WAM（DYNA-2）[D:dyna-2] | ACT-1/ACT-2 单一端到端网络，架构未披露 [S:act-1][S:act-2] | GEN-0/1/1.5，99% 参数从零 [G:beyond]，Harmonic Reasoning 单流 [G:gen-0]，100 Hz [G:gen-1.5] |
-| 分层 vs 统一 | 三层各自时标 [F:helix-02] | 四层栈 ⚠️（note.com 转述，见 dyna 报告 §1） | 导航 + 操作单模型 [S:act-1] | "不依赖 System1-System2 架构" [G:gen-0] |
+| 分层 vs 统一 | 三层各自时标 [F:helix-02] | 三层时标：System 2 DYNA-VLM ~1 Hz → System 1 DYNA-2 ~10–15 Hz → System 0 ~1 kHz，本体层 DYNA-SAUR [D:home] | 导航 + 操作单模型 [S:act-1] | "不依赖 System1-System2 架构" [G:gen-0] |
 | 新任务上线成本 | 8 h 精策划可用 [F:helix-logistics]；10→60 h 仍线性 [F:scaling-helix] | ≤10 h 后训练 [D:dyna-2]；1 h 微调 ~100% [D:pre-training] | 单条示例 SFT 教会可泛化折法；每户零适配 [S:act-2] | ~1 h → 99% [G:gen-1]；3–12 s 零梯度 59%，10 步 5 min 83% [G:gen-1.5] |
 | 评测口径 | T_eff 对示范者归一化 [F:helix-logistics]；BMW 三 KPI [F:bmw] | "部署即评测"，每条生产 episode 按客户 SOP 打分 [D:product] | Solve = 性能 × 声明范围 × 适应成本 [S:act-2] | 盲测 A/B、MSE + 反向 KL [G:gen-0] |
 | 数据基础设施亮点 | 10 Gbps mmWave 回坞卸数 [F:figure-03]；五阶段策展 [F:index]；视觉自标定 [F:helix-logistics] | MCAP + topic-group chunking [D:infra]；环形缓冲触发固化、SOP 自动标注、硬件退化指数 [D:product] | 48 小时迭代周期 [S:technology]；任务专属评分 + 多轮 QA [S:technology]；高质量子采样消融 [S:act-2] | O(10K) 核、专线上行、6.85 年经验/训练日 [G:gen-0]；任务向量定位数据缺口 [G:hands] |
@@ -218,7 +219,7 @@ Dyna 是四家里唯一公开承认自测 99.4% [D:dyna-1] 与客户质检 46% [
 |---|---|---|---|
 | 动作真值来源 | 硬件记录 vs 视觉伪动作 | Generalist [G:gen-1.5]、Sunday [S:act-1] 硬件；Dyna 伪动作 [D:dyna-2]；Figure 遥操作 + 人类视频 [F:helix][F:index] | 各家只有自家曲线；Dyna 自认伪动作缺手指/力/触觉 [D:dyna-2] |
 | 本体 | 人形 vs 非人形 | Figure "perspectives and kinematics mirror our own" [F:go-big]；Sunday 非人形 [S:act-1]；Dyna 固定双臂起步 [D:dyna-2]；Generalist 不选边 [G:hands] | Figure 的人形优势论目前只有导航迁移证据 [F:go-big] |
-| 模型分层 | 时标分层 vs 单流 | Figure 三层 [F:helix-02]；Generalist 单流 [G:gen-0]；Sunday 单模型 [S:act-1] | 100 Hz 单流 [G:gen-1.5] 与 200 Hz S1 [F:helix] 都达商用速度，无法判优 |
+| 模型分层 | 时标分层 vs 单流 | Figure 三层 [F:helix-02]、Dyna 三层 [D:home]；Generalist 单流 [G:gen-0]；Sunday 单模型 [S:act-1] | 100 Hz 单流 [G:gen-1.5] 与 200 Hz S1 [F:helix] 都达商用速度，无法判优；两家分层的中层速率相差 10 倍以上（Dyna ~10–15 Hz [D:home] vs Figure 200 Hz [F:helix]），说明"分层"不等于"中层高频" |
 | 骨干来源 | VLM 初始化 vs 从零 | Figure S2 开源 VLM [F:helix]，DYNA-1 Qwen3-VL-4B [D:dyna-2]；Generalist 99% 从零 [G:beyond]；DYNA-2 视频扩散骨干 [D:dyna-2] | "从零总是赢"只有自家数据 [G:beyond] |
 | 训练目标 | 纯动作 vs 联合未来帧 | Dyna-2 联合 39/39 胜 [D:dyna-2]；Generalist "combining ideas from across… VLAs, world models, and beyond" [G:beyond] | 见 U-37 |
 | 仿真角色 | 全身控制层 vs 不用 | Figure S0 全仿真 RL [F:helix-02]；Generalist 零仿真预训练但可作提示 [G:gen-1.5] | — |
@@ -231,6 +232,7 @@ Dyna 是四家里唯一公开承认自测 99.4% [D:dyna-1] 与客户质检 46% [
 3. **评测在向可比声明演进**：T_eff [F:helix-logistics]、Solve [S:act-2]、部署即评测 [D:product]、盲测 A/B [G:gen-0]。
 4. **涌现即兴与恢复被三家独立观察**：Figure 拍平快递袋 [F:scaling-helix]、多抓退回 [F:laundry]；Generalist 香蕉当刷 [G:gen-1.5]；Sunday 地上衣物回收 [S:act-2]；Generalist 明说它也是对齐负债 [G:gen-1]。
 5. **车队数据基础设施是共同补齐方向**：[F:figure-03][F:ramping]、[D:product][D:infra]、[S:technology]、[G:gen-0]。
+6. **头部 + 手内双视角（2026-09-16 补）**：Figure 头相机 + 掌心相机 [F:figure-03]；Sunday 相机帽 + 手套相机吊舱（[research-sunday.md](research-sunday.md) §1.1）；Dyna 头部吊舱 + 胸口相机 + 每臂腕装相机（首页视频截帧，[research-dyna-comparison.md](research-dyna-comparison.md) §1.1，图片推断 ⚠️）；Generalist Data Hands 的相机布局未见一手细节。
 
 ### 5.5 与本仓库四轨的映射
 
@@ -261,4 +263,4 @@ Dyna 是四家里唯一公开承认自测 99.4% [D:dyna-1] 与客户质检 46% [
 
 ## 7. 来源
 
-一手：本文顶部 38 个引用键，全部对应 [docs/sources/MANIFEST.md](sources/MANIFEST.md) 中的归档文件（含 URL、页面日期、抓取日期、原始 HTML sha256）。第三方（⚠️，仅补一手缺失项）：Humanoids Daily（Index 周活 69,943 / 35 min/s；Memo 手套价格与采集员数；F04 设计锁定）、humanoid.guide（Memo 重量与脊柱高度）、Sacra（手套价格另一口径）、note.com（Dyna 四层栈命名）。
+一手：本文顶部 39 个引用键，全部对应 [docs/sources/MANIFEST.md](sources/MANIFEST.md) 中的归档文件（含 URL、页面日期、抓取日期、原始 HTML sha256）。第三方（⚠️，仅补一手缺失项）：Humanoids Daily（Index 周活 69,943 / 35 min/s；Memo 手套价格与采集员数；F04 设计锁定）、humanoid.guide（Memo 重量与脊柱高度）、Sacra（手套价格另一口径）、note.com（Dyna 四层栈命名）。

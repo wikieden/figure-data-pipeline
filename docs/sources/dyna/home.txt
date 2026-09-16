@@ -1,0 +1,119 @@
+SOURCE ARCHIVE (fdp docs/sources)
+URL: https://www.dyna.co/
+Title: DYNA Robotics — Commercial-Grade Robots for the Real World
+Page date: undated (footer "© 2026 DYNA Robotics Inc."; Next.js deployment id dpl_6px4kN75pWfuvyKQsisz9PK3PSdn)
+Fetched: 2026-09-16 via curl (UA: desktop Chrome), HTML → text extraction (script/style/noscript/svg stripped, block tags → newlines, consecutive duplicate lines dropped)
+Raw HTML sha256: c5803c8c24fbe41962fdd89898c2bb28901531ff8fca8a3a6bf600d400e1919c
+Raw HTML bytes: 167802
+Rights: © DYNA Robotics Inc.; archived verbatim for citation/verification only, not for redistribution.
+Note: the "World Model" diagram's frequency labels are rendered from JS data, not DOM text; they are appended below from the page's own chunk.
+========================================================================
+DYNA Robotics — Commercial-Grade Robots for the Real World
+Menu
+CompanyCareersBlogResearchContact
+Completing end-to-end workflows in hospitality, logistics, and factory operations. Shift after shift.
+Robots that think, adapt, and act.
+[ LEADING THE SHIFT ]
+Dyna combines foundation models, rapid deployment, and a world-class team. Our robots learn in hours, adapt across environments, and deploy in minutes. Every deployment strengthens the fleet — scaling reliably from one site to hundreds.
+[ WORKFLOW AUTONOMY ]
+Mobile, dexterous, and intelligent. All at once.
+01
+02
+03
+Production-grade performance
+Variables are the enemy of a smooth operation. Our robots provide a steady baseline of speed and quality, ensuring your throughput remains constant through every shift and at every site.
+[ World Model ]
+From intention to completion.
+DYNA-2, Our flagship World Action Model (WAM) thinks in video. Trained on a million hours of human activity videos, it imagines what happens next, then acts on it.
+Learn more
+Task prompt
+“Fold these towels.”
+System 2
+DYNA-VLM
+High-level agentic reasoning
+System 1
+DYNA-2
+Mid-level task dexterity
+System 0
+DYNA-System0
+Low-level whole-body control
+Embodiment & sensing
+DYNA-SAUR
+Vision · tactile · proprioception
+[ Deployments ]
+Already working on sites like yours.
+[ Dryer to delivery-ready ]
+Laundry & Garment
+100 items/hr from dryer to folded, stacked, and bagged — no pre-sorting required
+≥98% delivery-ready (hospitality-grade fold, uniform stack height) across hand, bath, pool, and apparel — including tangled, damp, and wrinkled inputs
+[ Bus tub to loaded rack ]
+Food & Hospitality
+180 items/hr — pre-scrapes, sorts, and racks
+<90 seconds per bus tub (wash-ready orientation, correct rack assignment) across plates, glassware, and flatware
+[ Line to sealed carton ]
+Factory & Assembly
+200 units/hr — picks, inspects, places, and seals
+±2mm placement accuracy (label-up, barcode-out, seated to spec) across changing SKUs — including items the robot has never seen before
+You’ll believe it when you see it? Deal.
+Explore a pilot
+[ DYNA ]
+Discover:
+ResearchBlogContact
+About:
+HomeCompanyCareers
+Social:
+YouTubeLinkedInTwitterInstagram
+Newsletter Signup
+Policy
+© 2026 DYNA Robotics Inc.
+CompanyCareersResearchBlog
+Contact
+Contact3:08 PM
+Name
+Email
+Company
+Team Size1-2021-5051-100100+
+Message
+BusinessMediaInvestorOther
+Submit
+Real-time recovery
+24/7 autonomous operation
+Fixed systems fail silently or stop. Dyna robots detect errors as they happen, correct in the moment, and continue the workflow.
+Real operations do not stop after one shift. Dyna robots run across shifts and through the night, keeping workflows moving without human oversight.
+[Dryer to delivery-ready]
+[Bus tub to loaded rack]
+[Line to sealed carton]
+[ Policy ]
+
+======================================================================== 
+APPENDIX A — "World Model" diagram data, extracted verbatim from the page's JS chunk
+Chunk URL: https://www.dyna.co/_next/static/chunks/0yhg2~wxz7tg~.js?dpl=dpl_6px4kN75pWfuvyKQsisz9PK3PSdn
+Chunk sha256: fa3b753d7256e0e32e5073510677d77be9df75c822864c7bc7961195092e02a0
+Fetched: 2026-09-16
+Note: the chunk carries two variants of the diagram (a card layout with per-node "hz" and a rail layout with per-edge labels). Both are copied as-is; they disagree on System 1 rate (~15 Hz vs ~10 Hz) and on the System 0 name ("DYNA RL Controller" vs "DYNA-System0").
+
+Card layout nodes:
+{system:"System 2",hz:"1 Hz",model:"DYNA-VLM Reasoning Model",desc:"High-level agentic reasoning",active:0===l,flex:r(0)}
+{system:"System 1",hz:"~15 Hz",model:"DYNA-2",desc:"Mid-level task dexterity",active:1===l,flex:r(1)}
+{system:"System 0",hz:"~1 kHz",model:"DYNA RL Controller",desc:"Low-level whole-body control",active:2===l,flex:r(2)}
+
+Rail layout nodes:
+{node:"vlm",left:240,system:"System 2",name:"DYNA-VLM",desc:"High-level agentic reasoning"}
+{node:"verse",left:550,system:"System 1",name:"DYNA-2",desc:"Mid-level task dexterity"}
+{node:"sys0",left:860,system:"System 0",name:"DYNA-System0",desc:"Low-level whole-body control"}
+
+Rail layout edges:
+{from:"prompt",to:"vlm",exit:"right",enter:"left",pace:"slow"}
+{from:"vlm",to:"verse",exit:"right",enter:"left",pace:"slow",label:"Instruction",pill:!0,labelDy:0,rate:"~1 Hz"}
+{from:"verse",to:"sys0",exit:"right",enter:"left",pace:"mid",label:"~10 Hz",labelDy:-12}
+{from:"sys0",to:"robot",exit:"right",enter:"left",pace:"fast",label:"~1 kHz",labelDy:-12}
+{from:"robot",to:"verse",exit:"bottom",enter:"bottom",pace:"steady",big:!0,rail:322}
+{from:"robot",to:"vlm",exit:"bottom",enter:"bottom",pace:"steady",big:!0,rail:362,label:"Sensor stream",labelDy:-12}
+
+Other diagram strings present in the chunk / DOM: "Task prompt", "“Fold these towels.”", "Instruction", "Sensor stream", "Embodiment & sensing", "DYNA-SAUR", "Vision · tactile · proprioception".
+
+APPENDIX B — hero / section video assets referenced by the page (archived frames: docs/assets/sources/dyna/, see MANIFEST.md)
+/assets/videos/strobe-lights.mp4 (desktop hero, 1920x1080, 10.09 s) sha256 2902ea0d528f50c57d6d963b6c79334138c70ed88a372f2a4c3fa1c42a91062f
+/assets/videos/laundry-garment.mp4 (1920x1080, 5.71 s) sha256 91ae87f9c7630b1995cf9f657055930100282e72db4398c870e57f237c83b09d
+/assets/videos/dyna-mission.mp4 (1920x1012, 28.24 s) sha256 6b5aa27488b39dd1cc5b68140389cf6b8df40f2d1d3246da43f2c4042281a7e8
+/assets/videos/dyna-factory.mp4, /assets/videos/dyna-restaurant.mp4, /assets/videos/dyna-folding-laundry.mp4 (720x576 section videos, not archived as frames)
