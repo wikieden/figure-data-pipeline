@@ -72,6 +72,7 @@
 | [research-vla-pretraining.md](research-vla-pretraining.md) | 清洗→VLA/WAM 0→1 预训练全链路，含可行计划 | 2026-08-30 |
 | [research-qwen-robotics.md](research-qwen-robotics.md) | 通义机器人栈（现场 slide，非公开） | 2026-09-04 |
 | [research-sunday.md](research-sunday.md) | Sunday Memo / Skill Capture Glove | 2026-09-04 |
+| [research-sensor-layouts.md](research-sensor-layouts.md) | 已调研产品机器人本体的传感器设计对照（Figure 03 / Dyna / Sunday Memo / Generalist 机器人端），每台一张布局示意图，位置可信度分级 | 2026-09-16 |
 | [research-twindex.md](research-twindex.md) | 自变量 TwinDEX 孪生灵巧手 | 2026-09-04 |
 | [device-landscape.md](device-landscape.md) | 领先采集设备构型横评（多角度图集） | 2026-09-04 |
 | [research-simfoundry.md](research-simfoundry.md) | NVIDIA SimFoundry：单视频→仿真孪生/数字表亲，real2sim 评测与 sim2real 训练，license 边界 | 2026-09-09 |
