@@ -29,6 +29,7 @@
 | dyna | [`dyna/dyna-2-infrastructure.txt`](dyna/dyna-2-infrastructure.txt) | Training Dyna-2 at million-hour scale, repeatably | 2026-08-17 | https://www.dyna.co/research/dyna-2-infrastructure | 28,265 | `74fd2c48df9d` |
 | dyna | [`dyna/scaling-customer-deployments.txt`](dyna/scaling-customer-deployments.txt) | Not Just a Model, But a Product | 2026-08-27 | https://www.dyna.co/research/scaling-customer-deployments | 21,768 | `4fdaa6368742` |
 | dyna | [`dyna/home.txt`](dyna/home.txt) | DYNA Robotics — Commercial-Grade Robots for the Real World（首页；附录 A 为 World Model 图示的 JS 数据，附录 B 为视频资产清单） | 无（页脚 © 2026） | https://www.dyna.co/ | 2,773（正文）| `c5803c8c24fb` |
+| dyna | [`dyna/company.txt`](dyna/company.txt) | Company — DYNA（公司页：使命句、"Where frontier research ships."、文化三条、团队来源；hero 视频 dyna-hero-home.mp4） | 无（页脚 © 2026） | https://www.dyna.co/company | 1,734 | `08abdf0b1996` |
 | sunday | [`sunday/no-robot-data.txt`](sunday/no-robot-data.txt) | ACT-1: A Robot Foundation Model Trained on Zero Robot Data | 2025-11-19 | https://www.sunday.ai/blog/no-robot-data | 9,479 | `4b2b811c298c` |
 | sunday | [`sunday/series-b.txt`](sunday/series-b.txt) | Sunday's Series B: No More Demos | 2026-03-12 | https://www.sunday.ai/blog/series-b | 1,896 | `94369ce78db3` |
 | sunday | [`sunday/act-2-preview.txt`](sunday/act-2-preview.txt) | ACT-2 Preview: Generalizing Reliability | 2026-07-17 | https://www.sunday.ai/blog/act-2-preview | 25,729 | `e28a90a77b4c` |
@@ -55,7 +56,7 @@
 | skild | [`skild/skild-zebra.txt`](skild/skild-zebra.txt) | Skild AI Acquires Zebra Technologies' Robotics Arm | 2026-04-15 | https://www.skild.ai/blogs/skild-zebra | 3,806 | `2b785a385635` |
 | skild | [`skild/s1.txt`](skild/s1.txt) | Introducing S1: In-Context Learning for Robotics | 2026-08（页面只写月份；100M ARR 文说 S1 发布于其两周前，即约 2026-08-27） | https://www.skild.ai/blogs/s1 | 23,821 | `18fb93bfaec8` |
 | skild | [`skild/skild-crosses-100m-arr.txt`](skild/skild-crosses-100m-arr.txt) | The Hidden Pillar of Robotics (Skild AI crossed $100 million in ARR) | 2026-09-10 | https://www.skild.ai/blogs/skild-crosses-100m-arr | 8,357 | `39535a1a56af` |
-共 50 篇：Figure 18、Dyna 7（首页于 2026-09-16 归档）、Sunday 4、Generalist 10、Skild 11（skild.ai 于 2026-09-14 晚间可达，全部博客归档）。
+共 51 篇：Figure 18、Dyna 8（首页与公司页于 2026-09-16 归档）、Sunday 4、Generalist 10、Skild 11（skild.ai 于 2026-09-14 晚间可达，全部博客归档）。
 
 ## 图片归档（docs/assets/sources/）
 
@@ -71,6 +72,8 @@
 | dyna | [`assets/sources/dyna/dyna-hero-celery-topdown.jpg`](../assets/sources/dyna/dyna-hero-celery-topdown.jpg) | https://www.dyna.co/ （hero 视频） | https://www.dyna.co/assets/videos/strobe-lights.mp4 @ 2.6 s（1920×1080，10.09 s） | `2902ea0d528f`（视频文件） | 164 KB（缩到 ≤1600 px JPEG） | 俯视双臂协作，两只夹爪各带一枚相机模块 |
 | dyna | [`assets/sources/dyna/dyna-hero-folding-station.jpg`](../assets/sources/dyna/dyna-hero-folding-station.jpg) | https://www.dyna.co/ （hero 视频） | https://www.dyna.co/assets/videos/strobe-lights.mp4 @ 6.0 s（1920×1080，10.09 s） | `2902ea0d528f`（视频文件） | 224 KB（缩到 ≤1600 px JPEG） | 叠衣工作站全景：头部相机吊舱、桌沿独立基座双臂、机身在桌后推车上；同房间 ≥8 台同款 |
 | dyna | [`assets/sources/dyna/dyna-hero-compact-towel.jpg`](../assets/sources/dyna/dyna-hero-compact-towel.jpg) | https://www.dyna.co/ （hero 视频） | https://www.dyna.co/assets/videos/strobe-lights.mp4 @ 9.6 s（1920×1080，10.09 s） | `2902ea0d528f`（视频文件） | 176 KB（缩到 ≤1600 px JPEG） | 紧凑型：双臂直接装在机身两侧肩托，头部吊舱 + 胸口相机 |
+| dyna | [`assets/sources/dyna/dyna-company-hero-mural.jpg`](../assets/sources/dyna/dyna-company-hero-mural.jpg) | https://www.dyna.co/company （hero 视频） | https://www.dyna.co/assets/videos/dyna-hero-home.mp4 @ 1.0 s（1920×1080，14.53 s） | `bdfabe8236c3`（视频文件） | 132 KB（缩到 ≤1600 px JPEG） | 紧凑型机身正面：头部吊舱、胸口相机槽、双臂肩托安装；用户 2026-09-16 截图（"Where frontier research ships."）对应此帧 |
+| dyna | [`assets/sources/dyna/dyna-company-hero-gripper-camera.jpg`](../assets/sources/dyna/dyna-company-hero-gripper-camera.jpg) | https://www.dyna.co/company （hero 视频） | https://www.dyna.co/assets/videos/dyna-hero-home.mp4 @ 9.0 s | `bdfabe8236c3`（视频文件） | 132 KB | 装箱特写：腕装相机模块（镜头 + 红色 LED）经支架装在夹爪上方朝向指尖，弯指平行夹爪 |
 
 ## 归档规则
 

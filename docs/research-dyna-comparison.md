@@ -32,8 +32,14 @@ CEO 的一句话定调了他们的数据观："客户从没问过成功率，只
 
 ![Dyna 紧凑型双臂装在机身肩托](assets/sources/dyna/dyna-hero-compact-towel.jpg)
 
-1. **相机三处**：头部吊舱（白色立柱顶端，前脸黑色视窗，侧面绿色状态灯）、胸口相机（机身正面；1.2 s 帧中为侧装可转的小黑盒）、腕装相机（每只夹爪本体上一枚黑色相机模块带绿色 LED，线缆外走，朝向指尖）。这与 §1 表 DYNA-SAUR 的 "Vision" 对应，也是四家收敛点"头部 + 手内双视角"的第三个样本（[research-four-routes.md](research-four-routes.md) §5.4 第 6 条）。
-2. **末端**：平行双指夹爪，指尖细长黑色；1.2 s 帧夹持菜刀切芹菜，2.6 s 帧俯视两臂协作（一臂持刀、一臂扶芹菜）。看不出触觉传感器的外观，图示中的 "tactile" 无法从帧上确认。
+公司页 [sources/dyna/company.txt](sources/dyna/company.txt)（标语 "Where frontier research ships."，使命句 "robots that earn their place on any floor."）的 hero 视频 `dyna-hero-home.mp4` 另取两帧：
+
+![Dyna 公司页 hero：紧凑型机身正面](assets/sources/dyna/dyna-company-hero-mural.jpg)
+
+![Dyna 公司页 hero：腕装相机特写](assets/sources/dyna/dyna-company-hero-gripper-camera.jpg)
+
+1. **相机三处**：头部吊舱（白色立柱顶端，前脸黑色视窗，侧面绿色状态灯）、胸口相机（机身正面；1.2 s 帧中为侧装可转的小黑盒，公司页帧中为机身正面一条横向黑色开口）、腕装相机（每只夹爪本体上一枚黑色相机模块，公司页 9.0 s 帧可见镜头 + 红色 LED，经支架装在夹爪上方、朝向指尖，线缆外走）。这与 §1 表 DYNA-SAUR 的 "Vision" 对应，也是四家收敛点"头部 + 手内双视角"的第三个样本（[research-four-routes.md](research-four-routes.md) §5.4 第 6 条）。
+2. **末端**：平行双指夹爪，指尖细长黑色、末端内弯（公司页 9.0 s 帧）；1.2 s 帧夹持菜刀切芹菜，2.6 s 帧俯视两臂协作（一臂持刀、一臂扶芹菜）。看不出触觉传感器的外观，图示中的 "tactile" 无法从帧上确认。
 3. **臂与安装**：白色连杆黑色关节，外观与 §1 表的 6-DoF YAM 描述一致（型号未在页面写明）。两种安装方式：6.0 s 帧两臂立在桌沿的独立基座上、机身在桌后的带轮推车上；9.6 s 帧两臂直接装在机身两侧肩托上（紧凑型）。
 4. **车队**：6.0 s 帧同一房间可数 ≥8 台同款工作站，每台配笔记本与洗衣篮，是 §2.3 与 D-26 "每站每天 >1 TB" 的物理来源。
 5. **对本仓库**：robot 轨相机语义命名（data-format-contract 的相机归一化表）应预留 `head` / `torso` / `wrist_left` / `wrist_right` 四个槽位，Dyna 是三家里唯一同时占满四槽的；device 轨 UMI 的腕装鱼眼与 Dyna 腕装相机同位，配对采集时可对齐。
@@ -202,7 +208,7 @@ CEO 的一句话定调了他们的数据观："客户从没问过成功率，只
 
 ## 9. 来源
 
-**官方（一手）**：dyna.co 首页（[sources/dyna/home.txt](sources/dyna/home.txt)，含 World Model 图示 JS 数据与 hero 视频截帧，2026-09-16）；PR Newswire — DYNA-1 发布（2025-04-29，302441437）、$120M A 轮（2025-09-15，302556817）、DYNA-2 发布与更正（2026-08-10，302847114）；Skild 博客列表（skild.ai/blogs，抓取成功）；Generalist 博客 GEN-1（generalistai.com/blog/gen-1，抓取成功）与博客列表；NVIDIA 技术博客 WAM（2026-06-15）；NVIDIA 案例页 Skild；Alluxio 客户案例（合作方稿）。
+**官方（一手）**：dyna.co 首页（[sources/dyna/home.txt](sources/dyna/home.txt)，含 World Model 图示 JS 数据与 hero 视频截帧）与公司页（[sources/dyna/company.txt](sources/dyna/company.txt)），2026-09-16；PR Newswire — DYNA-1 发布（2025-04-29，302441437）、$120M A 轮（2025-09-15，302556817）、DYNA-2 发布与更正（2026-08-10，302847114）；Skild 博客列表（skild.ai/blogs，抓取成功）；Generalist 博客 GEN-1（generalistai.com/blog/gen-1，抓取成功）与博客列表；NVIDIA 技术博客 WAM（2026-06-15）；NVIDIA 案例页 Skild；Alluxio 客户案例（合作方稿）。
 **官方（经转述）**：dyna.co/dyna-2 研究页 → explainx.ai（2026-08）、note.com 香川友志（2026-08-20）、ActionTrajectories；skild.ai/blogs/s1 → The Robot Report、Humanoids Daily、unite.ai、NVIDIA 博客；Dyna 官方 X 帖（2026-08-10，经搜索摘要）。
 **第三方**：Interesting Engineering、Robotics 24/7（403）、heise、Bloomberg/TNW（Skild ARR）、CyberRobo X 帖（Monster Laundry）。
 **论文**：arXiv 2606.00054、2602.15922、2609.05588、2607.00836、2605.00080、2604.20246、2606.30457、2505.20795、2603.07530、2505.11709；其余见 [data-strategy-roadmap.md](data-strategy-roadmap.md) §7.1。

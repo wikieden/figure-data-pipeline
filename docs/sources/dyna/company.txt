@@ -1,0 +1,63 @@
+SOURCE ARCHIVE (fdp docs/sources)
+URL: https://www.dyna.co/company
+Title: Company — DYNA
+Page date: undated (footer "© 2026 DYNA Robotics Inc.")
+Fetched: 2026-09-16 via curl (UA: desktop Chrome), HTML → text extraction (script/style/noscript/svg stripped, block tags → newlines, consecutive duplicate lines dropped)
+Raw HTML sha256: 08abdf0b19963ed0f280eecd7e94a77c65fcdece05b2ac611e89b7a69352e2df
+Raw HTML bytes: 171428
+Rights: © DYNA Robotics Inc.; archived verbatim for citation/verification only, not for redistribution.
+Note: hero video /assets/videos/dyna-hero-home.mp4 (frame archived under docs/assets/sources/dyna/, see MANIFEST.md).
+========================================================================
+Company — DYNA
+Menu
+CompanyCareersBlogResearchContact
+Our mission is to build robots that earn their place on any floor.
+Where frontier research ships.
+[ mission ]
+At Dyna, we build robots to be useful in the real world. From the hardware to foundation models, we’re obsessed with delivering on the full stack of embodied AI. Our success will decouple the physical economy from human hours.
+[ Our team comes from ]
+Want to push the boundaries of physical AGI? Join us.
+Apply now
+[ Culture ]
+Our principles for a culture of ambition and execution.
+01
+Aim high, stay grounded
+We set extremely ambitious goals that inspire us, and support them with disciplined execution to deliver measurable real-world impact. We don’t chase hype, we build systems that perform.
+02
+Sharp minds, low egos
+We value clear thinking, innovative ideas, and strong convictions. We engage in rigorous (and low ego) debates, make quick decisions, and prioritize team success over individual recognition.
+03
+Deep ownership, bold obsession
+We treat the work as our own because that’s how ambitious ideas become real, obsessing over details and caring more about outcomes than credit.
+[ Featured ]
+See the latest.
+Not Just a Model, But a Product
+08.27.26
+Training Dyna-2 at million-hour scale, repeatably
+08.17.26
+Dyna-2: A 1-Million-Hour Scaling Law for World-Action Models
+08.15.26
+[ Get in Touch ]
+You’ll believe it when you see it? Deal.
+Explore a pilot
+[ DYNA ]
+Discover:
+ResearchBlogContact
+About:
+HomeCompanyCareers
+Social:
+YouTubeLinkedInTwitterInstagram
+Newsletter Signup
+Policy
+© 2026 DYNA Robotics Inc.
+CompanyCareersResearchBlog
+Contact
+Contact3:08 PM
+Name
+Email
+Company
+Team Size1-2021-5051-100100+
+Message
+BusinessMediaInvestorOther
+Submit
+[ Policy ]
