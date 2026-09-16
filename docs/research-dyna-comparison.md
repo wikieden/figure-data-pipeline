@@ -14,11 +14,29 @@
 | 融资 | 种子 $23.5M（2025-03，CRV、First Round）；A 轮 $120M（2025-09，Robostrategy 领投，CRV、First Round、Salesforce Ventures、NVentures、Amazon Industrial Innovation Fund、Samsung Next、LG TV 参投）；估值 >$600M 为 Bloomberg 报道未经确认 | PR Newswire 官方；估值第三方 |
 | 硬件（DYNA-SAUR 层） | 固定双臂 6-DoF YAM 臂 + 平行夹爪；双臂 + WUJI-2 20-DoF 五指手；"半人形"移动上身原型；移动底盘 2026 年由外购转自研；感知含视觉、触觉、本体 | note.com 转述官方；explainx 转述研究页 |
 | 部署 | 酒店、餐厅、洗衣房、健身房；Monster Laundry（Sacramento）3 个月折 20 万+ 条毛巾、10 个客户；Red Bull Mirage（Coachella 2026-04）8 小时 700+ 杯；单机每天运行 16 小时 | X 帖（CyberRobo 转述）、heise、note.com · 第三方/自报⚠️ |
-| 商业 KPI（2026-08 自报） | 洗衣 100 件/h、98%+ 可出货；餐饮 180 件/h；装配 200 件/h、±2 mm；早期口径为"人类 60% 吞吐" | note.com 转述官方 · 自报⚠️ |
-| 四层栈 | System 2 DYNA-VLM（推理）/ System 1 DYNA-2（灵巧操作）/ System 0（全身控制）/ DYNA-SAUR（硬件感知） | note.com 转述官方 |
+| 商业 KPI（自报） | 洗衣 100 items/hr、≥98% delivery-ready；餐饮 180 items/hr、每 bus tub <90 s；装配 200 units/hr、±2 mm；早期口径为"人类 60% 吞吐"（note.com 转述） | dyna.co 首页一手（[sources/dyna/home.txt](sources/dyna/home.txt)，2026-09-16 归档）· 自报⚠️ |
+| 三层模型 + 本体层 | System 2 DYNA-VLM "High-level agentic reasoning" ~1 Hz → Instruction → System 1 DYNA-2 "Mid-level task dexterity" ~10 Hz（同页另一布局写 ~15 Hz）→ System 0 DYNA-System0（JS 数据另名 "DYNA RL Controller"）"Low-level whole-body control" ~1 kHz → DYNA-SAUR "Embodiment & sensing: Vision · tactile · proprioception"；传感流回送 System 1 与 System 2 | dyna.co 首页一手（[sources/dyna/home.txt](sources/dyna/home.txt) 附录 A，频率取自页面 JS 数据）；此前为 note.com 转述 |
 | 公开性 | 无权重、无 API、无云服务；"Distribution is King" | note.com 第三方 |
 
 CEO 的一句话定调了他们的数据观："客户从没问过成功率，只问 ROI"（Lindon Gao，第三方转述）。
+
+### 1.1 官方首页视频截帧观察（2026-09-16）
+
+来源：dyna.co 首页 hero 视频 `strobe-lights.mp4`（1920×1080，10.09 s，sha256 见 [sources/MANIFEST.md](sources/MANIFEST.md) 图片表）四帧，时间戳 1.2 / 2.6 / 6.0 / 9.6 s。用户 2026-09-16 提供的三张截图分别对应 1.2 s、6.0 s 附近帧与标语 "Robots that think, adapt, and act."。以下全部为图片推断 ⚠️，页面未给硬件规格。
+
+![Dyna 夹爪持刀切芹菜，腕装相机与胸口相机可见](assets/sources/dyna/dyna-hero-celery-knife.jpg)
+
+![Dyna 俯视双臂协作，每只夹爪一枚相机](assets/sources/dyna/dyna-hero-celery-topdown.jpg)
+
+![Dyna 叠衣工作站全景，同房间多台同款](assets/sources/dyna/dyna-hero-folding-station.jpg)
+
+![Dyna 紧凑型双臂装在机身肩托](assets/sources/dyna/dyna-hero-compact-towel.jpg)
+
+1. **相机三处**：头部吊舱（白色立柱顶端，前脸黑色视窗，侧面绿色状态灯）、胸口相机（机身正面；1.2 s 帧中为侧装可转的小黑盒）、腕装相机（每只夹爪本体上一枚黑色相机模块带绿色 LED，线缆外走，朝向指尖）。这与 §1 表 DYNA-SAUR 的 "Vision" 对应，也是四家收敛点"头部 + 手内双视角"的第三个样本（[research-four-routes.md](research-four-routes.md) §5.4 第 6 条）。
+2. **末端**：平行双指夹爪，指尖细长黑色；1.2 s 帧夹持菜刀切芹菜，2.6 s 帧俯视两臂协作（一臂持刀、一臂扶芹菜）。看不出触觉传感器的外观，图示中的 "tactile" 无法从帧上确认。
+3. **臂与安装**：白色连杆黑色关节，外观与 §1 表的 6-DoF YAM 描述一致（型号未在页面写明）。两种安装方式：6.0 s 帧两臂立在桌沿的独立基座上、机身在桌后的带轮推车上；9.6 s 帧两臂直接装在机身两侧肩托上（紧凑型）。
+4. **车队**：6.0 s 帧同一房间可数 ≥8 台同款工作站，每台配笔记本与洗衣篮，是 §2.3 与 D-26 "每站每天 >1 TB" 的物理来源。
+5. **对本仓库**：robot 轨相机语义命名（data-format-contract 的相机归一化表）应预留 `head` / `torso` / `wrist_left` / `wrist_right` 四个槽位，Dyna 是三家里唯一同时占满四槽的；device 轨 UMI 的腕装鱼眼与 Dyna 腕装相机同位，配对采集时可对齐。
 
 ## 2. Dyna 的模型路线：DYNA-1 → DYNA-1i → DYNA-2
 
@@ -184,7 +202,7 @@ CEO 的一句话定调了他们的数据观："客户从没问过成功率，只
 
 ## 9. 来源
 
-**官方（一手）**：PR Newswire — DYNA-1 发布（2025-04-29，302441437）、$120M A 轮（2025-09-15，302556817）、DYNA-2 发布与更正（2026-08-10，302847114）；Skild 博客列表（skild.ai/blogs，抓取成功）；Generalist 博客 GEN-1（generalistai.com/blog/gen-1，抓取成功）与博客列表；NVIDIA 技术博客 WAM（2026-06-15）；NVIDIA 案例页 Skild；Alluxio 客户案例（合作方稿）。
+**官方（一手）**：dyna.co 首页（[sources/dyna/home.txt](sources/dyna/home.txt)，含 World Model 图示 JS 数据与 hero 视频截帧，2026-09-16）；PR Newswire — DYNA-1 发布（2025-04-29，302441437）、$120M A 轮（2025-09-15，302556817）、DYNA-2 发布与更正（2026-08-10，302847114）；Skild 博客列表（skild.ai/blogs，抓取成功）；Generalist 博客 GEN-1（generalistai.com/blog/gen-1，抓取成功）与博客列表；NVIDIA 技术博客 WAM（2026-06-15）；NVIDIA 案例页 Skild；Alluxio 客户案例（合作方稿）。
 **官方（经转述）**：dyna.co/dyna-2 研究页 → explainx.ai（2026-08）、note.com 香川友志（2026-08-20）、ActionTrajectories；skild.ai/blogs/s1 → The Robot Report、Humanoids Daily、unite.ai、NVIDIA 博客；Dyna 官方 X 帖（2026-08-10，经搜索摘要）。
 **第三方**：Interesting Engineering、Robotics 24/7（403）、heise、Bloomberg/TNW（Skild ARR）、CyberRobo X 帖（Monster Laundry）。
 **论文**：arXiv 2606.00054、2602.15922、2609.05588、2607.00836、2605.00080、2604.20246、2606.30457、2505.20795、2603.07530、2505.11709；其余见 [data-strategy-roadmap.md](data-strategy-roadmap.md) §7.1。
