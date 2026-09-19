@@ -1,6 +1,6 @@
 # 治理登记：风险 · 未决决策 · 自报数字
 
-> 2026-09-08 建立，2026-09-09 增补（战略路线图引出的 U-23–U-33 / R-14–R-19 / D-13–D-21；2026-09-14 增补 U-37 / R-20 / D-22–D-24，U-11 表 23–30 行）；同日逐项裁决 data-strategy-roadmap §6 的 10 项决策（U-03/U-23/U-24/U-25/U-27/U-28/U-30/U-32 closed，U-26 部分裁决，U-29 拆表后逐项待 LEGAL）；同日追加裁决 U-09/U-22/U-31/U-33；2026-09-12 增 U-34–U-36（采集设备五件套）；2026-09-14 增 U-38 / D-25–D-27（四家路线精读 research-four-routes.md），同日 D-23 由第三方改一手（research-skild.md）。来源为全局 review 三路审计（一致性 / 覆盖缺口 / 风险与未决项）的合并结果。三张表是活文档：每条有 owner（按角色，非人名）与复检时点；状态字段只有 `open / mitigating / closed / accepted`。新增风险、新增依赖他家数字的设计决策、新增待裁决项都必须先在这里登记再写进设计文档（CLAUDE.md 约定）。
+> 2026-09-08 建立，2026-09-09 增补（战略路线图引出的 U-23–U-33 / R-14–R-19 / D-13–D-21；2026-09-14 增补 U-37 / R-20 / D-22–D-24，U-11 表 23–30 行；2026-09-19 增补 U-39 / R-21，U-11 表 31–32 行）；同日逐项裁决 data-strategy-roadmap §6 的 10 项决策（U-03/U-23/U-24/U-25/U-27/U-28/U-30/U-32 closed，U-26 部分裁决，U-29 拆表后逐项待 LEGAL）；同日追加裁决 U-09/U-22/U-31/U-33；2026-09-12 增 U-34–U-36（采集设备五件套）；2026-09-14 增 U-38 / D-25–D-27（四家路线精读 research-four-routes.md），同日 D-23 由第三方改一手（research-skild.md）。来源为全局 review 三路审计（一致性 / 覆盖缺口 / 风险与未决项）的合并结果。三张表是活文档：每条有 owner（按角色，非人名）与复检时点；状态字段只有 `open / mitigating / closed / accepted`。新增风险、新增依赖他家数字的设计决策、新增待裁决项都必须先在这里登记再写进设计文档（CLAUDE.md 约定）。
 
 角色缩写：**DATA** 数据层（recorder/ingest/export/schema）、**CUR** 策展层、**TRAIN** 训练层、**HW** 采集硬件、**PLAT** 数据平台/运维、**LEGAL** 法务合规、**PM** 项目管理。
 
@@ -30,6 +30,7 @@
 | R-18 | 数据/合规 | 端上脱敏损伤手部可见率与动作伪标签（脱敏是 raw 永存唯一例外，且因旁观者诉讼必须前置） | 中 | 脱敏后 MPJPE 差 >10% 或手部可见率降 >5pt | 脱敏工具链选型消融（U-32）；脱敏前帧哈希留存 90 天；损伤指标进 QC | CUR + LEGAL | H0 末 | open |
 | R-19 | 商业 | 对外策展/评测服务的客户即竞争者（训练场自建策展）；开源工具与商业服务自我冲突 | 低 | 客户流失到自建；开源阈值被要求公开 | **2026-09-09 裁决**：PL3 策展即服务为对外首条产品线（M2 后，12 个月内 2 家训练场）；契约与报告器免费、估值与评测校准数据收费；方法公开、阈值与配方版本化不公开（open-source-strategy §5） | PM | 对外首单前 | mitigating |
 | R-20 | 商业/闭环 | 部署车队不产生自加速飞轮：Dyna 联创 York Yang（2026-05）自述 10 个月、多客户、每天 16 h 运营"部署没有自我加速"，并称全行业同此（research-dyna-comparison §2.4） | 高 | L7 回流小时数增长但"干预段 → 下一版本成功率增量"转化率不升；PL5 收入假设失据 | **2026-09-14 新增**。对策：闭环层 KPI 改为转化率而非回流小时；D5 只固化干预/OOD 段；G5 门加转化率阈值；PL5 商业假设按 Dyna 反证打折 | 数据负责人 | G5 |
+| R-21 | 训练/预算 | Dyna 复现方案的关键参数全为我方估算：Dyna 未披露骨干来源、参数量、训练算力、λ、分辨率、动作分支深度（[dyna-replica-plan.md](dyna-replica-plan.md) §4）；预算区间可能偏差一个档位 | 中 | R0 调试算力超出 30% 余量；单卡推理达不到 10 Hz；三种配方对照结论随超参翻转 | **2026-09-19 新增**。对策：未披露项一律当超参扫；G-R0a（第 3 月）专设推理延迟门；只批 R0，R1 以 G-R0b 为条件；预算每档独立止损 | 训练负责人 | G-R0a / G-R0b |
 
 ---
 
@@ -75,6 +76,7 @@
 | U-36 | D4 数据手套选型：MANUS 级 vs 低成本 IMU 手套 | ≥200 Hz 为硬约束（T-800 >100 Hz 能量）；H0 先用 Quest 手追，H1 选型（capture-devices-design §4） | 手套↔本体复现的重定向误差；单价（$3–6k vs $300–800） | H1 前 | 逐指真值缺失，灵巧任务对齐集不可用 | HW + TRAIN | open |
 | U-37 | 训练层是否纳入世界-动作模型（WAM）目标：next-frame 与 next-action 协同预测作为 Stage B/C 可选分支 | 已有 Dyna-2、NVIDIA DreamZero、AgiBot GE-Act 2.0、Cosmos Policy 四家独立验证，满足 CLAUDE.md 决策 7 的 ≥2 家门槛；倾向纳入为可选分支，不改数据层，只要求 export 保留连续帧对（research-dyna-comparison §8.1） | Dyna-2 "数据与目标都重要"消融的外部复现；自家 human 轨上 next-frame 协同 vs 仅 next-action 的消融 | 训练负责人 | M3 前 |
 | U-38 | 消融切分器是否加「微调权重位移按模块分解」报告（Generalist 任务向量分析：ΔW 按传感/推理/执行分解，定位该多采哪类数据） | 训练层工具，属「数据层承载创新」的边界外；倾向 M3 作为可选报告，不进 M2 验收 | 自家 Stage B 微调实验上 ΔW 分解与采集干预的因果验证（research-four-routes §6.8） | TRAIN | M3 |
+| U-39 | 是否立项 Dyna 复现 R0（≈$0.35–0.6M、6 个月、6 人）及视频扩散骨干选型（候选 A Cosmos 3 小杯 / 候选 B Wan 2.x） | 倾向立项 R0：同时裁决 U-37、测出自家人→机器人迁移指数、完成 M3 训练栈约一半工程；骨干默认 A（已准入），B 待 U-11 核查后只进研究分支；R2 不自费（[dyna-replica-plan.md](dyna-replica-plan.md) §8） | 双臂同构工作站报价；Egocentric-10K 隐私门通过率；2B 档单卡推理实测频率；program-plan §4 Stage B 算力能否与 R1 合并 | 训练负责人 | M2 验收后、Stage B 开跑前 |
 
 ### U-11 license 核查追踪表
 
@@ -110,6 +112,8 @@
 | 28 | EgoSuite-Open100K（光轮） | human 轨对照 | 自定义 "commercial-training-no-resale-v1.0" gated、文本未公布 ⚠️ | — | 排除直至文本公布 | LEGAL |
 | 29 | Noitom HiPHI | sim 轨动捕重定向 | ModalityNet Open Research License v1.0：非商用、禁再分发、5 日删除 ⚠️ | — | 研究分支 | LEGAL |
 | 30 | ABC-130K / ABC 训练代码（DINOv3） | 配方起点 / 参考基线 | 数据 Apache-2.0（LICENSE 文件缺失）；代码 Apache-2.0 但依赖 Meta DINOv3 许可 ⚠️ | L6 | 数据可用（固定 README 声明）；基线复现需审 DINOv3 | LEGAL |
+| 31 | Wan 2.x 视频扩散骨干（1.3B / 5B / 14B） | Dyna 复现 WAM 骨干候选 B（dyna-replica-plan §4.1） | 许可未核查 ⚠️ | R0 | 待核查；核查前仅研究分支 | LEGAL |
+| 32 | Build AI Egocentric-10K | Dyna 复现 R0 预训练语料（1 万 h 工厂第一视角） | 数据 Apache-2.0（HF 卡）；旁观者脱敏零说明 ⚠️ | R0 | 入湖先过隐私门；LEGAL 出具意见前不进默认配方 | LEGAL |
 
 ---
 

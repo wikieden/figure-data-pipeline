@@ -48,7 +48,7 @@
 | 采集设备 | $5k（手机补贴 + UMI ×2） | $30–60k（EVT 10–50 台 × $600 含 NRE 摊销） | $150–300k（500 台 × $300） | index-replica-plan §1 BOM |
 | 本体与遥操作站 | $30–80k（1 台 + Quest 3 + 工控机） | +$100–300k（3–5 台） | 维持 | 取决于本体选型（U-04） |
 | 平台（存储/算力/托管） | $3k/月 | $6–8k/月 | $30–80k/月 | data-platform §1.3 |
-| 训练算力 | 单卡/云 <$5k | Stage B（S 档）5k–30k GPU·h ≈ $15–100k | Stage B（M 档）3–10 万 H100·h ≈ $100–300k | research-vla-pretraining §5 |
+| 训练算力 | 单卡/云 <$5k | Stage B（S 档）5k–30k GPU·h ≈ $15–100k | Stage B（M 档）3–10 万 H100·h ≈ $100–300k | research-vla-pretraining §5；H2 的 M 档算力与 [dyna-replica-plan.md](dyna-replica-plan.md) R1（WAM 分支，10–15 万 H100·h）共用同一笔预算、两条配方分支（2026-09-19） |
 | VLM API | <$1k | $3–5k | $20–50k | 只仲裁分歧样本 |
 | HITL 审核 | 内部 | 5 人·月 × 3 | 按入湖量线性 | curation §9 |
 | 合规/法务 | $10–20k | $20–40k | $50–100k | 区域数 |
