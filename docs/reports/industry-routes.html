@@ -1,0 +1,180 @@
+<!doctype html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>具身路线对照与取舍</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@400;500;700&family=Noto+Serif+SC:wght@600;900&display=swap">
+<style>
+:root{
+  --ground:#F2F5F9; --surface:#FFFFFF; --ink:#16202F; --muted:#5C6B80; --rule:#D5DCE6;
+  --a:#2B4FA6; --a-soft:#E3EAF8; --b:#17786C; --b-soft:#DDF0EC;
+  --warn:#9A5B00; --warn-soft:#FBF0DA; --ok:#1F7A45;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --ground:#0F141C; --surface:#171E29; --ink:#E6ECF5; --muted:#93A1B5; --rule:#2A3443;
+    --a:#8FB0FF; --a-soft:#1C2A4A; --b:#5FD0BF; --b-soft:#123430;
+    --warn:#F0B95A; --warn-soft:#33270F; --ok:#6FD39A;
+  }
+}
+:root[data-theme="dark"]{
+  --ground:#0F141C; --surface:#171E29; --ink:#E6ECF5; --muted:#93A1B5; --rule:#2A3443;
+  --a:#8FB0FF; --a-soft:#1C2A4A; --b:#5FD0BF; --b-soft:#123430;
+  --warn:#F0B95A; --warn-soft:#33270F; --ok:#6FD39A;
+}
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{margin:0;background:var(--ground);color:var(--ink);font-family:"Noto Sans SC","PingFang SC","Microsoft YaHei",system-ui,sans-serif;font-size:16px;line-height:1.75;font-variant-numeric:tabular-nums}
+.wrap{max-width:1080px;margin:0 auto;padding:40px 16px 72px;display:flex;flex-direction:column;gap:44px}
+h1,h2,h3{font-family:"Noto Serif SC","Songti SC",serif;text-wrap:balance;margin:0;line-height:1.3}
+h1{font-size:clamp(28px,5vw,42px);font-weight:900;letter-spacing:.01em}
+h2{font-size:23px;font-weight:600;padding-bottom:10px;border-bottom:2px solid var(--ink)}
+h3{font-size:17px;font-weight:600}
+p{margin:0;max-width:66ch}
+.eyebrow{font-size:13px;letter-spacing:.12em;color:var(--muted);text-transform:uppercase}
+header{display:flex;flex-direction:column;gap:14px}
+.lede{font-size:18px;color:var(--ink);max-width:60ch}
+.meta{font-size:13.5px;color:var(--muted);max-width:none}
+section{display:flex;flex-direction:column;gap:18px}
+.tag{display:inline-block;padding:1px 9px;border-radius:999px;font-size:12.5px;font-weight:700;letter-spacing:.04em}
+.tag.a{background:var(--a-soft);color:var(--a)} .tag.b{background:var(--b-soft);color:var(--b)}
+.verdict{background:var(--surface);border:1px solid var(--rule);border-left:6px solid var(--a);padding:22px 24px;display:flex;flex-direction:column;gap:12px}
+.verdict ol{margin:0;padding-left:1.3em;display:flex;flex-direction:column;gap:8px;max-width:72ch}
+.pair{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.plan{background:var(--surface);border:1px solid var(--rule);padding:20px 22px;display:flex;flex-direction:column;gap:10px}
+.plan.a{border-top:5px solid var(--a)} .plan.b{border-top:5px solid var(--b)}
+.plan .big{font-family:"Noto Serif SC",serif;font-size:26px;font-weight:900;line-height:1.2}
+.plan.a .big{color:var(--a)} .plan.b .big{color:var(--b)}
+.plan dl{margin:0;display:grid;grid-template-columns:5.5em 1fr;gap:6px 12px;font-size:14.5px}
+.plan dt{color:var(--muted)} .plan dd{margin:0}
+.scroll{overflow-x:auto;background:var(--surface);border:1px solid var(--rule)}
+table{border-collapse:collapse;width:100%;min-width:720px;font-size:14.5px;line-height:1.6}
+th,td{text-align:left;vertical-align:top;padding:11px 14px;border-bottom:1px solid var(--rule)}
+tr:last-child td{border-bottom:none}
+thead th{font-size:13px;letter-spacing:.06em;color:var(--muted);font-weight:700;border-bottom:2px solid var(--ink);white-space:nowrap}
+thead th.a{color:var(--a)} thead th.b{color:var(--b)}
+tbody th{font-weight:700;width:9.5em;color:var(--ink)}
+td strong{font-weight:700}
+table.num{min-width:980px}
+table.num td{white-space:nowrap;text-align:right}
+table.num thead th{text-align:right;white-space:normal;min-width:6.5em}
+table.num thead th:first-child,table.num tbody th{text-align:left}
+table.num tbody th{width:17em;white-space:normal}
+td small{display:block;color:var(--muted);font-size:12px}
+tbody th small{display:block;font-weight:400;color:var(--muted);font-size:12.5px;line-height:1.45}
+tr.sum td,tr.sum th{border-top:2px solid var(--ink);background:color-mix(in srgb,var(--ink) 4%,transparent)}
+section>h3{margin-top:8px}
+.note{font-size:13.5px;color:var(--muted);max-width:80ch}
+.warn{background:var(--warn-soft);color:var(--warn);border:1px solid color-mix(in srgb,var(--warn) 35%,transparent);padding:12px 16px;font-size:14px;max-width:none}
+/* range chart */
+.chart{background:var(--surface);border:1px solid var(--rule);padding:22px 22px 14px;display:flex;flex-direction:column;gap:6px}
+.row{display:grid;grid-template-columns:11.5em 1fr;gap:12px;align-items:center;min-height:38px}
+.row .lab{font-size:14px;line-height:1.35}
+.row .lab small{display:block;color:var(--muted);font-size:12.5px}
+.track{position:relative;height:30px;background:repeating-linear-gradient(to right,var(--rule) 0 1px,transparent 1px 20%)}
+.bar{position:absolute;top:6px;height:18px;border-radius:2px}
+.bar.a{background:var(--a)} .bar.b{background:var(--b)} .bar.opt{background:transparent;border:2px dashed var(--muted)}
+.bar span{position:absolute;left:calc(100% + 8px);top:-3px;white-space:nowrap;font-size:13px;font-weight:700;color:var(--ink)}
+.bar.lead span{left:auto;right:calc(100% + 8px)}
+.axis{display:grid;grid-template-columns:11.5em 1fr;gap:12px;font-size:12px;color:var(--muted)}
+.axis div:last-child{display:flex;justify-content:space-between}
+.grp{font-size:12.5px;letter-spacing:.08em;color:var(--muted);margin-top:10px}
+/* timeline */
+.tl{background:var(--surface);border:1px solid var(--rule);padding:20px 22px;overflow-x:auto}
+.tl-inner{min-width:760px;display:flex;flex-direction:column;gap:10px}
+.months{display:grid;grid-template-columns:7em repeat(17,1fr);font-size:12px;color:var(--muted)}
+.months span{text-align:left;border-left:1px solid var(--rule);padding-left:3px}
+.lane{display:grid;grid-template-columns:7em repeat(17,1fr);align-items:center;row-gap:4px}
+.lane .name{font-size:13.5px;font-weight:700}
+.seg{height:30px;display:flex;align-items:center;padding:0 8px;font-size:12.5px;color:#fff;white-space:nowrap;overflow:hidden;border-right:2px solid var(--surface)}
+.seg.a{background:var(--a)} .seg.b{background:var(--b)} .seg.ghost{background:transparent;border:2px dashed var(--b);color:var(--b)}
+:root[data-theme="dark"] .seg.a,:root[data-theme="dark"] .seg.b{color:#0F141C}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]) .seg.a,:root:not([data-theme="light"]) .seg.b{color:#0F141C}}
+.gate{height:30px;display:flex;align-items:center;justify-content:flex-end;transform:translateX(7px)}
+.gate i{width:14px;height:14px;background:var(--warn);transform:rotate(45deg);display:block}
+.legend{display:flex;flex-wrap:wrap;gap:6px 18px;font-size:13px;color:var(--muted)}
+.legend i{display:inline-block;width:10px;height:10px;background:var(--warn);transform:rotate(45deg);margin-right:8px}
+.ask{background:var(--ink);color:var(--ground);padding:26px 26px;display:flex;flex-direction:column;gap:14px}
+.ask h2{border-color:var(--ground);color:var(--ground)}
+.ask ol{margin:0;padding-left:1.3em;display:flex;flex-direction:column;gap:10px;max-width:74ch}
+.ask b{font-weight:700}
+footer{font-size:13px;color:var(--muted);display:flex;flex-direction:column;gap:6px;border-top:1px solid var(--rule);padding-top:18px}
+@media (max-width:720px){.pair{grid-template-columns:1fr}.row,.axis{grid-template-columns:1fr}.axis div:first-child{display:none}.bar span{font-size:12px}}
+
+.pill{display:inline-block;padding:1px 10px;border-radius:999px;font-size:12.5px;font-weight:700;white-space:nowrap}
+.pill.hi{background:var(--b-soft);color:var(--b)} .pill.mid{background:var(--warn-soft);color:var(--warn)} .pill.lo{background:color-mix(in srgb,var(--muted) 18%,transparent);color:var(--muted)}
+.fam{background:var(--surface);border:1px solid var(--rule);padding:20px 22px;display:flex;flex-direction:column;gap:10px;border-left:5px solid var(--rule)}
+.fam.pick{border-left-color:var(--a)} .fam.part{border-left-color:var(--b)}
+.fam h3{display:flex;flex-wrap:wrap;gap:10px;align-items:center}
+.fam dl{margin:0;display:grid;grid-template-columns:6.5em 1fr;gap:6px 14px;font-size:14.5px}
+.fam dt{color:var(--muted)} .fam dd{margin:0}
+.fams{display:flex;flex-direction:column;gap:14px}
+table.fit td{text-align:center} table.fit td:first-child,table.fit th:first-child{text-align:left}
+@media (max-width:720px){.fam dl{grid-template-columns:1fr}.fam dt{margin-top:4px}}
+</style></head><body><div class="wrap">
+<header>
+  <div class="eyebrow">技术路线对照 · 2026-09-20</div>
+  <h1>业内七条主流路线，我们该跟哪一条</h1>
+  <p class="lede">把 2025 年底到 2026 年 9 月公开的主流做法，按"数据从哪来、动作真值从哪来"归成七类，逐类对照我们的约束：自研轮式人形、二指力控夹爪、洗衣房任务、只服务自家本体。</p>
+  <p class="meta">覆盖：Sunday · Generalist · 小米 · GigaBrain · 自变量 · Dyna · NVIDIA（GR00T、DreamZero、Cosmos）· 智元 · Physical Intelligence · Figure · Riemann · 通义 · Skild · 1X · 清华 RLinf，及若干论文</p>
+</header>
+
+<section>
+  <div class="verdict">
+    <h3>结论</h3>
+    <ol>
+      <li><strong>不押单独一家，但分主次</strong>：数据与本体策略跟"同构末端真值"这一类（主参照 Sunday），部署与系统纪律跟 Dyna，起步基座用 Physical Intelligence 这类开放权重，最上层先用"冻结模型加编排"这种零成本手段。</li>
+      <li><strong>如果只能选一家当主参照，选 Sunday</strong>：本体形态、任务、单一本体策略都和我们最像，而且它对资源的要求是各家里最低的。它的短板是披露最少，所以跟的是数据与本体策略，不是模型结构。</li>
+      <li><strong>明确不跟的</strong>：Figure 的全栈垂直整合（五指手、全身学习控制器、自建产线）；Generalist 的从零训练大模型；Skild 的跨本体仿真路线；任何"先凑够百万小时"的规模竞赛。</li>
+      <li>各家在两件最不起眼的事上说法高度一致，也是最该抄的：<strong>数据质量与评测纪律，以及现场连续运行的工程</strong>。</li>
+    </ol>
+  </div>
+  <p class="warn">口径：各家结果几乎全部为公司自报或论文自报，没有一条经过第三方复现；"跟随"是借方向，不是信数字。Sunday、Dyna、Figure、Generalist、Skild 五家读过官网一手原文并已归档；其余来自论文、官方页面与行业媒体的整理。没有公开技术材料的公司未覆盖。</p>
+</section>
+
+<section>
+  <h2>七类路线逐一对照</h2>
+  <div class="fams"><div class="fam pick"><h3>一、同构末端的硬件动作真值<span class="pill hi">主参照</span></h3><dl><dt>代表</dt><dd>Sunday（采集手套与机器人手一比一）、Generalist（手持夹爪，自报 50 万小时以上、每周新增 1 万小时）、小米 Xiaomi-Robotics-1（10 万小时手持夹爪预训练加 1 万小时后训练）、GigaBrain-0.7（真机 55%、手持夹爪 22%、第一视角 8%、仿真 15%）、自变量 TwinDEX（孪生灵巧手）</dd><dt>数据从哪来</dt><dd>人戴着或拿着与机器人末端相同的工具干活，硬件直接记录动作、开合度、力</dd><dt>模型形态</dt><dd>各家不一：Sunday 未披露架构；Generalist 从零训练 7B 以上单流模型；小米、GigaBrain 为 VLA</dd><dt>公开结果</dt><dd>Sunday 叠衣 785 次 99.1%、未见家庭零调整、零遥操作；Generalist 每任务约 1 小时机器人数据；小米报告数据缩放的收益大于模型缩放</dd><dt>资源门槛</dt><dd>设备设计与采集运营；不需要百万小时，也不需要千卡起步</dd><dt>对我们</dt><dd><strong>本体形态（轮式、升降、两指）与任务（家务、叠衣）和 Sunday 最接近；我们的末端已是二指力控夹爪，做同构手持器比五指手套简单一个数量级；能记录夹持力，这是视频给不了的</strong></dd><dt>取与不取</dt><dd>数据与本体策略整体跟随；模型结构无从跟（未披露）</dd></dl></div><div class="fam part"><h3>二、头戴人类视频加世界-动作模型<span class="pill hi">预训练配方参照</span></h3><dl><dt>代表</dt><dd>Dyna DYNA-2（100 万小时）、NVIDIA DreamZero（140 亿参数，开源视频生成骨干）、智元 GE-Act 2.0（300 → 3 万小时，从零初始化）、Cosmos Policy</dd><dt>数据从哪来</dt><dd>便宜的第一视角人类视频；动作标签从画面估出（手腕位姿加拇指食指开合度）</dd><dt>模型形态</dt><dd>一个模型同时预测未来画面与未来动作；推理时只出动作，不生成视频</dd><dt>公开结果</dt><dd>Dyna：联合预测在 39 个任务上全胜只预测动作；后训练性能 20% → 53%；客户质检 46% → 87%。四家在 2026 年 2–9 月独立收敛到同一方向</dd><dt>资源门槛</dt><dd>数据采购（每可用小时 3–12 美元）加数百到上千张 GPU；Dyna 公开融资 1.435 亿美元</dd><dt>对我们</dt><dd><strong>如果要做自有预训练，这是唯一公开了目标函数与消融的配方；但动作标签没有接触力，最后一段精度靠规模硬堆</strong></dd><dt>取与不取</dt><dd>取配方与基建经验（MCAP、训练清单、奖励模型在环）；不取百万小时的规模竞赛，也不取「预训练零机器人数据」的自我设限</dd></dl></div><div class="fam part"><h3>三、跨具身遥操作的通用 VLA 加真机强化学习<span class="pill hi">起步基座</span></h3><dl><dt>代表</dt><dd>Physical Intelligence（π0、π0.5、π0.7，权重开放；RECAP 真机强化学习）、RDT2、Wall-OSS、通义机器人栈</dd><dt>数据从哪来</dt><dd>多品牌机器人的遥操作数据为主；π0.7 用元数据条件化把失败与自主运行数据也吃进去</dd><dt>模型形态</dt><dd>视觉语言模型主干加流匹配动作头，输出动作块，已是多家共识</dd><dt>公开结果</dt><dd>π 系是目前开放权重里最通用的起点；论文报告专家演示在 120 小时后饱和，靠三轮纠错数据从 58% 到 93%（XR-2）</dd><dt>资源门槛</dt><dd>用现成权重做后训练：几千到几万 GPU 卡时，几十到几百小时遥操作</dd><dt>对我们</dt><dd><strong>交付一、交付二的起步基座；我们不需要它的跨品牌能力，但可以白用它的通用先验</strong></dd><dt>取与不取</dt><dd>取权重与后训练方法；不长期绑定，许可与版本不在自己手里</dd></dl></div><div class="fam "><h3>四、头戴人类视频加分层 VLA<span class="pill mid">方向旁证</span></h3><dl><dt>代表</dt><dd>Figure（Helix 加 Index 众包视频，官方称未来 12 个月在数据与算力上投入超过 10 亿美元）、NVIDIA GR00T N1.7（2 万小时第一视角视频）、Riemann-1.0（23 万小时，其中 20 万为人类视频，每个真机任务 3 小时）、通义 Ego2Robot</dd><dt>数据从哪来</dt><dd>众包或自采的第一视角视频，视觉伪动作；Figure 另有自有车队真值</dd><dt>模型形态</dt><dd>慢的视觉语言模型加快的动作模型；Figure 三层（7–9 Hz、200 Hz、1 kHz）</dd><dt>公开结果</dt><dd>GR00T：1 千 → 2 万小时任务完成度翻倍；论文 HumanScale：同为 5 千小时，人类视频优于遥操作；ZimaBlue：12 万小时未见饱和</dd><dt>资源门槛</dt><dd>Figure 式全栈需要数十亿美元量级；GR00T 权重可用但许可带护栏与署名义务</dd><dt>对我们</dt><dd><strong>佐证「人类视频是预训练主轴」的大方向；分层频率与「训练时对齐部署延迟」值得抄</strong></dd><dt>取与不取</dt><dd>不跟 Figure 的五指手、全身学习控制器与自建产线</dd></dl></div><div class="fam "><h3>五、仿真海量本体加互联网视频加上下文学习<span class="pill lo">不适用</span></h3><dl><dt>代表</dt><dd>Skild AI（十万种仿真机器人，一个大脑控制所有本体；看一段视频即执行新任务）</dd><dt>数据从哪来</dt><dd>仿真真值为主，互联网与头戴视频为辅，少量遥操作做后训练</dd><dt>模型形态</dt><dd>分层：低频高层策略加高频低层策略；训练细节未披露</dd><dt>公开结果</dt><dd>自报一条演示约等于 380 条后训练数据；自己承认重复同一成功动作「再采也没用」</dd><dt>资源门槛</dt><dd>大规模仿真算力；C 轮 14 亿美元</dd><dt>对我们</dt><dd><strong>它的价值主张就是跨本体，恰好是我们不需要的；布料又是仿真最弱的一类</strong></dd><dt>取与不取</dt><dd>只取扰动阶梯式评测，以及刚体类子技能（开关机门、避碰）可在仿真里训</dd></dl></div><div class="fam "><h3>六、车队遥操作加世界模型<span class="pill lo">观察</span></h3><dl><dt>代表</dt><dd>1X（家庭部署，以专家遥操作为主要数据来源，世界模型用来做评测）</dd><dt>数据从哪来</dt><dd>自有车队的遥操作与运行数据</dd><dt>模型形态</dt><dd>世界模型作评测器与数据放大器</dd><dt>公开结果</dt><dd>公开材料以路线表述为主，缺少可比的量化结果</dd><dt>资源门槛</dt><dd>需要先有规模化车队</dd><dt>对我们</dt><dd><strong>我们只有 6 台，车队数据短期内撑不起预训练；「用世界模型做评测」可作为后续选项</strong></dd><dt>取与不取</dt><dd>暂不跟</dd></dl></div><div class="fam part"><h3>七、不训练：冻结动作模型加智能体编排<span class="pill hi">零成本试验</span></h3><dl><dt>代表</dt><dd>清华 RLinf 的 RPent 与 Harness VLA（冻结的动作模型当可重试的技能，上层由大模型规划并记忆失败）</dd><dt>数据从哪来</dt><dd>不需要新数据；靠规划、重试、把失败模式写回规则</dd><dt>模型形态</dt><dd>大模型规划器加现成 VLA 加解析式原语（导航、升降、联网控制）</dd><dt>公开结果</dt><dd>论文自报不微调即在多个基准上提升二三十个点</dd><dt>资源门槛</dt><dd>几乎为零</dd><dt>对我们</dt><dd><strong>和我们的「VLM 大脑加站位原语加洗衣机联网」是同一形态；适合当最便宜的第一层改进手段</strong></dd><dt>取与不取</dt><dd>取形态；数字为基准测试自报，现场效果要自己测</dd></dl></div></div>
+  <p class="note">左侧蓝条为主参照，绿条为部分采用，灰条为旁证或不采用。</p>
+</section>
+
+<section>
+  <h2>和我们的约束逐项对表</h2>
+  <div class="scroll"><table class="fit"><thead><tr><th>我们的约束</th><th style="white-space:normal;min-width:6em">一 同构真值</th><th style="white-space:normal;min-width:6em">二 视频加世界-动作模型</th><th style="white-space:normal;min-width:6em">三 通用 VLA 后训练</th><th style="white-space:normal;min-width:6em">四 视频加分层 VLA</th><th style="white-space:normal;min-width:6em">五 仿真加上下文</th><th style="white-space:normal;min-width:6em">六 车队加世界模型</th><th style="white-space:normal;min-width:6em">七 冻结模型加编排</th></tr></thead><tbody><tr><th style="width:15em">只做自研本体，不跨品牌</th><td><span class="pill hi">高</span></td><td><span class="pill mid">中</span></td><td><span class="pill mid">中</span></td><td><span class="pill mid">中</span></td><td><span class="pill lo">低</span></td><td><span class="pill mid">中</span></td><td><span class="pill hi">高</span></td></tr><tr><th style="width:15em">末端是二指力控夹爪</th><td><span class="pill hi">高</span></td><td><span class="pill mid">中</span></td><td><span class="pill hi">高</span></td><td><span class="pill lo">低</span></td><td><span class="pill mid">中</span></td><td><span class="pill mid">中</span></td><td><span class="pill hi">高</span></td></tr><tr><th style="width:15em">任务是洗衣房（布料、湿衣、夹持力）</th><td><span class="pill hi">高</span></td><td><span class="pill mid">中</span></td><td><span class="pill mid">中</span></td><td><span class="pill mid">中</span></td><td><span class="pill lo">低</span></td><td><span class="pill lo">低</span></td><td><span class="pill mid">中</span></td></tr><tr><th style="width:15em">现有 6 台机器人，没有大车队</th><td><span class="pill hi">高</span></td><td><span class="pill hi">高</span></td><td><span class="pill hi">高</span></td><td><span class="pill lo">低</span></td><td><span class="pill mid">中</span></td><td><span class="pill lo">低</span></td><td><span class="pill hi">高</span></td></tr><tr><th style="width:15em">团队十人级起步</th><td><span class="pill hi">高</span></td><td><span class="pill lo">低</span></td><td><span class="pill hi">高</span></td><td><span class="pill lo">低</span></td><td><span class="pill lo">低</span></td><td><span class="pill lo">低</span></td><td><span class="pill hi">高</span></td></tr><tr><th style="width:15em">不需要千卡与百万小时也能起步</th><td><span class="pill hi">高</span></td><td><span class="pill lo">低</span></td><td><span class="pill hi">高</span></td><td><span class="pill lo">低</span></td><td><span class="pill lo">低</span></td><td><span class="pill mid">中</span></td><td><span class="pill hi">高</span></td></tr><tr><th style="width:15em">披露充分、可以照着做</th><td><span class="pill lo">低</span></td><td><span class="pill hi">高</span></td><td><span class="pill hi">高</span></td><td><span class="pill mid">中</span></td><td><span class="pill lo">低</span></td><td><span class="pill lo">低</span></td><td><span class="pill hi">高</span></td></tr></tbody></table></div>
+  <p class="note">高、中、低是我方判断，依据见上一节各类的"对我们"一栏。</p>
+</section>
+
+<section>
+  <h2>业内已经收敛的，和还在争的</h2>
+  <div class="pair">
+    <div class="plan a"><h3>已经收敛（多家独立验证）</h3>
+      <p>一、人类数据是预训练主轴，机器人数据退为对齐层；每个任务只需几分钟到十小时的机器人数据。</p>
+      <p>二、慢的"想"与快的"动"分层，上层 1–10 Hz，下层 10–200 Hz。</p>
+      <p>三、动作头用流匹配或扩散，输出一段动作而不是单步。</p>
+      <p>四、同时预测未来画面与动作，好于只预测动作（四家）。</p>
+      <p>五、失败与次优数据要留着用，不删；演示可以直接当提示。</p>
+    </div>
+    <div class="plan b"><h3>还在争（没有公开的受控对比）</h3>
+      <p>一、动作标签：从视频里估，还是硬件直接记录。前者便宜量大，后者有力与接触。这是我们要自己测的第一件事。</p>
+      <p>二、基座：用开放权重，还是从零训练。只有 Generalist 一家坚持从零。</p>
+      <p>三、仿真：Skild 当主轴，多数家只用来评测与覆盖长尾。</p>
+      <p>四、部署数据能不能形成自我加速的飞轮。Dyna 自述十个月运营没有出现；没有任何一家公开过干预率。</p>
+      <p>反面证据也要看：有论文指出人类视频丢了"主动看"的信息，估出来的动作只能监督视觉、监督不了动作头。</p>
+    </div>
+  </div>
+</section>
+
+<section>
+  <h2>落到我们的阶段上</h2>
+  <div class="scroll"><table>
+    <thead><tr><th>阶段</th><th>跟谁</th><th>做什么</th></tr></thead><tbody>
+    <tr><th>现在到交付一<small>分类、洗、烘</small></th><td>Physical Intelligence 的开放权重；Dyna 的三层分工；RLinf 的编排形态</td><td>开放权重基座做后训练，上面加 VLM 大脑与站位原语；提示与规则先行，当天可回滚</td></tr>
+    <tr><th>同时起步<small>第 1 周</small></th><td>Sunday、Generalist、小米</td><td>与自家夹爪一比一的手持采集器开模；这是整条数据线里交付周期最长的一环</td></tr>
+    <tr><th>交付二之前<small>叠、晾、收纳</small></th><td>自己的实验</td><td>两个裁决：泛化探针（训两类衣物、测第三类）；"1 小时真值相当于多少小时视频"的换算率实验</td></tr>
+    <tr><th>需要自有预训练时</th><td>Dyna 的配方，Sunday 的数据</td><td>联合预测画面与动作；数据以同构真值为主轴，视频作廉价的多样性来源；预训练里放自家机器人数据</td></tr>
+    <tr><th>全程</th><td>Sunday 与 Dyna 的评测口径</td><td>泛化差距（见过的与没见过的之差）加客户质检通过率；评测机不参与采集；盲测</td></tr>
+  </tbody></table></div>
+</section>
+
+<footer>
+  <span>来源：仓库 docs/research-four-routes.md、research-dyna-comparison.md、research-sunday.md、research-skild.md、research-generalist-dora.md、research-vla-pretraining.md、data-strategy-roadmap.md 第 1 节；五家官网原文归档于 docs/sources/。</span>
+  <span>相关汇报：洗衣房两套方案（docs/reports/laundry-two-plans.html）；不限资源时追平 Dyna 的最快路线（docs/reports/dyna-parity-fast-track.html）。</span>
+</footer>
+</div></body></html>
