@@ -35,7 +35,7 @@
 | `fabric_class` | 棉麻 / 化纤 / 牛仔 / 羊毛羊绒 / 丝与蕾丝等精细 / 羽绒 / 未知 | 视觉判断不可靠，默认允许"未知" |
 | `care_label` | `visible: bool`；`wash_max_temp`、`hand_wash`、`no_tumble_dry`、`dry_clean_only`、`no_bleach`；`fiber_text` | 只有拍到洗标时才填；洗标优先级高于视觉判断 |
 | `attention` | 口袋有物 / 拉链未拉 / 带金属装饰 / 严重污渍 / 破损 | 触发人工或预处理 |
-| `confidence` | 每个字段一个 0–1 | 经校准后使用（§5.4） |
+| `confidence` | 每个字段一个 0–1 | 经校准后使用（§4 的 S5 阶段） |
 
 ### 1.3 分筐规则（规则引擎，不训练）
 
