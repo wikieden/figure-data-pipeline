@@ -59,7 +59,7 @@
 | 文档 | 内容 | 成文 |
 |---|---|---|
 | [index-replica-plan.md](index-replica-plan.md) | Index 复刻：硬件三阶段、Creator 端、平台、伪标签工厂、训练集成、H0/H1/H2 | 2026-08-29 / 2026-09-08 |
-| [dyna-replica-plan.md](dyna-replica-plan.md) | Dyna 模式复现：四层替代、双臂工作站、七项软件缺口、WAM 模型三档、训练数据来源、R0/R1/R2 预算区间与止损门 | 2026-09-19 |
+| [dyna-replica-plan.md](dyna-replica-plan.md) | Dyna 模式复现：四层替代、双臂工作站、七项软件缺口、WAM 模型三档、训练数据来源、R0/R1/R2 预算区间与止损门；§12 为当前执行口径（洗衣四任务、仅后训练 + VLM 大脑、自有人形 6 台） | 2026-09-19 / 2026-09-20 |
 | [data-platform.md](data-platform.md) | 容量/成本模型、组件选型、lineage 表结构、可观测性 | 2026-09-08 |
 | [compliance-and-security.md](compliance-and-security.md) | 区域矩阵、Creator 协议、保留期、RBAC/审计、安全基线、劳动合规 | 2026-09-08 |
 

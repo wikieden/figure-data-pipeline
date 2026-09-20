@@ -76,7 +76,7 @@
 | U-36 | D4 数据手套选型：MANUS 级 vs 低成本 IMU 手套 | ≥200 Hz 为硬约束（T-800 >100 Hz 能量）；H0 先用 Quest 手追，H1 选型（capture-devices-design §4） | 手套↔本体复现的重定向误差；单价（$3–6k vs $300–800） | H1 前 | 逐指真值缺失，灵巧任务对齐集不可用 | HW + TRAIN | open |
 | U-37 | 训练层是否纳入世界-动作模型（WAM）目标：next-frame 与 next-action 协同预测作为 Stage B/C 可选分支 | 已有 Dyna-2、NVIDIA DreamZero、AgiBot GE-Act 2.0、Cosmos Policy 四家独立验证，满足 CLAUDE.md 决策 7 的 ≥2 家门槛；倾向纳入为可选分支，不改数据层，只要求 export 保留连续帧对（research-dyna-comparison §8.1） | Dyna-2 "数据与目标都重要"消融的外部复现；自家 human 轨上 next-frame 协同 vs 仅 next-action 的消融 | 训练负责人 | M3 前 |
 | U-38 | 消融切分器是否加「微调权重位移按模块分解」报告（Generalist 任务向量分析：ΔW 按传感/推理/执行分解，定位该多采哪类数据） | 训练层工具，属「数据层承载创新」的边界外；倾向 M3 作为可选报告，不进 M2 验收 | 自家 Stage B 微调实验上 ΔW 分解与采集干预的因果验证（research-four-routes §6.8） | TRAIN | M3 |
-| U-39 | 是否立项 Dyna 复现 R0（≈$0.35–0.6M、6 个月、6 人）及视频扩散骨干选型（候选 A Cosmos 3 小杯 / 候选 B Wan 2.x） | 倾向立项 R0：同时裁决 U-37、测出自家人→机器人迁移指数、完成 M3 训练栈约一半工程；骨干默认 A（已准入），B 待 U-11 核查后只进研究分支；R2 不自费（[dyna-replica-plan.md](dyna-replica-plan.md) §8） | 双臂同构工作站报价；Egocentric-10K 隐私门通过率；2B 档单卡推理实测频率；program-plan §4 Stage B 算力能否与 R1 合并 | 训练负责人 | M2 验收后、Stage B 开跑前 |
+| U-39 | 是否立项 Dyna 复现 R0（≈$0.35–0.6M、6 个月、6 人）及视频扩散骨干选型（候选 A Cosmos 3 小杯 / 候选 B Wan 2.x） | **2026-09-20 范围收敛**：先执行 [dyna-replica-plan.md](dyna-replica-plan.md) §12（洗衣四任务、仅后训练 + VLM 大脑、自有人形 6 台，9 个月累计 ≈$0.57–1.1M），R0 降为 G-PA 不通过时的后备。原倾向：立项 R0：同时裁决 U-37、测出自家人→机器人迁移指数、完成 M3 训练栈约一半工程；骨干默认 A（已准入），B 待 U-11 核查后只进研究分支；R2 不自费（[dyna-replica-plan.md](dyna-replica-plan.md) §8） | 双臂同构工作站报价；Egocentric-10K 隐私门通过率；2B 档单卡推理实测频率；program-plan §4 Stage B 算力能否与 R1 合并 | 训练负责人 | M2 验收后、Stage B 开跑前 |
 
 ### U-11 license 核查追踪表
 
