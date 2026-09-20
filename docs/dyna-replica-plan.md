@@ -259,7 +259,7 @@ VLM 大脑 ~1 Hz（文本指令 + 站位原语 + 洗衣机联网接口）
 
 ### 12.7 待补信息
 
-具身档案草案已落 [`configs/embodiments/inhouse_wheeled_humanoid_v1.yaml`](../configs/embodiments/inhouse_wheeled_humanoid_v1.yaml)。其中标 TBD 的待补：每臂自由度与关节顺序、限位、夹爪最大开度、IK 方案、控制器版本号、相机同步实测残差、Thor 上 VLA + VLM 同机实测延迟、干 / 湿衣夹持力阈值。2026-09-20 已确认：自研轮式人形 6 台、上肢位控 ≥200 Hz（力控开发中）、升降腰、DDS / ROS、Thor、电流可读、VR 遥操作已有。
+具身档案草案已落 [`configs/embodiments/inhouse_wheeled_humanoid_v1.yaml`](../configs/embodiments/inhouse_wheeled_humanoid_v1.yaml)。其中标 TBD 的待补：每臂自由度与关节顺序、限位、夹爪最大开度、IK 方案、控制器版本号、相机同步实测残差、Thor 上 VLA + VLM 同机实测延迟、干 / 湿衣夹持力阈值；2026-09-20 评审补入：**每臂有效负载、关节电流保护阈值、双臂有效工作空间、停靠重复精度、逐台可用率**（[plans-review-hard-points.md](plans-review-hard-points.md) §4）。2026-09-20 已确认：自研轮式人形 6 台、上肢位控 ≥200 Hz（力控开发中）、升降腰、DDS / ROS、Thor、电流可读、VR 遥操作已有。
 
 [D:dyna-2]: sources/dyna/dyna-2.txt
 [D:dyna-1]: sources/dyna/dyna-1.txt
