@@ -60,6 +60,7 @@
 |---|---|---|
 | [index-replica-plan.md](index-replica-plan.md) | Index 复刻：硬件三阶段、Creator 端、平台、伪标签工厂、训练集成、H0/H1/H2 | 2026-08-29 / 2026-09-08 |
 | [dyna-replica-plan.md](dyna-replica-plan.md) | Dyna 模式复现：四层替代、双臂工作站、七项软件缺口、WAM 模型三档、训练数据来源、R0/R1/R2 预算区间与止损门；§12 为当前执行口径（洗衣四任务、仅后训练 + VLM 大脑、自有人形 6 台） | 2026-09-19 / 2026-09-20 |
+| [dyna-parity-fast-track.md](dyna-parity-fast-track.md) | 不限资源时追平 Dyna 现状的最快预训练方案：追平判据、数据量重估（30 万小时主力、100 万按曲线裁决）、到货速度、F0–F4 时间线、算力 / 农场 / 团队、12 个月预算、钱买不到的约束 | 2026-09-20 |
 | [laundry-two-plans-brief.md](laundry-two-plans-brief.md) | 管理层汇报稿：洗衣房四任务的后训练方案 vs 预训练方案，效果、成本、训练流程、数据与管线需求、风险与决策请求 | 2026-09-20 |
 | [data-platform.md](data-platform.md) | 容量/成本模型、组件选型、lineage 表结构、可观测性 | 2026-09-08 |
 | [compliance-and-security.md](compliance-and-security.md) | 区域矩阵、Creator 协议、保留期、RBAC/审计、安全基线、劳动合规 | 2026-09-08 |
