@@ -1,0 +1,454 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>洗衣房两套方案</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@400;500;700&family=Noto+Serif+SC:wght@600;900&display=swap">
+<style>
+:root{
+  --ground:#F2F5F9; --surface:#FFFFFF; --ink:#16202F; --muted:#5C6B80; --rule:#D5DCE6;
+  --a:#2B4FA6; --a-soft:#E3EAF8; --b:#17786C; --b-soft:#DDF0EC;
+  --warn:#9A5B00; --warn-soft:#FBF0DA; --ok:#1F7A45;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --ground:#0F141C; --surface:#171E29; --ink:#E6ECF5; --muted:#93A1B5; --rule:#2A3443;
+    --a:#8FB0FF; --a-soft:#1C2A4A; --b:#5FD0BF; --b-soft:#123430;
+    --warn:#F0B95A; --warn-soft:#33270F; --ok:#6FD39A;
+  }
+}
+:root[data-theme="dark"]{
+  --ground:#0F141C; --surface:#171E29; --ink:#E6ECF5; --muted:#93A1B5; --rule:#2A3443;
+  --a:#8FB0FF; --a-soft:#1C2A4A; --b:#5FD0BF; --b-soft:#123430;
+  --warn:#F0B95A; --warn-soft:#33270F; --ok:#6FD39A;
+}
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{margin:0;background:var(--ground);color:var(--ink);font-family:"Noto Sans SC","PingFang SC","Microsoft YaHei",system-ui,sans-serif;font-size:16px;line-height:1.75;font-variant-numeric:tabular-nums}
+.wrap{max-width:1080px;margin:0 auto;padding:40px 16px 72px;display:flex;flex-direction:column;gap:44px}
+h1,h2,h3{font-family:"Noto Serif SC","Songti SC",serif;text-wrap:balance;margin:0;line-height:1.3}
+h1{font-size:clamp(28px,5vw,42px);font-weight:900;letter-spacing:.01em}
+h2{font-size:23px;font-weight:600;padding-bottom:10px;border-bottom:2px solid var(--ink)}
+h3{font-size:17px;font-weight:600}
+p{margin:0;max-width:66ch}
+.eyebrow{font-size:13px;letter-spacing:.12em;color:var(--muted);text-transform:uppercase}
+header{display:flex;flex-direction:column;gap:14px}
+.lede{font-size:18px;color:var(--ink);max-width:60ch}
+.meta{font-size:13.5px;color:var(--muted);max-width:none}
+section{display:flex;flex-direction:column;gap:18px}
+.tag{display:inline-block;padding:1px 9px;border-radius:999px;font-size:12.5px;font-weight:700;letter-spacing:.04em}
+.tag.a{background:var(--a-soft);color:var(--a)} .tag.b{background:var(--b-soft);color:var(--b)}
+.verdict{background:var(--surface);border:1px solid var(--rule);border-left:6px solid var(--a);padding:22px 24px;display:flex;flex-direction:column;gap:12px}
+.verdict ol{margin:0;padding-left:1.3em;display:flex;flex-direction:column;gap:8px;max-width:72ch}
+.pair{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.plan{background:var(--surface);border:1px solid var(--rule);padding:20px 22px;display:flex;flex-direction:column;gap:10px}
+.plan.a{border-top:5px solid var(--a)} .plan.b{border-top:5px solid var(--b)}
+.plan .big{font-family:"Noto Serif SC",serif;font-size:26px;font-weight:900;line-height:1.2}
+.plan.a .big{color:var(--a)} .plan.b .big{color:var(--b)}
+.plan dl{margin:0;display:grid;grid-template-columns:5.5em 1fr;gap:6px 12px;font-size:14.5px}
+.plan dt{color:var(--muted)} .plan dd{margin:0}
+.scroll{overflow-x:auto;background:var(--surface);border:1px solid var(--rule)}
+table{border-collapse:collapse;width:100%;min-width:720px;font-size:14.5px;line-height:1.6}
+th,td{text-align:left;vertical-align:top;padding:11px 14px;border-bottom:1px solid var(--rule)}
+tr:last-child td{border-bottom:none}
+thead th{font-size:13px;letter-spacing:.06em;color:var(--muted);font-weight:700;border-bottom:2px solid var(--ink);white-space:nowrap}
+thead th.a{color:var(--a)} thead th.b{color:var(--b)}
+tbody th{font-weight:700;width:9.5em;color:var(--ink)}
+td strong{font-weight:700}
+table.num{min-width:980px}
+table.num td{white-space:nowrap;text-align:right}
+table.num thead th{text-align:right;white-space:normal;min-width:6.5em}
+table.num thead th:first-child,table.num tbody th{text-align:left}
+table.num tbody th{width:17em;white-space:normal}
+td small{display:block;color:var(--muted);font-size:12px}
+tbody th small{display:block;font-weight:400;color:var(--muted);font-size:12.5px;line-height:1.45}
+tr.sum td,tr.sum th{border-top:2px solid var(--ink);background:color-mix(in srgb,var(--ink) 4%,transparent)}
+section>h3{margin-top:8px}
+.note{font-size:13.5px;color:var(--muted);max-width:80ch}
+.warn{background:var(--warn-soft);color:var(--warn);border:1px solid color-mix(in srgb,var(--warn) 35%,transparent);padding:12px 16px;font-size:14px;max-width:none}
+/* range chart */
+.chart{background:var(--surface);border:1px solid var(--rule);padding:22px 22px 14px;display:flex;flex-direction:column;gap:6px}
+.row{display:grid;grid-template-columns:11.5em 1fr;gap:12px;align-items:center;min-height:38px}
+.row .lab{font-size:14px;line-height:1.35}
+.row .lab small{display:block;color:var(--muted);font-size:12.5px}
+.track{position:relative;height:30px;background:repeating-linear-gradient(to right,var(--rule) 0 1px,transparent 1px 20%)}
+.bar{position:absolute;top:6px;height:18px;border-radius:2px}
+.bar.a{background:var(--a)} .bar.b{background:var(--b)} .bar.opt{background:transparent;border:2px dashed var(--muted)}
+.bar span{position:absolute;left:calc(100% + 8px);top:-3px;white-space:nowrap;font-size:13px;font-weight:700;color:var(--ink)}
+.bar.lead span{left:auto;right:calc(100% + 8px)}
+.axis{display:grid;grid-template-columns:11.5em 1fr;gap:12px;font-size:12px;color:var(--muted)}
+.axis div:last-child{display:flex;justify-content:space-between}
+.grp{font-size:12.5px;letter-spacing:.08em;color:var(--muted);margin-top:10px}
+/* timeline */
+.tl{background:var(--surface);border:1px solid var(--rule);padding:20px 22px;overflow-x:auto}
+.tl-inner{min-width:760px;display:flex;flex-direction:column;gap:10px}
+.months{display:grid;grid-template-columns:7em repeat(17,1fr);font-size:12px;color:var(--muted)}
+.months span{text-align:left;border-left:1px solid var(--rule);padding-left:3px}
+.lane{display:grid;grid-template-columns:7em repeat(17,1fr);align-items:center;row-gap:4px}
+.lane .name{font-size:13.5px;font-weight:700}
+.seg{height:30px;display:flex;align-items:center;padding:0 8px;font-size:12.5px;color:#fff;white-space:nowrap;overflow:hidden;border-right:2px solid var(--surface)}
+.seg.a{background:var(--a)} .seg.b{background:var(--b)} .seg.ghost{background:transparent;border:2px dashed var(--b);color:var(--b)}
+:root[data-theme="dark"] .seg.a,:root[data-theme="dark"] .seg.b{color:#0F141C}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]) .seg.a,:root:not([data-theme="light"]) .seg.b{color:#0F141C}}
+.gate{height:30px;display:flex;align-items:center;justify-content:flex-end;transform:translateX(7px)}
+.gate i{width:14px;height:14px;background:var(--warn);transform:rotate(45deg);display:block}
+.legend{display:flex;flex-wrap:wrap;gap:6px 18px;font-size:13px;color:var(--muted)}
+.legend i{display:inline-block;width:10px;height:10px;background:var(--warn);transform:rotate(45deg);margin-right:8px}
+.ask{background:var(--ink);color:var(--ground);padding:26px 26px;display:flex;flex-direction:column;gap:14px}
+.ask h2{border-color:var(--ground);color:var(--ground)}
+.ask ol{margin:0;padding-left:1.3em;display:flex;flex-direction:column;gap:10px;max-width:74ch}
+.ask b{font-weight:700}
+footer{font-size:13px;color:var(--muted);display:flex;flex-direction:column;gap:6px;border-top:1px solid var(--rule);padding-top:18px}
+@media (max-width:720px){.pair{grid-template-columns:1fr}.row,.axis{grid-template-columns:1fr}.axis div:first-child{display:none}.bar span{font-size:12px}}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header>
+  <div class="eyebrow">管理层汇报 · 2026-09-20</div>
+  <h1>洗衣房任务：后训练方案与预训练方案</h1>
+  <p class="lede">六项任务分两次交付：先做脏衣服分类、洗衣服、烘干，再做晾衣服、叠衣服、收纳；用自有的 6 台轮式人形机器人完成。两套模型路线的效果、成本、训练流程和数据需求，以及需要您决策的三件事。</p>
+  <p class="meta">本体现状：自研轮式人形 × 6 · 二指力控夹爪 · 腕部 RealSense D405 × 2 + 头部 D457 · 机载 Jetson Thor · 上肢位控 ≥200 Hz（力控开发中）· 升降腰 · VR 遥操作已就绪</p>
+</header>
+
+<section>
+  <div class="verdict">
+    <h3>结论</h3>
+    <ol>
+      <li><strong>建议立即批准方案 A 的交付一</strong>（分类 → 洗 → 烘）：6 个月、5–6 人、约 850–1,630 万新台币；第 3 个月设过程门，第 6 个月在洗衣房现场验收。</li>
+      <li>交付一的任务是从衣堆抓单件、开关机器门、整把装卸，对布料精细操作要求低，主要靠 VLM 大脑的识别编排加后训练的抓取放置。<strong>这部分用方案 A 把握较大，不需要自有预训练。</strong></li>
+      <li>方案 B（自有预训练）真正起作用的是交付二里的叠和晾。所以 <strong>B 的决策点放在第 7 个月</strong>：交付一验收后做 2–3 周的"泛化探针"（训两类衣物、测第三类），外部基座对布料的先验不够再启动 B。</li>
+      <li>方案 B 是 A 的超集，只多一段自有预训练；A 的设备、数据、评测集、管线全部复用，没有沉没成本。</li>
+      <li>为保住 B 这个选项，A 执行期间以最低档持续采集洗衣人类视频，每月 10–19 万新台币。</li>
+    </ol>
+  </div>
+  <p class="warn">口径：全部金额、算力、周期为我方估算，用于排序与止损，不是报价。引用的 Dyna 数字均为该公司自报，无第三方复现。币种为新台币，汇率 32 新台币 / 美元；人力按台湾地区全成本估算（工程师 180–300 万 / 人年），未取得薪资调查来源，立项前请人资核定。</p>
+</section>
+
+<section>
+  <h2>两套方案是什么</h2>
+  <div class="pair">
+    <div class="plan a">
+      <span class="tag a">方案 A</span>
+      <h3>后训练 + VLM 大脑</h3>
+      <div class="big">NT$1,525–2,915 万 · 11 个月</div>
+      <p>拿开放权重的机器人基座模型，用我们自己的洗衣遥操作数据做后训练，上面叠一个 VLM 做任务编排。</p>
+      <dl>
+        <dt>基座</dt><dd>外取：π0.5 为主，GR00T N1.7 作对照（许可逐项核查）</dd>
+        <dt>团队</dt><dd>5–6 人，两次交付期间基本持平</dd>
+        <dt>非人力支出</dt><dd>445–1,110 万（算力、环境件、视频、试点）</dd>
+        <dt>我们拥有</dt><dd>对齐层数据、评测集、数据管线、洗衣 SOP 大脑</dd>
+      </dl>
+    </div>
+    <div class="plan b">
+      <span class="tag b">方案 B</span>
+      <h3>自有预训练 + 后训练 + VLM 大脑</h3>
+      <div class="big">NT$3,905–7,885 万 · 14 个月起</div>
+      <p>先用几万小时人类洗衣 / 家务第一视角视频训一个自己的世界-动作模型基座（Dyna DYNA-2 的做法），再做与 A 相同的后训练。</p>
+      <dl>
+        <dt>基座</dt><dd>自训：开放权重视频扩散骨干 + 自研动作分支，2B → 5B</dd>
+        <dt>团队</dt><dd>6 人 → 12 人</dd>
+        <dt>非人力支出</dt><dd>1,790–4,365 万（其中人类视频与处理 855–2,420 万）</dd>
+        <dt>我们拥有</dt><dd>A 的全部 + 预训练基座 + 人类视频语料</dd>
+      </dl>
+    </div>
+  </div>
+  <p class="note">两套方案共用同一个两层结构：VLM 大脑约 1 Hz 下发文本子任务指令和站位原语（到叠衣台、蹲到洗衣机前、升到晾杆高度），小脑模型 ≥10 Hz 输出双臂末端增量位姿与夹爪开合，经 IK 转成关节位置指令。洗衣机程序走联网控制，机器人只做装卸。</p>
+</section>
+
+<section>
+  <h2>成本：按步骤、按类型</h2>
+  <p class="note">单位新台币万元，汇率 32 新台币 / 美元。人力按台湾地区全成本估算：工程师 180–300 万 / 人年，遥操作员与现场值守 58–85 万 / 人年，标注员 55–72 万 / 人年。</p>
+  <div class="chart" role="img" aria-label="各步骤成本区间，单位新台币万元">
+    <div class="grp">方案 A 的步骤（合计 1,525–2,915 万）</div>
+    <div class="row"><div class="lab">A0 基建与验证<small>第 0–1 月</small></div><div class="track"><div class="bar a" style="left:3.17%;width:2.70%"><span>75–135</span></div></div></div>
+    <div class="row"><div class="lab">A1 脏衣服分类<small>第 1–3 月</small></div><div class="track"><div class="bar a" style="left:5.38%;width:5.18%"><span>125–245</span></div></div></div>
+    <div class="row"><div class="lab">A2 洗衣服（装卸洗衣机）<small>第 2–5 月</small></div><div class="track"><div class="bar a" style="left:7.60%;width:6.48%"><span>175–325</span></div></div></div>
+    <div class="row"><div class="lab">A3 烘干（转移与取出）<small>第 3–5 月</small></div><div class="track"><div class="bar a" style="left:5.15%;width:4.54%"><span>120–225</span></div></div></div>
+    <div class="row"><div class="lab">A4 VLM 大脑 v1<small>第 1–5 月</small></div><div class="track"><div class="bar a" style="left:6.75%;width:5.76%"><span>155–290</span></div></div></div>
+    <div class="row"><div class="lab">A5 交付一：分类 → 洗 → 烘 试点<small>第 5–6 月</small></div><div class="track"><div class="bar a" style="left:6.37%;width:6.71%"><span>145–300</span></div></div></div>
+    <div class="row"><div class="lab">A6 叠衣服<small>第 6–9 月</small></div><div class="track"><div class="bar a" style="left:5.90%;width:4.70%"><span>135–245</span></div></div></div>
+    <div class="row"><div class="lab">A7 晾衣服<small>第 6–9 月</small></div><div class="track"><div class="bar a" style="left:6.66%;width:5.36%"><span>155–275</span></div></div></div>
+    <div class="row"><div class="lab">A8 收纳<small>第 8–10 月</small></div><div class="track"><div class="bar a" style="left:2.83%;width:2.55%"><span>65–125</span></div></div></div>
+    <div class="row"><div class="lab">A9 VLM 大脑 v2 与全流程串联<small>第 7–10 月</small></div><div class="track"><div class="bar a" style="left:4.88%;width:4.48%"><span>110–215</span></div></div></div>
+    <div class="row"><div class="lab">A10 交付二：晾 → 叠 → 收纳 试点<small>第 9–11 月</small></div><div class="track"><div class="bar a" style="left:7.10%;width:7.23%"><span>165–330</span></div></div></div>
+    <div class="row"><div class="lab">A11 保选项：洗衣人类视频最低档采集<small>第 0–11 月</small></div><div class="track"><div class="bar a" style="left:4.59%;width:4.59%"><span>105–210</span></div></div></div>
+    <div class="grp">方案 B 额外增加的步骤（B 全程合计 3,905–7,885 万）</div>
+    <div class="row"><div class="lab">B1 预训练验证<small>第 0–6 月</small></div><div class="track"><div class="bar b" style="left:25.57%;width:21.48%"><span>590–1,080</span></div></div></div>
+    <div class="row"><div class="lab">B2 预训练放大与换基座<small>第 6–14 月</small></div><div class="track"><div class="bar b lead" style="left:82.37%;width:96.00%"><span>1,895–4,100</span></div></div></div>
+    <div class="axis"><div></div><div><span>0</span><span>460</span><span>920</span><span>1,380</span><span>1,840</span><span>2,300 万</span></div></div>
+  </div>
+  <p class="note">B2 的区间上限为 4,100 万，超出横轴，条形在右端截断；其宽度主要来自人类视频采购单价与采购量的不确定性。</p>
+  <h3>方案 A：每个步骤花在哪</h3>
+  <div class="scroll"><table class="num">
+<thead><tr><th>步骤</th><th>工程人力</th><th>遥操作 / 现场人力</th><th>标注人力</th><th>训练与推理算力</th><th>环境件与配套硬件</th><th>人类视频采购</th><th>试点现场与合规</th><th class="a">小计</th></tr></thead><tbody>
+<tr><th>A0 基建与验证<small>第 0–1 月 · 录制链路、Thor 推理基准、相机同步、夹持力阈值（干 / 湿）、评测集</small></th><td>60–100</td><td>—</td><td>—</td><td>5–10</td><td>10–25</td><td>—</td><td>—</td><td><strong>75–135</strong></td></tr>
+<tr><th>A1 脏衣服分类<small>第 1–3 月 · 从衣堆单件抓取、按颜色 / 面料 / 洗标分筐，15–25 h</small></th><td>75–125</td><td>10–15</td><td>15–30</td><td>15–50</td><td>10–25</td><td>—</td><td>—</td><td><strong>125–245</strong></td></tr>
+<tr><th>A2 洗衣服（装卸洗衣机）<small>第 2–5 月 · 开关门、装入、取出湿衣、放洗涤剂，40–70 h；程序走联网控制</small></th><td>120–200</td><td>20–30</td><td>—</td><td>20–50</td><td>15–50</td><td>—</td><td>—</td><td><strong>175–325</strong></td></tr>
+<tr><th>A3 烘干（转移与取出）<small>第 3–5 月 · 湿衣转入烘干机、烘后取出入筐，25–40 h</small></th><td>75–125</td><td>15–20</td><td>—</td><td>15–40</td><td>15–40</td><td>—</td><td>—</td><td><strong>120–225</strong></td></tr>
+<tr><th>A4 VLM 大脑 v1<small>第 1–5 月 · 衣物识别与分类判别、SOP 状态机、机器联网、站位原语、成败判别</small></th><td>105–175</td><td>—</td><td>20–45</td><td>30–70</td><td>—</td><td>—</td><td>—</td><td><strong>155–290</strong></td></tr>
+<tr><th>A5 交付一：分类 → 洗 → 烘 试点<small>第 5–6 月 · 洗衣房现场连续运行 8 h，驻场值守，客户验收</small></th><td>60–100</td><td>20–30</td><td>—</td><td>5–15</td><td>15–30</td><td>—</td><td>50–130</td><td><strong>145–300</strong></td></tr>
+<tr><th>A6 叠衣服<small>第 6–9 月 · 毛巾 → T 恤 → 裤子，5–6 个子技能，40–60 h</small></th><td>105–175</td><td>15–20</td><td>—</td><td>15–50</td><td>—</td><td>—</td><td>—</td><td><strong>135–245</strong></td></tr>
+<tr><th>A7 晾衣服<small>第 6–9 月 · 不可烘衣物：衣架穿入、挂杆、夹子，50–80 h</small></th><td>105–175</td><td>20–30</td><td>—</td><td>20–50</td><td>10–25</td><td>—</td><td>—</td><td><strong>155–275</strong></td></tr>
+<tr><th>A8 收纳<small>第 8–10 月 · 叠好衣物入柜 / 上架 / 按客户分袋，10–20 h</small></th><td>45–75</td><td>5–10</td><td>—</td><td>5–20</td><td>5–20</td><td>—</td><td>—</td><td><strong>65–125</strong></td></tr>
+<tr><th>A9 VLM 大脑 v2 与全流程串联<small>第 7–10 月 · 折法 / 晾法 SOP、质检判别、六任务串联</small></th><td>75–125</td><td>—</td><td>20–45</td><td>20–50</td><td>—</td><td>—</td><td>—</td><td><strong>110–215</strong></td></tr>
+<tr><th>A10 交付二：晾 → 叠 → 收纳 试点<small>第 9–11 月 · 全流程连续运行 8 h → 24 h，客户质检</small></th><td>75–125</td><td>25–35</td><td>—</td><td>5–15</td><td>10–25</td><td>—</td><td>50–130</td><td><strong>165–330</strong></td></tr>
+<tr><th>A11 保选项：洗衣人类视频最低档采集<small>第 0–11 月 · 每月几百小时，方案 B 启动时直接可用</small></th><td>—</td><td>—</td><td>—</td><td>—</td><td>—</td><td>105–210</td><td>—</td><td><strong>105–210</strong></td></tr>
+<tr class="sum"><th>方案 A 合计<small>11 个月</small></th><td><strong>900–1,500</strong></td><td><strong>125–185</strong></td><td><strong>50–115</strong></td><td><strong>155–405</strong></td><td><strong>90–240</strong></td><td><strong>105–210</strong></td><td><strong>95–255</strong></td><td><strong>1,525–2,915</strong></td></tr>
+</tbody></table></div>
+  <p class="note"><strong>交付一</strong>（A0–A5 + 前 6 个月保选项采集）= <strong>850–1,630 万</strong>，第 6 个月验收；<strong>交付二</strong>（A6–A10 + 后 5 个月保选项采集）= <strong>680–1,285 万</strong>，第 11 个月验收。两次交付各自可独立止损。</p>
+  <h3>方案 B：在 A 之上增加的步骤</h3>
+  <div class="scroll"><table class="num">
+<thead><tr><th>步骤</th><th>工程人力</th><th>遥操作 / 现场人力</th><th>标注人力</th><th>训练与推理算力</th><th>环境件与配套硬件</th><th>人类视频采购</th><th>伪动作算力与存储</th><th>试点现场与合规</th><th class="b">小计</th></tr></thead><tbody>
+<tr><th>B1 预训练验证<small>第 0–6 月 · 2B 模型，1 万小时（自采洗衣 ≥3 千），验证联合预测优于只预测动作</small></th><td>360–600</td><td>—</td><td>—</td><td>95–190</td><td>—</td><td>60–115</td><td>60–130</td><td>15–50</td><td><strong>590–1,080</strong></td></tr>
+<tr><th>B2 预训练放大与换基座<small>第 6–14 月 · 5B 模型，3–5 万小时，用自有基座重跑各任务的后训练</small></th><td>600–1,000</td><td>75–130</td><td>—</td><td>415–640</td><td>—</td><td>480–1,535</td><td>255–640</td><td>65–160</td><td><strong>1,895–4,100</strong></td></tr>
+<tr class="sum"><th>B 的增量合计</th><td><strong>965–1,595</strong></td><td><strong>75–130</strong></td><td><strong>—</strong></td><td><strong>510–830</strong></td><td><strong>—</strong></td><td><strong>540–1,650</strong></td><td><strong>315–770</strong></td><td><strong>80–210</strong></td><td><strong>2,485–5,185</strong></td></tr>
+</tbody></table></div>
+  <p class="note">方案 B 全程 = 方案 A（去掉保选项采集）+ B1 + B2 = <strong>3,905–7,885 万</strong>，14 个月。B2 的"遥操作 / 现场人力"是 1 名数据运营 × 8 个月。</p>
+  <h3>按类型汇总</h3>
+  <div class="scroll"><table class="num">
+<thead><tr><th>类型</th><th class="a">方案 A</th><th class="a">占比</th><th class="b">方案 B 全程</th><th class="b">占比</th></tr></thead><tbody>
+<tr><th>工程人力</th><td>900–1,500</td><td>54%</td><td>1,865–3,095</td><td>42%</td></tr>
+<tr><th>遥操作 / 现场人力</th><td>125–185</td><td>7%</td><td>205–315</td><td>4%</td></tr>
+<tr><th>标注人力</th><td>50–115</td><td>4%</td><td>50–115</td><td>1%</td></tr>
+<tr><th>训练与推理算力</th><td>155–405</td><td>13%</td><td>670–1,240</td><td>16%</td></tr>
+<tr><th>环境件与配套硬件</th><td>90–240</td><td>7%</td><td>90–240</td><td>3%</td></tr>
+<tr><th>人类视频采购</th><td>105–210</td><td>7%</td><td>540–1,650</td><td>19%</td></tr>
+<tr><th>伪动作算力与存储</th><td>—</td><td>0%</td><td>315–770</td><td>9%</td></tr>
+<tr><th>试点现场与合规</th><td>95–255</td><td>8%</td><td>175–465</td><td>5%</td></tr>
+<tr class="sum"><th>合计</th><td><strong>1,525–2,915</strong></td><td>100%</td><td><strong>3,905–7,885</strong></td><td>100%</td></tr>
+</tbody></table></div>
+  <div class="scroll"><table>
+<thead><tr><th>不在上表内</th><th>金额</th><th>说明</th></tr></thead><tbody>
+<tr><th>可选：仿真批量 RL + 真机车队 RL</th><td>340–715 万</td><td>仿真工程 2 人 × 6 个月、资产、批量 rollout 算力、真机 RL 基础设施；仿真只用于刚体类子技能，布料靠真机</td></tr>
+<tr><th>之后每扩一个站点</th><td>95–255 万</td><td>集成、驻场与现场件；6 台可支撑 1–2 个站点</td></tr>
+<tr><th>本体</th><td>0</td><td>自有 6 台，不新购</td></tr>
+</tbody></table></div>
+</section>
+
+<section>
+  <h2>如果团队放在中国大陆</h2>
+  <p class="note">同一套步骤与人月，只换人力单价和受地点影响的非人力项。单位人民币万元，括号内为新台币万元。大陆人力全成本为我方估算，未取得薪资调查来源：一线城市工程师 60–100 万元 / 人年，新一线 40–70 万元 / 人年；遥操作员 8–15 万元；标注员 6–12 万元。</p>
+  <div class="scroll"><table class="num">
+<thead><tr><th></th><th>团队在台湾（基准）</th><th>团队在大陆一线城市（北上深杭）</th><th>团队在大陆新一线城市（成都 / 武汉 / 合肥 / 苏州等）</th><th>混合：工程在大陆新一线，遥操作与试点留在台湾</th></tr></thead><tbody>
+<tr><th>交付一（分类 → 洗 → 烘）</th><td>190–360<small>（850–1,630）</small></td><td>220–435<small>（1,000–1,965）</small></td><td>165–350<small>（740–1,570）</small></td><td>190–400<small>（855–1,790）</small></td></tr>
+<tr><th>交付二（晾 → 叠 → 收纳）</th><td>150–285<small>（680–1,285）</small></td><td>180–350<small>（805–1,570）</small></td><td>130–275<small>（590–1,245）</small></td><td>155–320<small>（695–1,440）</small></td></tr>
+<tr class="sum"><th>方案 A 合计</th><td><strong>340–645</strong><small>（1,525–2,915）</small></td><td><strong>400–785</strong><small>（1,805–3,535）</small></td><td><strong>295–625</strong><small>（1,335–2,810）</small></td><td><strong>345–720</strong><small>（1,545–3,235）</small></td></tr>
+<tr><th>B1 预训练验证</th><td>130–240<small>（590–1,080）</small></td><td>160–305<small>（720–1,385）</small></td><td>120–245<small>（540–1,115）</small></td><td>125–255<small>（560–1,160）</small></td></tr>
+<tr><th>B2 预训练放大</th><td>420–910<small>（1,895–4,100）</small></td><td>415–920<small>（1,870–4,140）</small></td><td>345–810<small>（1,555–3,660）</small></td><td>370–920<small>（1,675–4,155）</small></td></tr>
+<tr class="sum"><th>方案 B 全程</th><td><strong>865–1,750</strong><small>（3,905–7,885）</small></td><td><strong>965–1,980</strong><small>（4,340–8,930）</small></td><td><strong>750–1,655</strong><small>（3,375–7,460）</small></td><td><strong>825–1,855</strong><small>（3,710–8,355）</small></td></tr>
+<tr><th>方案 A 相对台湾基准</th><td>—</td><td>+20%</td><td>-7%</td><td>+8%</td></tr>
+<tr><th>方案 B 相对台湾基准</th><td>—</td><td>+13%</td><td>-8%</td><td>+2%</td></tr>
+</tbody></table></div>
+  <p><strong>搬到大陆省不了多少钱，放在一线城市反而更贵。</strong>这个项目六到七成是工程人力，而具身智能方向的算法工程师在大陆一线城市的全成本高于台湾同级；便宜的是遥操作员、标注员、环境件和人类视频采购，但它们在方案 A 里合计不到三成。新一线城市约省一成；方案 B 因为人类视频占比高，在一线城市的涨幅比方案 A 小。</p>
+  <div class="scroll"><table>
+<thead><tr><th>比成本更要紧的事</th><th>影响（均需在决定前核实）</th></tr></thead><tbody>
+<tr><th>6 台机器人与 Jetson Thor 的跨境</th><td>整机进出口与暂准进口的手续和周期；Thor 属较新一代 GPU 模组，对大陆的出口管制状态须向供应商确认</td></tr>
+<tr><th>训练算力</th><td>大陆难以按挂牌价取得 H100 级算力。方案 A 微调量小，影响有限；方案 B 的 8–12 万 H100·h 受影响大，可能要在境外云训练</td></tr>
+<tr><th>基座模型与许可</th><td>美国来源的 VLA 权重许可含出口合规约束；大陆团队可改用本土开放权重基座，需重新选型并核查许可</td></tr>
+<tr><th>数据跨境</th><td>试点洗衣房若在台湾，现场视频（含旁观者）传到大陆训练，两边的个人资料法规都要过；混合方案最受这条约束</td></tr>
+<tr><th>人才供给</th><td>大陆具身智能人才池明显更大、招聘更快。这才是搬过去的真正理由，不是成本</td></tr>
+</tbody></table></div>
+  <p><strong>建议</strong>：若目的是省钱，不值得搬；若目的是招得到人、招得快，首选"工程在大陆新一线、遥操作与试点留在台湾"的混合方案，成本与全在台湾持平，但要先解决数据跨境与基座许可。交付一的数据量小，可以先按"数据不出境、在台湾本地训练，大陆工程师远程开发"起步。</p>
+</section>
+
+<section>
+  <h2>交付物与效果预期</h2>
+  <p class="note">没有任何一家公开过可直接套用的洗衣成功率曲线。下表是验收目标与判断依据，不是承诺。</p>
+  <div class="scroll">
+    <table>
+      <thead><tr><th>时点</th><th class="a">方案 A</th><th class="b">方案 B（与 A 同时起步时）</th></tr></thead>
+      <tbody>
+        <tr><th>第 3 个月<small>过程门</small></th><td>脏衣分类：类别判别准确率 ≥95%，从衣堆单件抓取成功率 ≥90%；洗衣机开关门与装入在实验室跑通；Thor 同机延迟达标</td><td>管线打通，2B 模型首轮对照跑完。<strong>此时还没有真机结果</strong></td></tr>
+        <tr class="sum"><th>第 6 个月<small>交付一</small></th><td>洗衣房现场：分类 → 洗 → 烘 全流程连续运行 ≥8 h；每百件干预 ≤10 次；错分率 ≤3%；掉落与夹门为零容忍项</td><td>验证核心主张：联合预测视频 + 动作优于只预测动作（≥80% 留出任务）</td></tr>
+        <tr><th>第 7 个月<small>B 的决策点</small></th><td>泛化探针：只训矩形类与上衣类各 ≤10 h，测留出实物与完全没训过的下装类；留出实物 ≥60% 且下装类 ≥30% 视为外部基座先验够用</td><td>—</td></tr>
+        <tr class="sum"><th>第 11 个月<small>交付二</small></th><td>晾 → 叠 → 收纳 上线，六任务全流程连续运行 8 h → 24 h；叠衣客户质检通过率 ≥90%</td><td>5B 基座训练中</td></tr>
+        <tr><th>第 14 个月</th><td>已进入扩站</td><td>用自有基座达到交付二指标，外加"未见过的衣物类型、新站点零调整"的泛化指标</td></tr>
+        <tr><th>能力上限</th><td>交付一预期可达标；交付二的叠、晾由外部基座决定，湿衣、新面料、新站点最可能卡住</td><td>预期布料泛化更好。依据是 Dyna 自报：同样 ≤10 h 后训练，真机表现随预训练规模 20% → 53%；客户现场质检 46% → 87%</td></tr>
+        <tr><th>节拍</th><td colspan="2">分类与装卸按"件 / 小时"和每机循环时间计，第 3 个月实测后定目标；叠衣参照 Dyna 固定双臂自报 95–100 条 / 小时，人形预期更低</td></tr>
+        <tr><th>主要不确定性</th><td>湿衣缠绕时的单件分离；位控手臂在洗衣机、烘干机筒内的碰撞保护</td><td>Dyna 的主张无第三方复现；骨干、参数量、算力等关键参数均未披露</td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<section>
+  <h2>时间线与决策门</h2>
+  <div class="tl"><div class="tl-inner">
+    <div class="months"><span></span><span>0</span><span>1</span><span>2</span><span>3</span><span>4</span><span>5</span><span>6</span><span>7</span><span>8</span><span>9</span><span>10</span><span>11</span><span>12</span><span>13</span><span>14</span><span>15</span><span>16</span></div>
+    <div class="lane">
+      <div class="name">方案 A</div>
+      <div class="seg a" style="grid-column:2/8">交付一：脏衣分类 → 洗 → 烘 · 大脑 v1 · 现场试点</div>
+      <div class="seg a" style="grid-column:8/13">交付二：晾 → 叠 → 收纳 · 大脑 v2 · 现场试点</div>
+      <div class="seg a" style="grid-column:13/19;opacity:.55">扩站</div>
+      <div class="gate" style="grid-column:4/5;grid-row:2"><i></i></div>
+      <div class="gate" style="grid-column:7/8;grid-row:2"><i></i></div>
+      <div class="gate" style="grid-column:8/9;grid-row:2"><i></i></div>
+      <div class="gate" style="grid-column:12/13;grid-row:2"><i></i></div>
+    </div>
+    <div class="lane">
+      <div class="name">B 同时起步</div>
+      <div class="seg b" style="grid-column:2/8">预训练 2B · 1 万小时 · 验证主张</div>
+      <div class="seg b" style="grid-column:8/16">预训练 5B · 3–5 万小时 · 换上自有基座</div>
+      <div class="gate" style="grid-column:7/8;grid-row:2"><i></i></div>
+      <div class="gate" style="grid-column:15/16;grid-row:2"><i></i></div>
+    </div>
+    <div class="lane">
+      <div class="name">B 探针后启动</div>
+      <div class="seg ghost" style="grid-column:9/15">第一阶段（仅当泛化探针不过）</div>
+      <div class="seg ghost" style="grid-column:15/19">第二阶段 → 第 21 个月</div>
+    </div>
+    <div class="legend"><span><i></i>方案 A 的门：第 3 个月过程门 · 第 6 个月交付一验收 · 第 7 个月泛化探针（决定是否启动 B）· 第 11 个月交付二验收</span><span>横轴单位：月</span></div>
+  </div></div>
+</section>
+
+<section>
+  <h2>加速版：交付一压缩到 3 个月</h2>
+  <p><strong>3 个月内做到"全流程跑通、现场有人值守试运行"可行；做到"无人值守连续 8 小时验收"偏紧，建议放在第 5 个月。</strong>能压缩的是并行度；压缩不了的是每轮约 1 周的采集、训练、评测迭代，以及稳定性验证需要的日历时间。</p>
+  <div class="tl"><div class="tl-inner">
+    <div class="months"><span></span><span>0</span><span>1</span><span>2</span><span>3</span><span>4</span><span>5</span><span>6</span><span>7</span><span>8</span><span>9</span><span>10</span><span>11</span><span>12</span><span>13</span><span>14</span><span>15</span><span>16</span></div>
+    <div class="lane">
+      <div class="name">交付一</div>
+      <div class="seg a" style="grid-column:2/5">a：全流程 · 有人值守</div>
+      <div class="seg a" style="grid-column:5/7;opacity:.7">b：无人值守 8 h</div>
+      <div class="gate" style="grid-column:4/5;grid-row:2"><i></i></div>
+      <div class="gate" style="grid-column:6/7;grid-row:2"><i></i></div>
+    </div>
+    <div class="lane">
+      <div class="name">交付二</div>
+      <div class="seg a" style="grid-column:5/10">晾 → 叠 → 收纳 · 大脑 v2 · 现场试点</div>
+      <div class="seg a" style="grid-column:10/19;opacity:.55">扩站</div>
+      <div class="gate" style="grid-column:5/6;grid-row:2"><i></i></div>
+      <div class="gate" style="grid-column:9/10;grid-row:2"><i></i></div>
+    </div>
+    <div class="legend"><span><i></i>第 3 个月交付一 a · 第 4 个月泛化探针（是否启动方案 B）· 第 5 个月交付一 b · 第 8 个月交付二</span></div>
+  </div></div>
+  <div class="scroll"><table>
+    <thead><tr><th></th><th>原版</th><th class="a">加速版</th></tr></thead><tbody>
+    <tr><th>交付一 a<small>全流程跑通，现场有人值守，每百件干预 ≤20，错分率 ≤5%</small></th><td>第 6 个月</td><td><strong>第 3 个月</strong></td></tr>
+    <tr><th>交付一 b<small>无人值守连续 8 h，每百件干预 ≤10，错分率 ≤3%</small></th><td>第 6 个月</td><td>第 5 个月</td></tr>
+    <tr><th>方案 B 决策点</th><td>第 7 个月</td><td>第 4 个月</td></tr>
+    <tr><th>交付二</th><td>第 6–11 月</td><td>第 3–8 月，与交付一 b 并行</td></tr>
+    <tr><th>工程团队</th><td>5–6 人，平稳</td><td><strong>第 0 天即 9 人</strong>，第 3–5 月峰值 9–10 人</td></tr>
+    <tr><th>遥操作</th><td>2–3 个工位</td><td>3 个工位、4 台机并行、操作员 4–5 人，第 2 周开工</td></tr>
+    <tr><th>交付一投入</th><td>850–1,630 万新台币</td><td>a：730–1,395 万；b：165–305 万；合计 895–1,700 万（约 +5%）</td></tr>
+    <tr class="sum"><th>方案 A 合计</th><td>1,525–2,915 万 · 11 个月</td><td><strong>1,570–2,990 万 · 8 个月</strong></td></tr>
+  </tbody></table></div>
+  <p class="note">压缩不省钱，只是把钱和人提前：人月总量基本不变，多出来的是并行协调成本。</p>
+  <div class="scroll"><table>
+    <thead><tr><th>3 个月成立的前提</th><th>任一不成立，交付一 a 顺延</th></tr></thead><tbody>
+    <tr><th>人</th><td>9 名工程师第 0 天到岗；招聘时间不在 3 个月之内</td></tr>
+    <tr><th>设备与场地</th><td>第 1 周订到可联网控制的洗衣机与烘干机；第 1 个月内签下试点洗衣房</td></tr>
+    <tr><th>基座许可</th><td>第 2 周前核完；核不完就用当时已准入的那个，不等</td></tr>
+    <tr><th>数据链路</th><td>走最短路径：现有 ROS 录制直接出训练数据，完整的入湖与策展后补；但干预打点、控制器版本、夹持力三个字段第 1 周必须录进去</td></tr>
+    <tr><th>机载算力</th><td>Thor 同机延迟第 2 周实测；不达标立即把大脑下放到站点服务器</td></tr>
+    <tr><th>检查点</th><td>第 4 周：单件抓取 ≥85%、分类判别 ≥90%；第 8 周：洗、烘装卸各自在实验室连续 20 次成功</td></tr>
+    <tr><th>验收口径</th><td>按 a、b 两步，事先与试点客户对齐</td></tr>
+  </tbody></table></div>
+  <p><strong>最大的未知仍是湿衣</strong>：从洗衣机里取出缠绕的湿衣并单件分离，是交付一里唯一没有公开先例可抄的子技能。建议第 2 周就开始采这一项的数据，不要按"分类、洗、烘"的顺序排到最后。</p>
+</section>
+
+<section>
+  <h2>不同品类衣物的泛化怎么保证</h2>
+  <p><strong>原则：能设计成与品类无关的环节，就不让它依赖品类。</strong>交付一基本与品类无关；交付二（叠、晾）才真正依赖品类，也是决定要不要启动自有预训练的依据。</p>
+  <div class="scroll"><table>
+    <thead><tr><th>环节</th><th>泛化的真正变量</th><th>做法</th></tr></thead><tbody>
+    <tr><th>识别与分筐<small>交付一</small></th><td>颜色、面料、洗标，不是款式</td><td>分筐规则里没有"品类"这一项；没见过的款式只要颜色与面料判得出，分筐照样成立。显式"未知"类，拿不准进人工筐，人工筐每周回流成难例</td></tr>
+    <tr><th>抓取与装卸<small>交付一</small></th><td>尺寸与重量、干与湿、表面摩擦、缠绕</td><td>技能定义在"一团布"上。采集配额按物理属性分三档 × 三档 × 三档，约 60 件编号实物；单件衣物的演示不超过总数的 5%；湿衣从第 2 周开始采</td></tr>
+    <tr><th>折叠与晾挂<small>交付二</small></th><td>品类结构（矩形、上衣、下装、小件、特殊件）</td><td>大脑管"折成什么样"：每个品类一条文字版折法流程；动作模型管"怎么动"：九个所有品类共用的动作原语。所有衣物先摊平到同一个中间状态再操作。约 120 件编号实物轮换采集，每类留 5 件永不进训练</td></tr>
+  </tbody></table></div>
+  <div class="pair">
+    <div class="plan a">
+      <h3>新增一个品类要花什么</h3>
+      <p>写一条折法流程，加每个动作原语不超过 2 小时的演示，跑"留一类不训"测试，泛化差距不超过 10 个点即进白名单。不重训整个模型。目标是第三个品类之后，新增成本降到"流程文本加零到几十条演示"。</p>
+    </div>
+    <div class="plan a">
+      <h3>交付范围用品类白名单写清</h3>
+      <p>白名单内的品类计入验收指标；白名单外一律进人工筐，不算错分。建议首批：毛巾类、长短袖 T 恤、长裤。扩展顺序按试点洗衣房的订单件数占比排，这份统计目前没有，交付一期间从现场取得。</p>
+    </div>
+  </div>
+  <div class="scroll"><table>
+    <thead><tr><th>怎么测</th><th>内容</th><th>判据</th></tr></thead><tbody>
+    <tr><th>三档测试集</th><td>见过的品类里没见过的那一件；留一类不训；没见过的站点</td><td>同时报域内、域外与二者之差。分筐准确率的差超过 5 个点告警；折叠质检通过率的差不超过 10 个点；各结构类之间不超过 15 个点</td></tr>
+    <tr><th>泛化探针<small>交付二开工后第 1–3 周，兼方案 B 的启动判据</small></th><td>只训矩形类与上衣类各不超过 10 小时；测各类留出实物，以及完全没训过的下装类</td><td>留出实物 ≥60% 且下装类 ≥30%：外部基座够用，继续方案 A。留出实物 ≥60% 但下装类不足 30%：逐类补数据，方案 B 暂缓。留出实物不足 60%：启动方案 B</td></tr>
+  </tbody></table></div>
+  <p class="note">样本量与阈值为设计目标，不是实测结果。依据中引用的 Dyna、Sunday、Skild 结论均为公司自报。详细计划见仓库 docs/laundry-sorting-brain-plan.md 第 9 节与 docs/laundry-fold-hang-plan.md。</p>
+</section>
+
+<section>
+  <h2>训练流程</h2>
+  <div class="scroll">
+    <table>
+      <thead><tr><th>步骤</th><th class="a">方案 A</th><th class="b">方案 B</th></tr></thead>
+      <tbody>
+        <tr><th>① 预训练</th><td>无</td><td>人类视频 1 万小时（洗衣 ≥3 千）→ 3–5 万小时（洗衣过半）；从视频提取腕位姿 + 拇指-食指开合度作"伪动作"；联合预测未来视频与动作；2B → 5B；嵌套数据子集 × 两种配方对照，得到自家缩放曲线</td></tr>
+        <tr><th>② 后训练</th><td>六任务拆 20–26 个子技能，每个 ≤10 h 遥操作；π0.5 与对照基座同数据同步数各跑一轮后定稿</td><td>相同，换成自有基座</td></tr>
+        <tr><th>③ VLM 大脑</th><td colspan="2">分两版：v1（交付一）衣物识别与分类判别、洗烘 SOP、机器联网、站位原语；v2（交付二）折法与晾法 SOP、质检判别。提示词 + SOP 状态机 → 几千条标注微调；判成败用头部画面 + 腕部深度 + 夹持力</td></tr>
+        <tr><th>④ 持续升级</th><td>提示库与规则（当天可回滚）→ 干预段后训练（周级）→ 真机 RL（月级，可选）</td><td>同 A，另加：站点数据回灌基座（季度级，仅当缩放消融为正）</td></tr>
+        <tr><th>⑤ 评测</th><td>评测机专用、评测衣物不进训练；每个 checkpoint 盲测；训练未见过的那台机单列成绩</td><td>同 A，另加留出机器人数据上的零样本离线评测</td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<section>
+  <h2>数据与管线需求</h2>
+  <div class="scroll">
+    <table>
+      <thead><tr><th>需求</th><th class="a">方案 A</th><th class="b">方案 B 额外需要</th></tr></thead>
+      <tbody>
+        <tr><th>遥操作数据</th><td>180–295 h：交付一 80–135 h（分类 15–25、洗 40–70、烘 25–40），交付二 100–160 h（叠 40–60、晾 50–80、收纳 10–20）；2–3 个 VR 工位并行</td><td>相同</td></tr>
+        <tr><th>部署回流</th><td>只固化干预段、失败段、异常段；成功段抽样</td><td>相同</td></tr>
+        <tr><th>标注</th><td>衣物类别、颜色、面料、洗标标注（分类任务的主要数据）；大脑层 SOP 与成败标注几千条；夹持力给出抓取成败的自动标签</td><td>相同</td></tr>
+        <tr><th>人类视频</th><td>仅保选项：每月几百小时洗衣视频</td><td>1 万 → 3–5 万可用小时；需采集网络或采购渠道，按通过分钟计酬；湿衣场景必须自采</td></tr>
+        <tr><th>隐私合规</th><td>洗衣房现场告知与旁观者处理</td><td>人类视频的人脸与旁观者脱敏、同意与撤回、跨境路径</td></tr>
+        <tr><th>管线模块</th><td>采集（ROS → MCAP，含深度、夹持力、关节电流、干预打点、控制器版本）、入湖、运动学质量门、导出、评测 CI、回流触发</td><td>伪动作工厂、手部可见质量门、连续帧序列导出、列式训练清单与嵌套子集切分、世界-动作模型训练栈与推理运行时</td></tr>
+        <tr><th>存储</th><td>约 5–10 TB</td><td>约 60 TB → 300 TB</td></tr>
+        <tr><th>新增工程量</th><td>约 8–10 人月</td><td>再加约 25 人月</td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<section>
+  <h2>风险</h2>
+  <div class="scroll">
+    <table>
+      <thead><tr><th>风险</th><th class="a">A</th><th class="b">B</th><th>对策</th></tr></thead>
+      <tbody>
+        <tr><th>外部基座许可或版本变动</th><td>高</td><td>低</td><td>后训练数据自有，可换基座重跑；许可逐项核查后才进默认路径</td></tr>
+        <tr><th>不同品类衣物的泛化</th><td>交付一中，交付二高</td><td>中</td><td>见上文"不同品类衣物的泛化怎么保证"：按属性决策、按物理属性采集、共用动作原语、留一类测试、品类白名单</td></tr>
+        <tr><th>布料与湿衣泛化不足</th><td>高（集中在交付二）</td><td>中</td><td>第 7 个月泛化探针专门检验；不过则启动 B。交付一只涉及整把抓取，受影响小</td></tr>
+        <tr><th>湿衣缠绕、筒内取衣碰撞</th><td>中</td><td>中</td><td>夹持力干、湿两档阈值；关节电流阈值做碰撞保护；筒内避碰可先在仿真里训</td></tr>
+        <tr><th>错分导致染色或缩水赔付</th><td>中</td><td>中</td><td>分类判别低置信度一律转人工筐；错分率单列为验收项</td></tr>
+        <tr><th>关键参数凭估算、结论无第三方复现</th><td>低</td><td>高</td><td>B 第一阶段即复核核心主张，不成立则关闭，损失封顶约 590–1,080 万（B1 步骤）</td></tr>
+        <tr><th>人类视频成本失控</th><td>—</td><td>高</td><td>按通过分钟计酬；单价超过每可用小时 $12 即暂停采购</td></tr>
+        <tr><th>Thor 上两个模型同机延迟不达标</th><td>中</td><td>中高</td><td>第 1 个月实测；不达标则大脑下放到站点服务器</td></tr>
+        <tr><th>上肢力控上线改变动力学</th><td>中</td><td>中</td><td>每条数据记控制器版本；上线后先做新旧数据混训消融</td></tr>
+        <tr><th>人形连续运行可靠性</th><td>中</td><td>中</td><td>试点站位外接电源；本体停机与策略失败分开记账</td></tr>
+        <tr><th>部署飞轮不自转</th><td>中</td><td>中</td><td>Dyna 自述十个月运营未出现自加速；只用"干预小时换来的下一版成功率增量"做 KPI</td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<section class="ask">
+  <h2>请您决策的三件事</h2>
+  <ol>
+    <li><b>批准方案 A 的交付一</b>（脏衣分类 → 洗 → 烘）：6 个月、5–6 人、850–1,630 万新台币；其中前 3 个月约 400–760 万，第 3 个月过程门不过即停。</li>
+    <li><b>批准保选项的人类视频最低档采集</b>：每月 10–19 万新台币（已含在上述数字内），让方案 B 随时可以启动。</li>
+    <li><b>确认方案 B 的决策点放在第 7 个月</b>：依据是交付一的现场验收结果，加上 2–3 周的泛化探针（训两类衣物、测第三类）。交付二（晾 → 叠 → 收纳）预算 680–1,285 万，届时一并审批。</li>
+  </ol>
+</section>
+
+<footer>
+  <span>三条路径的总投入：只做 A 为 1,525–2,915 万新台币（11 个月，两次交付）；先 A、交付一之后再定 B（建议）为 1,525–2,915 万，启动 B 则至 3,905–7,885 万，最晚第 21 个月换上自有基座；A、B 同时起步为 3,905–7,885 万，第 14 个月换上自有基座。</span>
+  <span>算力按公有云挂牌价 $2–2.5 / H100·h，自有集群或长约可再降 30–50%。环境件未询价。相机规格与 Thor 同机推理能力为经验判断，列入第 1 个月实测项。</span>
+  <span>详细推算与来源：仓库 docs/laundry-two-plans-brief.md 与 docs/dyna-replica-plan.md。</span>
+</footer>
+
+</div>
+</body>
+</html>
