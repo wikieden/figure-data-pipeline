@@ -1,0 +1,292 @@
+<!doctype html>
+<html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>追平 Dyna 最快路线</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@400;500;700&family=Noto+Serif+SC:wght@600;900&display=swap">
+<style>
+:root{
+  --ground:#F2F5F9; --surface:#FFFFFF; --ink:#16202F; --muted:#5C6B80; --rule:#D5DCE6;
+  --a:#2B4FA6; --a-soft:#E3EAF8; --b:#17786C; --b-soft:#DDF0EC;
+  --warn:#9A5B00; --warn-soft:#FBF0DA; --ok:#1F7A45;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --ground:#0F141C; --surface:#171E29; --ink:#E6ECF5; --muted:#93A1B5; --rule:#2A3443;
+    --a:#8FB0FF; --a-soft:#1C2A4A; --b:#5FD0BF; --b-soft:#123430;
+    --warn:#F0B95A; --warn-soft:#33270F; --ok:#6FD39A;
+  }
+}
+:root[data-theme="dark"]{
+  --ground:#0F141C; --surface:#171E29; --ink:#E6ECF5; --muted:#93A1B5; --rule:#2A3443;
+  --a:#8FB0FF; --a-soft:#1C2A4A; --b:#5FD0BF; --b-soft:#123430;
+  --warn:#F0B95A; --warn-soft:#33270F; --ok:#6FD39A;
+}
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{margin:0;background:var(--ground);color:var(--ink);font-family:"Noto Sans SC","PingFang SC","Microsoft YaHei",system-ui,sans-serif;font-size:16px;line-height:1.75;font-variant-numeric:tabular-nums}
+.wrap{max-width:1080px;margin:0 auto;padding:40px 16px 72px;display:flex;flex-direction:column;gap:44px}
+h1,h2,h3{font-family:"Noto Serif SC","Songti SC",serif;text-wrap:balance;margin:0;line-height:1.3}
+h1{font-size:clamp(28px,5vw,42px);font-weight:900;letter-spacing:.01em}
+h2{font-size:23px;font-weight:600;padding-bottom:10px;border-bottom:2px solid var(--ink)}
+h3{font-size:17px;font-weight:600}
+p{margin:0;max-width:66ch}
+.eyebrow{font-size:13px;letter-spacing:.12em;color:var(--muted);text-transform:uppercase}
+header{display:flex;flex-direction:column;gap:14px}
+.lede{font-size:18px;color:var(--ink);max-width:60ch}
+.meta{font-size:13.5px;color:var(--muted);max-width:none}
+section{display:flex;flex-direction:column;gap:18px}
+.tag{display:inline-block;padding:1px 9px;border-radius:999px;font-size:12.5px;font-weight:700;letter-spacing:.04em}
+.tag.a{background:var(--a-soft);color:var(--a)} .tag.b{background:var(--b-soft);color:var(--b)}
+.verdict{background:var(--surface);border:1px solid var(--rule);border-left:6px solid var(--a);padding:22px 24px;display:flex;flex-direction:column;gap:12px}
+.verdict ol{margin:0;padding-left:1.3em;display:flex;flex-direction:column;gap:8px;max-width:72ch}
+.pair{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.plan{background:var(--surface);border:1px solid var(--rule);padding:20px 22px;display:flex;flex-direction:column;gap:10px}
+.plan.a{border-top:5px solid var(--a)} .plan.b{border-top:5px solid var(--b)}
+.plan .big{font-family:"Noto Serif SC",serif;font-size:26px;font-weight:900;line-height:1.2}
+.plan.a .big{color:var(--a)} .plan.b .big{color:var(--b)}
+.plan dl{margin:0;display:grid;grid-template-columns:5.5em 1fr;gap:6px 12px;font-size:14.5px}
+.plan dt{color:var(--muted)} .plan dd{margin:0}
+.scroll{overflow-x:auto;background:var(--surface);border:1px solid var(--rule)}
+table{border-collapse:collapse;width:100%;min-width:720px;font-size:14.5px;line-height:1.6}
+th,td{text-align:left;vertical-align:top;padding:11px 14px;border-bottom:1px solid var(--rule)}
+tr:last-child td{border-bottom:none}
+thead th{font-size:13px;letter-spacing:.06em;color:var(--muted);font-weight:700;border-bottom:2px solid var(--ink);white-space:nowrap}
+thead th.a{color:var(--a)} thead th.b{color:var(--b)}
+tbody th{font-weight:700;width:9.5em;color:var(--ink)}
+td strong{font-weight:700}
+table.num{min-width:980px}
+table.num td{white-space:nowrap;text-align:right}
+table.num thead th{text-align:right;white-space:normal;min-width:6.5em}
+table.num thead th:first-child,table.num tbody th{text-align:left}
+table.num tbody th{width:17em;white-space:normal}
+td small{display:block;color:var(--muted);font-size:12px}
+tbody th small{display:block;font-weight:400;color:var(--muted);font-size:12.5px;line-height:1.45}
+tr.sum td,tr.sum th{border-top:2px solid var(--ink);background:color-mix(in srgb,var(--ink) 4%,transparent)}
+section>h3{margin-top:8px}
+.note{font-size:13.5px;color:var(--muted);max-width:80ch}
+.warn{background:var(--warn-soft);color:var(--warn);border:1px solid color-mix(in srgb,var(--warn) 35%,transparent);padding:12px 16px;font-size:14px;max-width:none}
+/* range chart */
+.chart{background:var(--surface);border:1px solid var(--rule);padding:22px 22px 14px;display:flex;flex-direction:column;gap:6px}
+.row{display:grid;grid-template-columns:11.5em 1fr;gap:12px;align-items:center;min-height:38px}
+.row .lab{font-size:14px;line-height:1.35}
+.row .lab small{display:block;color:var(--muted);font-size:12.5px}
+.track{position:relative;height:30px;background:repeating-linear-gradient(to right,var(--rule) 0 1px,transparent 1px 20%)}
+.bar{position:absolute;top:6px;height:18px;border-radius:2px}
+.bar.a{background:var(--a)} .bar.b{background:var(--b)} .bar.opt{background:transparent;border:2px dashed var(--muted)}
+.bar span{position:absolute;left:calc(100% + 8px);top:-3px;white-space:nowrap;font-size:13px;font-weight:700;color:var(--ink)}
+.bar.lead span{left:auto;right:calc(100% + 8px)}
+.axis{display:grid;grid-template-columns:11.5em 1fr;gap:12px;font-size:12px;color:var(--muted)}
+.axis div:last-child{display:flex;justify-content:space-between}
+.grp{font-size:12.5px;letter-spacing:.08em;color:var(--muted);margin-top:10px}
+/* timeline */
+.tl{background:var(--surface);border:1px solid var(--rule);padding:20px 22px;overflow-x:auto}
+.tl-inner{min-width:760px;display:flex;flex-direction:column;gap:10px}
+.months{display:grid;grid-template-columns:7em repeat(17,1fr);font-size:12px;color:var(--muted)}
+.months span{text-align:left;border-left:1px solid var(--rule);padding-left:3px}
+.lane{display:grid;grid-template-columns:7em repeat(17,1fr);align-items:center;row-gap:4px}
+.lane .name{font-size:13.5px;font-weight:700}
+.seg{height:30px;display:flex;align-items:center;padding:0 8px;font-size:12.5px;color:#fff;white-space:nowrap;overflow:hidden;border-right:2px solid var(--surface)}
+.seg.a{background:var(--a)} .seg.b{background:var(--b)} .seg.ghost{background:transparent;border:2px dashed var(--b);color:var(--b)}
+:root[data-theme="dark"] .seg.a,:root[data-theme="dark"] .seg.b{color:#0F141C}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]) .seg.a,:root:not([data-theme="light"]) .seg.b{color:#0F141C}}
+.gate{height:30px;display:flex;align-items:center;justify-content:flex-end;transform:translateX(7px)}
+.gate i{width:14px;height:14px;background:var(--warn);transform:rotate(45deg);display:block}
+.legend{display:flex;flex-wrap:wrap;gap:6px 18px;font-size:13px;color:var(--muted)}
+.legend i{display:inline-block;width:10px;height:10px;background:var(--warn);transform:rotate(45deg);margin-right:8px}
+.ask{background:var(--ink);color:var(--ground);padding:26px 26px;display:flex;flex-direction:column;gap:14px}
+.ask h2{border-color:var(--ground);color:var(--ground)}
+.ask ol{margin:0;padding-left:1.3em;display:flex;flex-direction:column;gap:10px;max-width:74ch}
+.ask b{font-weight:700}
+footer{font-size:13px;color:var(--muted);display:flex;flex-direction:column;gap:6px;border-top:1px solid var(--rule);padding-top:18px}
+@media (max-width:720px){.pair{grid-template-columns:1fr}.row,.axis{grid-template-columns:1fr}.axis div:first-child{display:none}.bar span{font-size:12px}}
+
+.cols{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;align-items:end;height:230px;padding:0 6px}
+.col{display:flex;flex-direction:column;justify-content:flex-end;align-items:center;gap:6px;height:100%}
+.col .v{font-weight:700;font-size:15px}
+.col .d{font-size:12.5px;color:var(--muted)}
+.col .b{width:70%;background:var(--b);border-radius:2px 2px 0 0}
+.col .b.hot{background:var(--a)}
+.col .x{font-size:13px;color:var(--muted);border-top:1px solid var(--rule);width:100%;text-align:center;padding-top:6px}
+.months16{grid-template-columns:7em repeat(16,1fr)}
+.seg.c{background:var(--muted)} .seg.opt{background:transparent;border:2px dashed var(--a);color:var(--a)}
+.kpis{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+.kpi{background:var(--surface);border:1px solid var(--rule);padding:18px 20px;display:flex;flex-direction:column;gap:4px}
+.kpi .n{font-family:"Noto Serif SC",serif;font-weight:900;font-size:28px;line-height:1.2;color:var(--a)}
+.kpi .l{font-size:13.5px;color:var(--muted)}
+@media (max-width:720px){.kpis{grid-template-columns:1fr}}
+</style></head><body><div class="wrap">
+
+<header>
+  <div class="eyebrow">管理层汇报 · 2026-09-20</div>
+  <h1>不限资源时，多快能追平 Dyna</h1>
+  <p class="lede">前提：资源投入不设上限，目标是以最短时间达到 Dyna Robotics 公开披露的当前水平。数据量按证据重新评估，不照抄"100 万小时"。二版：只服务自研本体，并把 Dyna 的视频预训练与 Sunday 式同构末端真值结合。</p>
+  <p class="meta">与洗衣房交付计划并行、互不阻塞 · 本体现状：自研轮式人形 × 6 · Dyna 参照：DYNA-1（2025-04）→ DYNA-2（2026-08）用时 16 个月，公开融资 1.435 亿美元</p>
+</header>
+
+<section>
+  <div class="kpis">
+    <div class="kpi"><div class="n">约 9 个月</div><div class="l">模型层追平：同协议盲测 14 个任务 ≥53%，单站点连续运行 24 小时</div></div>
+    <div class="kpi"><div class="n">12–15 个月</div><div class="l">部署层追平：客户现场质检通过率 ≥87%。这一段靠真实运行积累，加钱不提速</div></div>
+    <div class="kpi"><div class="n">$25–56M</div><div class="l">12 个月总投入，约 8–18 亿新台币；换算率有利、第 5 个月不再加购数据则为 $25–35M（8–11 亿新台币）</div></div>
+  </div>
+  <div class="verdict">
+    <h3>结论</h3>
+    <ol>
+      <li><strong>工期由钱买不到的东西决定。</strong>千卡集群上 5B 模型过一遍 30 万小时数据只要约 4 天，训练不在关键路径上。真正卡工期的依次是：招到人、数据到货速度、真机评测的迭代轮数、现场连续运行的日历时间。</li>
+      <li><strong>不需要先凑齐 100 万小时，也不只靠视频。</strong>按 Dyna 自己公布的曲线，10 万小时已拿到 100 万小时效果的约 85%。再叠加 Sunday 式的同构末端真值，主力模型的数据定为：10 万小时带动作标签的视频，加 8–10 万小时同构手持夹爪真值，加 50–100 万小时无标签视频。</li>
+      <li><strong>只做自研本体让三件事变简单</strong>：预训练里可以放自家机器人数据；评测农场用自家上半身而不是外购机械臂；追平判据里"跨品牌零样本"一项改成"自家留出数据"。</li>
+      <li><strong>不限资源时该并行下注，不该加大单一赌注。</strong>三个骨干候选、两条模型路线、两种动作数据同时跑，第 3 个月砍到一条。</li>
+      <li>比原先按成本排序的路线多花约 2 倍的钱，换回约 12 个月；比本方案一版（纯视频）便宜约两成，且多出"夹持力"这一维能力。</li>
+    </ol>
+  </div>
+  <p class="warn">口径：全部金额、算力、周期为我方估算，用于排序与决策，不是报价。Dyna 的数字全部为该公司自报，无第三方复现；其骨干模型、参数量、训练算力均未披露。汇率 32 新台币 / 美元。</p>
+</section>
+
+<section>
+  <h2>要追平的是什么</h2>
+  <div class="scroll"><table>
+    <thead><tr><th>层</th><th>Dyna 公开状态（自报）</th><th class="a">我们的追平判据</th></tr></thead><tbody>
+    <tr><th>预训练</th><td>世界-动作模型 DYNA-2；100 万小时以上头戴人类视频、零机器人数据；从 1 千到 100 万小时的人到机器人迁移幂律</td><td>跨品牌本体不是目标：改为在自研本体的留出数据上出幂律（数据越多、零样本动作误差越低）；公开数据只作旁证</td></tr>
+    <tr><th>后训练</th><td>每任务不超过 10 小时机器人数据，14 任务归一化性能 53%；对上一代模型完成次数 1.55 倍；约 10 分钟数据学会双五指手拧瓶盖</td><td>同协议（盲测、每任务不少于 10 次、评测者不参与开发）14 任务 ≥53%；对同数据基线成对胜率 ≥65%</td></tr>
+    <tr><th>现场质量</th><td>客户质检通过率 46% → 87%；洗衣生产 95 条 / 小时、93% 达标</td><td>自家洗衣房站点同口径 ≥87%；节拍在固定双臂工作站上对齐，人形另计</td></tr>
+    <tr><th>连续运行</th><td>上一代模型即达 24 小时以上无人干预</td><td>单站点连续 24 小时</td></tr>
+    <tr><th>商业规模</th><td>多家客户在产，称车队将到数百台</td><td><strong>不在追平范围</strong>：客户数与车队规模是销售与交付问题，不是预训练问题</td></tr>
+  </tbody></table></div>
+</section>
+
+<section>
+  <h2>数据量重估：视频 10 万小时加同构真值，不是 100 万</h2>
+  <div class="chart" role="img" aria-label="Dyna 自报：后训练归一化性能随预训练小时数变化，1 千小时 20%，1 万小时 28%，10 万小时 45%，100 万小时 53%">
+    <div class="grp">Dyna 自报：14 个任务的后训练性能，随预训练数据量变化</div>
+    <div class="cols">
+      <div class="col"><div class="v">20%</div><div class="d">&nbsp;</div><div class="b" style="height:57px"></div><div class="x">1 千小时</div></div>
+      <div class="col"><div class="v">28%</div><div class="d">+8</div><div class="b" style="height:79px"></div><div class="x">1 万小时</div></div>
+      <div class="col"><div class="v">45%</div><div class="d">+17，收益最大的一段</div><div class="b hot" style="height:127px"></div><div class="x">10 万小时</div></div>
+      <div class="col"><div class="v">53%</div><div class="d">+8，多花十倍的钱</div><div class="b" style="height:150px"></div><div class="x">100 万小时</div></div>
+    </div>
+  </div>
+  <p>10 万小时已拿到 100 万小时效果的约 85%。我们还有三个办法比 Dyna 更省数据，其中第二条在二版升级为数据的第二主轴：</p>
+  <div class="scroll"><table>
+    <thead><tr><th>杠杆</th><th>为什么成立</th><th>做法</th></tr></thead><tbody>
+    <tr><th>预训练里放机器人数据</th><td>Dyna 为了证明"跨具身零样本"刻意一条不放；我们要的是效果。已有论文报告目标机器人数据占比不到 2% 仍大幅受益</td><td>公开机器人数据 1–2 万小时，加自采 2–5 千小时</td></tr>
+    <tr><th>混入硬件动作真值</th><td>Dyna 的动作标签是从视频里估出来的，自认没有手指关节与接触力</td><td><strong>升为第二主轴</strong>：与自研夹爪一比一的手持采集器，第 5 个月 8–10 万小时</td></tr>
+    <tr><th>场景加权</th><td>我们的商业目标是洗衣与家务，不是全品类</td><td>洗衣、布料、家务场景占 30–40%，其余保持多样性</td></tr>
+  </tbody></table></div>
+  <h3>Dyna 的视频预训练，加 Sunday 式的同构末端真值</h3>
+  <div class="pair">
+    <div class="plan b"><span class="tag b">Dyna 的长处与短处</span><p>头戴人类视频便宜、场景极多；但动作标签是从画面里估出来的，只有手腕位姿和拇指食指开合度，没有接触力。短板在最后一段精度与接触丰富的操作。</p></div>
+    <div class="plan a"><span class="tag a">Sunday 的长处与短处</span><p>采集手套与机器人手完全同构，硬件直接记录动作真值；自报零遥操作、未见过的家庭零调整。短板是规模靠自己发设备，单价比视频贵约一个数量级。</p></div>
+  </div>
+  <p><strong>我们做这个组合特别便宜</strong>：末端本来就是二指力控夹爪加腕部相机，手持采集器直接用同一套指部零件和同一款相机即可，比 Sunday 的五指手套简单一个数量级；采集端与机器人端看到的腕部画面是同一种，不需要"把人从画面里抹掉"的转换步骤。</p>
+  <div class="scroll"><table>
+    <thead><tr><th>预期收益（我方推断，尚无任何一家做过受控对比）</th><th>预期</th><th>把握</th></tr></thead><tbody>
+    <tr><th>同等效果所需的带标签视频小时数</th><td>降到几分之一至十分之一（30 万 → 5–10 万）</td><td>中</td></tr>
+    <tr><th>叠、晾、取湿衣等接触丰富任务的成功率</th><td>提升十几到二十几个点</td><td>中低</td></tr>
+    <tr><th>简单抓放</th><td>提升很小</td><td>中高</td></tr>
+    <tr><th>每个任务所需的机器人数据</th><td>从 10 小时以内降到 1 小时级</td><td>中</td></tr>
+    <tr><th>夹持力相关能力（湿衣、不伤面料、穿衣架）</th><td>视频路线给不了的新增能力</td><td>高</td></tr>
+  </tbody></table></div>
+  <p><strong>先花小钱把"多少"测出来</strong>：第 2–10 周做四组同算力对照（纯视频、视频加 5% 真值、视频加 20% 真值、纯真值），得出"1 小时真值相当于多少小时视频"。需要 20–50 对手持器采 1–3 千小时，约 3–20 万美元。换算率 ≥10，视频停在 10 万小时、预算转向真值；3–10，两轴并进；不足 3，回到视频为主。</p>
+  <div class="scroll"><table class="num">
+    <thead><tr><th>数据</th><th>第 2 个月</th><th class="a">第 5 个月（主力模型）</th><th>第 9 个月（仅当曲线未饱和）</th></tr></thead><tbody>
+    <tr><th>带动作标签的头戴人类视频（可用小时）</th><td>3 万</td><td><strong>10 万</strong></td><td>30 万至 100 万，仅当换算率不足 3 且曲线未饱和</td></tr>
+    <tr><th>同构手持夹爪真值<small>与自研夹爪一比一，含夹持力</small></th><td>1–3 千</td><td><strong>8–10 万</strong></td><td>20–30 万</td></tr>
+    <tr><th>无标签视频<small>授权视频库；获取成本低一个数量级</small></th><td>5 万</td><td><strong>50–100 万</strong></td><td>200 万以上</td></tr>
+    <tr><th>自家机器人数据<small>遥操作、农场自主运行、部署干预；进预训练</small></th><td>300 小时</td><td>3–6 千小时</td><td>1–2 万小时</td></tr>
+    <tr><th>公开机器人数据（其他品牌本体）</th><td>可选</td><td>可选，不超过 1 万小时</td><td>同左</td></tr>
+  </tbody></table></div>
+  <p><strong>裁决规则</strong>：第 3 个月按换算率定两轴配比；第 5 个月用嵌套数据档拟合自家曲线，外推增量不足 5 个点或已达追平判据即停止加购。两条合计可省 500–1,500 万美元。</p>
+  <div class="scroll"><table>
+    <thead><tr><th>数据多快能到货</th><th>起量时间</th><th>稳态速度</th><th>每可用小时成本</th></tr></thead><tbody>
+    <tr><th>5–8 家数据供应商并行签约</th><td>3–5 周</td><td>每周 2–4 万小时</td><td>$8–20，含加急溢价</td></tr>
+    <tr><th>自建采集者网络</th><td>8–12 周</td><td>每周 0.5–1 万小时</td><td>$6–12</td></tr>
+    <tr><th>授权现成视频库（无标签）</th><td>2–4 周</td><td>一次性 50–100 万小时</td><td>$0.5–2</td></tr>
+    <tr><th>公开数据集</th><td>即时</td><td>一次性 1–2 万小时</td><td>0，许可逐项核查</td></tr>
+    <tr><th>同构手持夹爪的自有采集网络<small>洗衣房、家庭洗衣区、酒店布草间</small></th><td>首批 20 对 4 周；500 对 16 周</td><td>500 对约每周 0.75 万小时</td><td>$15–40</td></tr>
+  </tbody></table></div>
+  <p class="note">按此，10 万小时视频在第 3 个月到齐，8–10 万小时真值在第 5 个月到齐。手持器的开模与相机下单、数据合同都要在第 1 周发出，比任何技术工作都优先；隐私脱敏、同意与跨境路径随合同一起定，否则数据到了不能用。</p>
+</section>
+
+<section>
+  <h2>最快时间线</h2>
+  <div class="tl"><div class="tl-inner"><div class="months months16"><span></span><span>0</span><span>1</span><span>2</span><span>3</span><span>4</span><span>5</span><span>6</span><span>7</span><span>8</span><span>9</span><span>10</span><span>11</span><span>12</span><span>13</span><span>14</span><span>15</span></div><div class="lane months16"><div class="name">人</div><div class="seg c" style="grid-column:2/4">核心 25 人</div><div class="seg c" style="grid-column:4/6">45 人</div><div class="seg c" style="grid-column:6/18">70 人</div></div><div class="lane months16"><div class="name">视频</div><div class="seg b" style="grid-column:2/5">签约 → 10 万小时</div><div class="seg opt" style="grid-column:5/11">30 万至 100 万（按裁决）</div><div class="seg b" style="grid-column:11/18;opacity:.55">部署回流</div><div class="gate" style="grid-column:4/5;grid-row:2"><i></i></div></div><div class="lane months16"><div class="name">同构真值</div><div class="seg b" style="grid-column:2/3">开模</div><div class="seg b" style="grid-column:3/5">20 → 150 对</div><div class="seg b" style="grid-column:5/7">500 对</div><div class="seg b" style="grid-column:7/18;opacity:.75">20–30 万小时</div><div class="gate" style="grid-column:6/7;grid-row:2"><i></i></div></div><div class="lane months16"><div class="name">模型</div><div class="seg a" style="grid-column:2/3">V0</div><div class="seg a" style="grid-column:3/5">F1 配方对照</div><div class="seg a" style="grid-column:5/8">F2 主力 5B</div><div class="seg a" style="grid-column:8/11">F3 放大 · 自主运行</div><div class="seg a" style="grid-column:11/18;opacity:.55">持续升级</div><div class="gate" style="grid-column:4/5;grid-row:2"><i></i></div><div class="gate" style="grid-column:7/8;grid-row:2"><i></i></div><div class="gate" style="grid-column:10/11;grid-row:2"><i></i></div></div><div class="lane months16"><div class="name">真机</div><div class="seg c" style="grid-column:2/5">农场 10 → 30 台</div><div class="seg c" style="grid-column:5/11">14 任务后训练 · 盲测</div><div class="seg c" style="grid-column:11/18">站点车队</div></div><div class="lane months16"><div class="name">现场</div><div class="seg c" style="grid-column:2/7">洗衣房试点（沿用方案 A）</div><div class="seg c" style="grid-column:7/11">换上自有基座</div><div class="seg a" style="grid-column:11/18">F4 3–5 个站点 · 质检 ≥87%</div><div class="gate" style="grid-column:16/17;grid-row:2"><i></i></div></div>
+    <div class="legend"><span><i></i>第 3 个月：配方定型、按换算率定数据配比 · 第 5 个月：是否继续加购数据 · 第 6 个月：14 任务 ≥45% · 第 9 个月：模型层追平 · 第 15 个月：部署层追平</span><span>横轴单位：月</span></div>
+  </div></div>
+  <div class="scroll"><table>
+    <thead><tr><th>阶段</th><th>做什么</th><th>出口判据</th></tr></thead><tbody>
+    <tr><th>F0 起跑<small>第 0–1 月</small></th><td>数据合同、千卡集群预留、手持采集器开模、评测农场排产同时发出；训练栈先用公开数据跑通，不等自家数据</td><td>2B 模型在公开数据上完成两种配方的首轮对照；入湖达到每周 1 万小时</td></tr>
+    <tr><th>F1 配方定型<small>第 1–3 月</small></th><td>三个骨干候选 × 三种配方 × 三档数据并行；世界-动作模型与传统动作模型同数据对照；视频与真值的换算率四组对照；手持采集器开模、首批 20 对下场</td><td>复核 Dyna 的核心主张；得出真值换算率并定数据配比；选定一个骨干、一个配方，砍掉其余</td></tr>
+    <tr><th>F2 主力模型<small>第 3–6 月</small></th><td>10 万小时视频、8–10 万小时同构真值、无标签视频和自家机器人数据，5B 主力训练；四档拟合自家曲线；14 任务后训练与盲测</td><td>14 任务 ≥45%；曲线拟合优度 ≥0.85；做出是否继续加购数据的裁决</td></tr>
+    <tr><th>F3 模型层追平<small>第 6–9 月</small></th><td>按裁决放大数据或模型；奖励模型在环的自主运行；与上层 VLM 联调</td><td><strong>14 任务 ≥53%；对基线成对胜率 ≥65%；单站连续 24 小时</strong></td></tr>
+    <tr><th>F4 部署层追平<small>第 9–15 月</small></th><td>3–5 个客户站点；同口径客户质检；干预数据回流与分级升级</td><td><strong>现场质检 ≥87%；洗衣节拍对齐</strong></td></tr>
+  </tbody></table></div>
+</section>
+
+<section>
+  <h2>资源配置</h2>
+  <div class="pair">
+    <div class="plan a"><h3>算力</h3><p>预留 1,024 张 H100 或 B200 级 GPU 9–12 个月，第 6–9 个月弹性扩到 2,048 张；全程约 200–400 万卡时。不按需租，排队时间是隐形工期。数据交付层（本地缓存、列式清单）第 1 个月到位，否则千卡会等数据。</p></div>
+    <div class="plan a"><h3>真机</h3><p>评测农场用 30 台自研本体的固定上半身工作站（双臂、夹爪、头腕相机，去掉底盘与升降），每天约 1,500 次评测试验，这是迭代轮数的上限。农场必须与产品同构，结果才能直接外推；产能取决于自研臂的供货，这一项进入关键路径。另配同构手持采集器：第 1 个月 20 对，第 4 个月 500 对。</p></div>
+  </div>
+  <div class="scroll"><table>
+    <thead><tr><th>团队约 70 人</th><th>人数</th><th>备注</th></tr></thead><tbody>
+    <tr><th>预训练与模型</th><td>12</td><td>含 3–4 名做过大规模视频生成模型训练的资深工程师，最难招的一类</td></tr>
+    <tr><th>后训练、奖励模型、上层 VLM</th><td>8</td><td></td></tr>
+    <tr><th>数据平台与动作标签提取</th><td>12</td><td></td></tr>
+    <tr><th>数据采购、采集者运营、质检</th><td>10</td><td>另加外包审核</td></tr>
+    <tr><th>机器人、遥操作、评测农场</th><td>15</td><td>含操作员</td></tr>
+    <tr><th>现场交付</th><td>8</td><td>第 9 个月起</td></tr>
+    <tr><th>合规、采购、项目管理</th><td>5</td><td></td></tr>
+  </tbody></table></div>
+  <p><strong>招人是第一关键路径。</strong>加速办法只有三种：整建制收购一个已有训练栈的小团队；与有视频生成经验的实验室联合开发；把工程主体放在人才池最大的地方。若第 0 天只有现有团队，整条时间线顺延 3–4 个月。</p>
+</section>
+
+<section>
+  <h2>预算（12 个月）</h2>
+  <div class="chart" role="img" aria-label="各项预算区间，单位百万美元">
+    <div class="row"><div class="lab">人力<small>约 70 人 · 年，按地区混合</small></div><div class="track"><div class="bar a" style="left:35.0%;width:35.0%"><span>$7–14M</span></div></div></div><div class="row"><div class="lab">训练算力<small>预留千卡 9–12 个月</small></div><div class="track"><div class="bar a" style="left:30.0%;width:30.0%"><span>$6–12M</span></div></div></div><div class="row"><div class="lab">同构手持夹爪真值<small>设备 500–1,000 对，采集 10–30 万小时</small></div><div class="track"><div class="bar b" style="left:10.0%;width:20.0%"><span>$2–6M</span></div></div></div><div class="row"><div class="lab">人类视频采购<small>带动作标签，10 万 → 按裁决至 30 万小时</small></div><div class="track"><div class="bar b" style="left:5.0%;width:20.0%"><span>$1–5M</span></div></div></div><div class="row"><div class="lab">无标签视频授权<small>只进视频目标</small></div><div class="track"><div class="bar b" style="left:5.0%;width:10.0%"><span>$1–3M</span></div></div></div><div class="row"><div class="lab">动作标签提取、存储、数据平台<small></small></div><div class="track"><div class="bar a" style="left:7.5%;width:12.5%"><span>$1.5–4M</span></div></div></div><div class="row"><div class="lab">评测农场与追加本体<small>自研上半身 30 台 + 人形 10–20 台</small></div><div class="track"><div class="bar a" style="left:10.0%;width:10.0%"><span>$2–4M</span></div></div></div><div class="row"><div class="lab">现场交付与站点<small>3–5 个站点</small></div><div class="track"><div class="bar a" style="left:10.0%;width:10.0%"><span>$2–4M</span></div></div></div><div class="row"><div class="lab">遥操作、评测与标注人工<small></small></div><div class="track"><div class="bar a" style="left:5.0%;width:5.0%"><span>$1–2M</span></div></div></div><div class="row"><div class="lab">合规、法务、许可<small>多法域数据合同</small></div><div class="track"><div class="bar a" style="left:5.0%;width:5.0%"><span>$1–2M</span></div></div></div>
+    <div class="axis"><div></div><div><span>0</span><span>4</span><span>8</span><span>12</span><span>16</span><span>20 百万美元</span></div></div>
+  </div>
+  <div class="scroll"><table class="num">
+    <thead><tr><th></th><th>低</th><th>高</th><th>新台币</th></tr></thead><tbody>
+    <tr class="sum"><th>合计</th><td><strong>$25M</strong></td><td><strong>$56M</strong></td><td>约 8–18 亿</td></tr>
+    <tr><th>换算率有利、第 5 个月不再加购数据</th><td>$25M</td><td>$35M</td><td>约 8–11 亿</td></tr>
+    <tr><th>对照：本方案一版（纯视频、跨品牌评测）</th><td>$28M</td><td>$68M</td><td>约 9–22 亿</td></tr>
+    <tr><th>对照：按成本排序的原路线（24 个月）</th><td>$11M</td><td>$24M</td><td>约 3.5–7.7 亿</td></tr>
+  </tbody></table></div>
+  <p class="note">绿色为数据类支出，蓝色为其余。同构真值成为数据类里最大的一项；视频采购的高值对应换算率不利、需要买到 30 万小时的情形。自研上半身工作站的单台成本未估。</p>
+</section>
+
+<section>
+  <h2>钱买不到、必须提前对冲的八件事</h2>
+  <div class="scroll"><table>
+    <thead><tr><th>约束</th><th>为什么钱解决不了</th><th>对冲</th></tr></thead><tbody>
+    <tr><th>资深训练人才</th><td>做过十亿参数级视频生成模型训练的人很少</td><td>收购或联合开发；起步用开源代码基线，不从零写</td></tr>
+    <tr><th>同构手持器的起量</th><td>开模、相机供货、采集员培训都有周期，500 对要 16 周</td><td>第 1 周开模下单；首批 20 对用 3D 打印件先跑换算率实验</td></tr>
+    <tr><th>自研上半身工作站的产能</th><td>评测农场必须与产品同构，不能外购替代</td><td>过渡期用现有 6 台整机；农场排产与手持器并列为第 1 周事项</td></tr>
+    <tr><th>Dyna 的关键参数未披露</th><td>骨干、参数量、损失权重、分辨率都要自己试</td><td>第 1–3 个月三骨干 × 三配方并行，就是为这个花的钱</td></tr>
+    <tr><th>核心主张未经第三方复现</th><td>联合预测全面胜出、幂律、46% → 87% 都是自报</td><td>第一件事就是复核；不成立则主力改走传统动作模型，同一批数据照用，数据投入不浪费</td></tr>
+    <tr><th>数据质量与合规</th><td>加急采购最容易买到重复、摆拍、无同意的视频</td><td>按通过分钟计酬；欺诈与去重检查第 1 个月上线；同意与脱敏不过的数据不入库</td></tr>
+    <tr><th>真机迭代轮数</th><td>每轮"训练、后训练、盲测"至少 1–2 周</td><td>30 台农场把单轮评测压到 1 天</td></tr>
+    <tr><th>现场运行的日历时间</th><td>故障谱与客户质检口径只能靠运行积累；Dyna 自述十个月运营未出现自加速</td><td>洗衣房试点不等预训练，先用外部基座上线，自有基座第 5–6 个月热替换</td></tr>
+  </tbody></table></div>
+</section>
+
+<section>
+  <h2>与洗衣房交付计划的关系</h2>
+  <p>两条线并行。洗衣房的两次交付按既定方案 A 推进，不等这条线；本方案的主力模型在第 5–6 个月产出后，替换掉外部基座，后训练数据、评测集、上层 VLM 原样复用。本方案取代的是洗衣房汇报里按成本收敛的"方案 B"（14 个月、3–5 万小时的洗衣专用版）。</p>
+</section>
+
+<section class="ask">
+  <h2>请您决策的三件事</h2>
+  <ol>
+    <li><b>是否走这条不设预算上限的路线</b>：12 个月 $25–56M（约 8–18 亿新台币），换回约 12 个月工期。</li>
+    <li><b>若走，第 1 周要同时发出的四项承诺</b>：数据供应商合同、千卡集群 9–12 个月预留、同构手持采集器开模与相机下单、30 台自研上半身工作站排产。四项都有交付周期，晚一周就整体晚一周。</li>
+    <li><b>人从哪里来</b>：收购团队、联合开发、还是把工程主体放到人才池更大的地区。这一条决定时间线是 9 个月还是 12–13 个月。</li>
+  </ol>
+</section>
+
+<footer>
+  <span>算力按预留价估算；评测农场单价未询价；追加人形本体的产能取决于自研进度，不在关键路径上。</span>
+  <span>详细推算与来源：仓库 docs/dyna-parity-fast-track.md；Dyna 一手原文归档于 docs/sources/dyna/。</span>
+</footer>
+</div></body></html>

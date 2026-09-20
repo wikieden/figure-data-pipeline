@@ -88,6 +88,8 @@
 | [research-skild.md](research-skild.md) | Skild AI 一手调研（11 篇博客）：Skild Brain 分层、全身体仿真、S1 视频提示 ICL 与 1k–100k h scaling、L1–L5 扰动阶梯、$1:$3 质控、部署飞轮观 | 2026-09-14 |
 | [sources/MANIFEST.md](sources/MANIFEST.md) | 一手资料归档：Figure 18 / Dyna 6 / Sunday 4 / Generalist 10 篇官网原文文本（URL、页面日期、抓取日期、HTML sha256），research 文档的引用目标 | 2026-09-14 |
 
+`reports/` 存管理层汇报页的单文件 HTML（[洗衣房两套方案](reports/laundry-two-plans.html)、[追平 Dyna 最快路线](reports/dyna-parity-fast-track.html)），内容分别对应 laundry-two-plans-brief.md 与 dyna-parity-fast-track.md，更新汇报页时同步覆盖。
+
 `assets/` 存文档图片（16 张，均在对应文档标注来源）。
 
 ## 三套里程碑前缀
