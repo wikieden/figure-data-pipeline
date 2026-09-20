@@ -192,7 +192,9 @@ R1 档与 program-plan §4 已列的"Stage B（M 档）3–10 万 H100·h"同量
 
 | 项 | 现状 | 对方案的含义 |
 |---|---|---|
-| 本体 | 轮式人形 × 6 台；上肢控制 ≥200 Hz；接口为 DDS / ROS 节点；关节电流可读；型号**待补** | 轮式底盘无跌倒风险，试点不需要吊架；200 Hz 正好落在决策 3 的状态 / 动作流 100–200 Hz 档，原生频率入湖不重采样；关节电流进状态流，供硬件退化归因 [D:product]；底盘移动与升降以离散站位原语调用，VLA 只管到位后的双臂操作 |
+| 本体 | 轮式人形 × 6 台；上肢控制 ≥200 Hz；接口为 DDS / ROS 节点；关节电流可读；本体自研；上肢目前仅位控，力控开发中；腰部可升降 | 轮式底盘无跌倒风险，试点不需要吊架；200 Hz 正好落在决策 3 的状态 / 动作流 100–200 Hz 档，原生频率入湖不重采样；关节电流进状态流，供硬件退化归因 [D:product]；底盘移动与升降以离散站位原语调用，VLA 只管到位后的双臂操作 |
+| 控制模式 | 上肢位控（力控开发中）；夹爪已有力控 | 叠、摆、晾对位控足够，柔顺由夹爪力限位承担；洗衣机筒内取衣是接触最重的子技能，位控下用关节电流阈值做碰撞保护并排在最后做；策略输出末端增量位姿 → IK → 关节位置指令；每条 episode 记 `controller_version`，力控上线视为新版本，先做新旧数据混训消融再合并 |
+| 升降腰 | 有 | 晾杆与洗衣机站位不需改造环境；每个站位一个高度预设，由大脑层以原语调用，升降关节只进状态不进策略动作空间 |
 | 机载算力 | NVIDIA Jetson Thor | VLA（3B 级，动作块 ≥10 Hz）与 8B 级 VLM 大脑（~1 Hz）同机运行，需量化并实测显存与延迟 ⚠️；达标则不需要外挂推理 GPU；各层推理延迟写回 episode（research-model-recipes §7） |
 | 遥操作 | VR 遥操作已自研完成 | 不再采购套件；需要补的只有接管打点：`intervention_ts_ns` 与操作员 ID 按 robot-track-teleop §1 写入同一条 MCAP |
 | 采集中间件 | ROS 2 / DDS | recorder 可直接用 rosbag2 的 MCAP 存储后端，U-01 在本体上倾向"ROS 节点 + MCAP"而非自写采集循环；时间戳取消息头的采样时刻而非接收时刻（architecture §8），topic 按读取模式分组写 chunk（data-format-contract §1.1） |
@@ -255,7 +257,7 @@ VLM 大脑 ~1 Hz（文本指令 + 站位原语 + 洗衣机联网接口）
 
 ### 12.7 待补信息
 
-本体型号（具身档案文件名）；上肢接口的指令类型（关节位置 / 末端位姿 / 力矩）；是否带升降腰（决定晾杆与洗衣机站位的高度方案）；Thor 上 VLA + VLM 同机的实测延迟。2026-09-20 已确认：轮式、≥200 Hz、DDS / ROS、Thor、电流可读、VR 遥操作已有。补齐后落 `configs/embodiments/<robot_model>.yaml`（robot-track-teleop §1）。
+具身档案草案已落 [`configs/embodiments/inhouse_wheeled_humanoid_v1.yaml`](../configs/embodiments/inhouse_wheeled_humanoid_v1.yaml)。其中标 TBD 的待补：每臂自由度与关节顺序、限位、夹爪最大开度、IK 方案、控制器版本号、相机同步实测残差、Thor 上 VLA + VLM 同机实测延迟、干 / 湿衣夹持力阈值。2026-09-20 已确认：自研轮式人形 6 台、上肢位控 ≥200 Hz（力控开发中）、升降腰、DDS / ROS、Thor、电流可读、VR 遥操作已有。
 
 [D:dyna-2]: sources/dyna/dyna-2.txt
 [D:dyna-1]: sources/dyna/dyna-1.txt

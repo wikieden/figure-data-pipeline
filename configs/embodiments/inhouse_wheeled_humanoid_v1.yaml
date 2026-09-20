@@ -1,0 +1,83 @@
+# 自研轮式人形 v1 具身档案（草案，2026-09-20）
+# 来源：负责人口述（docs/dyna-replica-plan.md §12.1）；标 TBD 的字段待按本体资料补齐后冻结。
+# 槽位布局见 docs/data-format-contract.md §2.3（slot_layout_version = 1）。
+robot_model: inhouse_wheeled_humanoid_v1
+slot_layout_version: 1
+fleet_size: 6                      # 每台独立 device_id 与 calibration_ref
+
+base:
+  type: wheeled
+  in_policy_action_space: false    # 站位切换由大脑层以离散原语调用，VLA 不输出底盘速度
+  state_stream: /signal/base_vel   # 仍记录，供回放与站位审计
+torso:
+  lift: true                       # 升降腰
+  in_policy_action_space: false    # P-A / P-B：每站位固定高度预设；升降关节只进状态
+  joints: [torso_lift]             # TBD：若另有俯仰 / 旋转自由度在此补
+
+arms:
+  count: 2
+  dof_per_arm: TBD
+  joint_order: TBD                 # 写入 joint_pos 段的顺序：torso → left arm → right arm → head
+  limits: TBD
+  control:
+    mode: position                 # 2026-09-20：上肢仅位控；力控开发中
+    rate_hz: 200                   # ≥200 Hz，原生频率入湖，不重采样（CLAUDE.md 决策 3）
+    interface: ros2_dds
+    controller_version: TBD        # 每条 episode 必填；力控上线 = 新 controller_version，数据不混训前先做消融
+  telemetry:
+    joint_pos: /signal/joint_pos
+    joint_vel: /signal/joint_vel
+    joint_current: /signal/joint_current   # 可读；硬件退化归因用，不进槽位，走 fdp.raw.*
+    joint_pos_cmd: /signal/action          # 遥操作 / 策略下发的关节位置指令
+
+end_effectors:
+  left:  &gripper
+    type: parallel_two_finger
+    force_control: true
+    slot: gripper_left             # 开度归一化到 [0,1]
+    aperture_m: TBD                # 最大开度，归一化用
+    streams:
+      width: /signal/gripper_width_left
+      force: /signal/grip_force_left       # 不进槽位，走 fdp.raw.*；抓取成败自动标签的信号源
+    grasp_success_force_threshold_n: {dry: TBD, wet: TBD}   # P-A 第一个月标定
+  right:
+    <<: *gripper
+    slot: gripper_right
+    streams:
+      width: /signal/gripper_width_right
+      force: /signal/grip_force_right
+
+cameras:
+  head:
+    topic: /video/head
+    model: RealSense D457          # 规格待按官方资料核对
+    rgb: {to_policy: true}
+    depth: {record: true, to_policy: false, encoding: lossless_16bit}
+  wrist_l:
+    topic: /video/wrist_left
+    model: RealSense D405
+    rgb: {to_policy: true}
+    depth: {record: true, to_policy: false, encoding: lossless_16bit}
+  wrist_r:
+    topic: /video/wrist_right
+    model: RealSense D405
+    rgb: {to_policy: true}
+    depth: {record: true, to_policy: false, encoding: lossless_16bit}
+  sync: {method: software, budget_ms: 5, measured_ms: TBD}   # architecture §8.4
+
+policy_action_space:
+  primary: ee_delta_camera_frame   # training-pipeline §1.2-4；经 IK 落到关节位置指令，200 Hz 插值
+  fallback: joint_pos_target
+  segments: [ee_pose_left, ee_pose_right, gripper_left, gripper_right]
+  ik: TBD                          # IK 求解器与奇异 / 限位处理；IK 失败计入 L1 运动学门
+
+compute:
+  onboard: NVIDIA Jetson Thor
+  vla_target_hz: 10
+  brain_target_hz: 1
+  colocated_latency_ms: TBD        # VLA 与 VLM 同机实测；各层延迟写回 episode
+
+teleop:
+  method: vr                       # 自研，已完成
+  intervention_topic: /event/intervention
+  operator_id_required: true
