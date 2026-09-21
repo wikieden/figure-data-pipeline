@@ -117,14 +117,14 @@ footer{font-size:13px;color:var(--muted);display:flex;flex-direction:column;gap:
   <div class="verdict">
     <h3>结论</h3>
     <ol>
-      <li><strong>建议立即批准方案 A 的交付一</strong>（分类 → 洗 → 烘）：6 个月、5–6 人、约 850–1,630 万新台币；第 3 个月设过程门，第 6 个月在洗衣房现场验收。</li>
+      <li><strong>建议立即批准方案 A 的交付一</strong>（分类 → 洗 → 烘）：6 个月、5–6 人、约 $266–509k；第 3 个月设过程门，第 6 个月在洗衣房现场验收。</li>
       <li>交付一的任务是从衣堆抓单件、开关机器门、整把装卸，对布料精细操作要求低，主要靠 VLM 大脑的识别编排加后训练的抓取放置。<strong>这部分用方案 A 把握较大，不需要自有预训练。</strong></li>
       <li>方案 B（自有预训练）真正起作用的是交付二里的叠和晾。所以 <strong>B 的决策点放在第 7 个月</strong>：交付一验收后做 2–3 周的"泛化探针"（训两类衣物、测第三类），外部基座对布料的先验不够再启动 B。</li>
       <li>方案 B 是 A 的超集，只多一段自有预训练；A 的设备、数据、评测集、管线全部复用，没有沉没成本。</li>
-      <li>为保住 B 这个选项，A 执行期间以最低档持续采集洗衣人类视频，每月 10–19 万新台币。</li>
+      <li>为保住 B 这个选项，A 执行期间以最低档持续采集洗衣人类视频，每月 $3–6k。</li>
     </ol>
   </div>
-  <p class="warn">口径：全部金额、算力、周期为我方估算，用于排序与止损，不是报价。引用的 Dyna 数字均为该公司自报，无第三方复现。币种为新台币，汇率 32 新台币 / 美元；人力按台湾地区全成本估算（工程师 180–300 万 / 人年），未取得薪资调查来源，立项前请人资核定。</p>
+  <p class="warn">口径：全部金额、算力、周期为我方估算，用于排序与止损，不是报价。引用的 Dyna 数字均为该公司自报，无第三方复现。币种为美元；原始估算以新台币做出，按 32 新台币 / 美元换算；人力按台湾地区全成本估算（工程师 $56–94k / 人年），未取得薪资调查来源，立项前请人资核定。</p>
 </section>
 
 <section>
@@ -133,112 +133,112 @@ footer{font-size:13px;color:var(--muted);display:flex;flex-direction:column;gap:
     <div class="plan a">
       <span class="tag a">方案 A</span>
       <h3>后训练 + VLM 大脑</h3>
-      <div class="big">NT$1,525–2,915 万 · 11 个月</div>
+      <div class="big">$477–911k · 11 个月</div>
       <p>拿开放权重的机器人基座模型，用我们自己的洗衣遥操作数据做后训练，上面叠一个 VLM 做任务编排。</p>
       <dl>
         <dt>基座</dt><dd>外取：π0.5 为主，GR00T N1.7 作对照（许可逐项核查）</dd>
         <dt>团队</dt><dd>5–6 人，两次交付期间基本持平</dd>
-        <dt>非人力支出</dt><dd>445–1,110 万（算力、环境件、视频、试点）</dd>
+        <dt>非人力支出</dt><dd>$139–347k（算力、环境件、视频、试点）</dd>
         <dt>我们拥有</dt><dd>对齐层数据、评测集、数据管线、洗衣 SOP 大脑</dd>
       </dl>
     </div>
     <div class="plan b">
       <span class="tag b">方案 B</span>
       <h3>自有预训练 + 后训练 + VLM 大脑</h3>
-      <div class="big">NT$3,905–7,885 万 · 14 个月起</div>
+      <div class="big">$1.22–2.46M · 14 个月起</div>
       <p>先用几万小时人类洗衣 / 家务第一视角视频训一个自己的世界-动作模型基座（Dyna DYNA-2 的做法），再做与 A 相同的后训练。</p>
       <dl>
         <dt>基座</dt><dd>自训：开放权重视频扩散骨干 + 自研动作分支，2B → 5B</dd>
         <dt>团队</dt><dd>6 人 → 12 人</dd>
-        <dt>非人力支出</dt><dd>1,790–4,365 万（其中人类视频与处理 855–2,420 万）</dd>
+        <dt>非人力支出</dt><dd>$0.56–1.36M（其中人类视频与处理 $267–756k）</dd>
         <dt>我们拥有</dt><dd>A 的全部 + 预训练基座 + 人类视频语料</dd>
       </dl>
     </div>
   </div>
-  <p class="note">两套方案共用同一个两层结构：VLM 大脑约 1 Hz 下发文本子任务指令和站位原语（到叠衣台、蹲到洗衣机前、升到晾杆高度），小脑模型 ≥10 Hz 输出双臂末端增量位姿与夹爪开合，经 IK 转成关节位置指令。洗衣机程序走联网控制，机器人只做装卸。</p>
+  <p class="note">两套方案共用同一个两层结构：VLM 大脑约 1 Hz 下发文本子任务指令和站位原语（到叠衣台、蹲到洗衣机前、升到晾杆高度），小脑模型 ≥10 Hz 输出双臂末端增量位姿与夹爪开合，经 IK 转成关节位置指令。洗衣机程序优先走机器接口，兜底为机器人按面板；机器人主要做装卸。</p>
 </section>
 
 <section>
   <h2>成本：按步骤、按类型</h2>
-  <p class="note">单位新台币万元，汇率 32 新台币 / 美元。人力按台湾地区全成本估算：工程师 180–300 万 / 人年，遥操作员与现场值守 58–85 万 / 人年，标注员 55–72 万 / 人年。</p>
-  <div class="chart" role="img" aria-label="各步骤成本区间，单位新台币万元">
-    <div class="grp">方案 A 的步骤（合计 1,525–2,915 万）</div>
-    <div class="row"><div class="lab">A0 基建与验证<small>第 0–1 月</small></div><div class="track"><div class="bar a" style="left:3.17%;width:2.70%"><span>75–135</span></div></div></div>
-    <div class="row"><div class="lab">A1 脏衣服分类<small>第 1–3 月</small></div><div class="track"><div class="bar a" style="left:5.38%;width:5.18%"><span>125–245</span></div></div></div>
-    <div class="row"><div class="lab">A2 洗衣服（装卸洗衣机）<small>第 2–5 月</small></div><div class="track"><div class="bar a" style="left:7.60%;width:6.48%"><span>175–325</span></div></div></div>
-    <div class="row"><div class="lab">A3 烘干（转移与取出）<small>第 3–5 月</small></div><div class="track"><div class="bar a" style="left:5.15%;width:4.54%"><span>120–225</span></div></div></div>
-    <div class="row"><div class="lab">A4 VLM 大脑 v1<small>第 1–5 月</small></div><div class="track"><div class="bar a" style="left:6.75%;width:5.76%"><span>155–290</span></div></div></div>
-    <div class="row"><div class="lab">A5 交付一：分类 → 洗 → 烘 试点<small>第 5–6 月</small></div><div class="track"><div class="bar a" style="left:6.37%;width:6.71%"><span>145–300</span></div></div></div>
-    <div class="row"><div class="lab">A6 叠衣服<small>第 6–9 月</small></div><div class="track"><div class="bar a" style="left:5.90%;width:4.70%"><span>135–245</span></div></div></div>
-    <div class="row"><div class="lab">A7 晾衣服<small>第 6–9 月</small></div><div class="track"><div class="bar a" style="left:6.66%;width:5.36%"><span>155–275</span></div></div></div>
-    <div class="row"><div class="lab">A8 收纳<small>第 8–10 月</small></div><div class="track"><div class="bar a" style="left:2.83%;width:2.55%"><span>65–125</span></div></div></div>
-    <div class="row"><div class="lab">A9 VLM 大脑 v2 与全流程串联<small>第 7–10 月</small></div><div class="track"><div class="bar a" style="left:4.88%;width:4.48%"><span>110–215</span></div></div></div>
-    <div class="row"><div class="lab">A10 交付二：晾 → 叠 → 收纳 试点<small>第 9–11 月</small></div><div class="track"><div class="bar a" style="left:7.10%;width:7.23%"><span>165–330</span></div></div></div>
-    <div class="row"><div class="lab">A11 保选项：洗衣人类视频最低档采集<small>第 0–11 月</small></div><div class="track"><div class="bar a" style="left:4.59%;width:4.59%"><span>105–210</span></div></div></div>
-    <div class="grp">方案 B 额外增加的步骤（B 全程合计 3,905–7,885 万）</div>
-    <div class="row"><div class="lab">B1 预训练验证<small>第 0–6 月</small></div><div class="track"><div class="bar b" style="left:25.57%;width:21.48%"><span>590–1,080</span></div></div></div>
-    <div class="row"><div class="lab">B2 预训练放大与换基座<small>第 6–14 月</small></div><div class="track"><div class="bar b lead" style="left:82.37%;width:96.00%"><span>1,895–4,100</span></div></div></div>
-    <div class="axis"><div></div><div><span>0</span><span>460</span><span>920</span><span>1,380</span><span>1,840</span><span>2,300 万</span></div></div>
+  <p class="note">图表与表格单位为千美元；原始估算以新台币做出，按 32 新台币 / 美元换算并四舍五入，分项之和与合计可能差 1–2。人力按台湾地区全成本估算：工程师 $56–94k / 人年，遥操作员与现场值守 $18–27k / 人年，标注员 $17–22k / 人年。</p>
+  <div class="chart" role="img" aria-label="各步骤成本区间，单位千美元">
+    <div class="grp">方案 A 的步骤（合计 $477–911k）</div>
+    <div class="row"><div class="lab">A0 基建与验证<small>第 0–1 月</small></div><div class="track"><div class="bar a" style="left:3.17%;width:2.70%"><span>23–42</span></div></div></div>
+    <div class="row"><div class="lab">A1 脏衣服分类<small>第 1–3 月</small></div><div class="track"><div class="bar a" style="left:5.38%;width:5.18%"><span>39–77</span></div></div></div>
+    <div class="row"><div class="lab">A2 洗衣服（装卸洗衣机）<small>第 2–5 月</small></div><div class="track"><div class="bar a" style="left:7.60%;width:6.48%"><span>55–102</span></div></div></div>
+    <div class="row"><div class="lab">A3 烘干（转移与取出）<small>第 3–5 月</small></div><div class="track"><div class="bar a" style="left:5.15%;width:4.54%"><span>38–70</span></div></div></div>
+    <div class="row"><div class="lab">A4 VLM 大脑 v1<small>第 1–5 月</small></div><div class="track"><div class="bar a" style="left:6.75%;width:5.76%"><span>48–91</span></div></div></div>
+    <div class="row"><div class="lab">A5 交付一：分类 → 洗 → 烘 试点<small>第 5–6 月</small></div><div class="track"><div class="bar a" style="left:6.37%;width:6.71%"><span>45–94</span></div></div></div>
+    <div class="row"><div class="lab">A6 叠衣服<small>第 6–9 月</small></div><div class="track"><div class="bar a" style="left:5.90%;width:4.70%"><span>42–77</span></div></div></div>
+    <div class="row"><div class="lab">A7 晾衣服<small>第 6–9 月</small></div><div class="track"><div class="bar a" style="left:6.66%;width:5.36%"><span>48–86</span></div></div></div>
+    <div class="row"><div class="lab">A8 收纳<small>第 8–10 月</small></div><div class="track"><div class="bar a" style="left:2.83%;width:2.55%"><span>20–39</span></div></div></div>
+    <div class="row"><div class="lab">A9 VLM 大脑 v2 与全流程串联<small>第 7–10 月</small></div><div class="track"><div class="bar a" style="left:4.88%;width:4.48%"><span>34–67</span></div></div></div>
+    <div class="row"><div class="lab">A10 交付二：晾 → 叠 → 收纳 试点<small>第 9–11 月</small></div><div class="track"><div class="bar a" style="left:7.10%;width:7.23%"><span>52–103</span></div></div></div>
+    <div class="row"><div class="lab">A11 保选项：洗衣人类视频最低档采集<small>第 0–11 月</small></div><div class="track"><div class="bar a" style="left:4.59%;width:4.59%"><span>33–66</span></div></div></div>
+    <div class="grp">方案 B 额外增加的步骤（B 全程合计 $1.22–2.46M）</div>
+    <div class="row"><div class="lab">B1 预训练验证<small>第 0–6 月</small></div><div class="track"><div class="bar b" style="left:25.57%;width:21.48%"><span>184–338</span></div></div></div>
+    <div class="row"><div class="lab">B2 预训练放大与换基座<small>第 6–14 月</small></div><div class="track"><div class="bar b lead" style="left:82.37%;width:96.00%"><span>592–1,281</span></div></div></div>
+    <div class="axis"><div></div><div><span>0</span><span>144</span><span>288</span><span>431</span><span>575</span><span>719 千美元</span></div></div>
   </div>
-  <p class="note">B2 的区间上限为 4,100 万，超出横轴，条形在右端截断；其宽度主要来自人类视频采购单价与采购量的不确定性。</p>
+  <p class="note">B2 的区间上限为 $1.28M，超出横轴，条形在右端截断；其宽度主要来自人类视频采购单价与采购量的不确定性。</p>
   <h3>方案 A：每个步骤花在哪</h3>
   <div class="scroll"><table class="num">
 <thead><tr><th>步骤</th><th>工程人力</th><th>遥操作 / 现场人力</th><th>标注人力</th><th>训练与推理算力</th><th>环境件与配套硬件</th><th>人类视频采购</th><th>试点现场与合规</th><th class="a">小计</th></tr></thead><tbody>
-<tr><th>A0 基建与验证<small>第 0–1 月 · 录制链路、Thor 推理基准、相机同步、夹持力阈值（干 / 湿）、评测集</small></th><td>60–100</td><td>—</td><td>—</td><td>5–10</td><td>10–25</td><td>—</td><td>—</td><td><strong>75–135</strong></td></tr>
-<tr><th>A1 脏衣服分类<small>第 1–3 月 · 从衣堆单件抓取、按颜色 / 面料 / 洗标分筐，15–25 h</small></th><td>75–125</td><td>10–15</td><td>15–30</td><td>15–50</td><td>10–25</td><td>—</td><td>—</td><td><strong>125–245</strong></td></tr>
-<tr><th>A2 洗衣服（装卸洗衣机）<small>第 2–5 月 · 开关门、装入、取出湿衣、取空确认，40–70 h；程序启动走机器接口，兜底为机器人按面板；洗涤剂改自动投放</small></th><td>120–200</td><td>20–30</td><td>—</td><td>20–50</td><td>15–50</td><td>—</td><td>—</td><td><strong>175–325</strong></td></tr>
-<tr><th>A3 烘干（转移与取出）<small>第 3–5 月 · 湿衣转入烘干机、烘后取出入筐，25–40 h</small></th><td>75–125</td><td>15–20</td><td>—</td><td>15–40</td><td>15–40</td><td>—</td><td>—</td><td><strong>120–225</strong></td></tr>
-<tr><th>A4 VLM 大脑 v1<small>第 1–5 月 · 衣物识别与分类判别、SOP 状态机、机器联网、站位原语、成败判别</small></th><td>105–175</td><td>—</td><td>20–45</td><td>30–70</td><td>—</td><td>—</td><td>—</td><td><strong>155–290</strong></td></tr>
-<tr><th>A5 交付一：分类 → 洗 → 烘 试点<small>第 5–6 月 · 洗衣房现场连续运行 8 h，驻场值守，客户验收</small></th><td>60–100</td><td>20–30</td><td>—</td><td>5–15</td><td>15–30</td><td>—</td><td>50–130</td><td><strong>145–300</strong></td></tr>
-<tr><th>A6 叠衣服<small>第 6–9 月 · 毛巾 → T 恤 → 裤子，5–6 个子技能，40–60 h</small></th><td>105–175</td><td>15–20</td><td>—</td><td>15–50</td><td>—</td><td>—</td><td>—</td><td><strong>135–245</strong></td></tr>
-<tr><th>A7 晾衣服<small>第 6–9 月 · 不可烘衣物：夹式晾挂、治具辅助衣架、挂杆，50–80 h；自由穿衣架放第二批</small></th><td>105–175</td><td>20–30</td><td>—</td><td>20–50</td><td>10–25</td><td>—</td><td>—</td><td><strong>155–275</strong></td></tr>
-<tr><th>A8 收纳<small>第 8–10 月 · 叠好衣物入柜 / 上架 / 按客户分袋，10–20 h</small></th><td>45–75</td><td>5–10</td><td>—</td><td>5–20</td><td>5–20</td><td>—</td><td>—</td><td><strong>65–125</strong></td></tr>
-<tr><th>A9 VLM 大脑 v2 与全流程串联<small>第 7–10 月 · 折法 / 晾法 SOP、质检判别、六任务串联</small></th><td>75–125</td><td>—</td><td>20–45</td><td>20–50</td><td>—</td><td>—</td><td>—</td><td><strong>110–215</strong></td></tr>
-<tr><th>A10 交付二：晾 → 叠 → 收纳 试点<small>第 9–11 月 · 全流程连续运行 8 h → 24 h，客户质检</small></th><td>75–125</td><td>25–35</td><td>—</td><td>5–15</td><td>10–25</td><td>—</td><td>50–130</td><td><strong>165–330</strong></td></tr>
-<tr><th>A11 保选项：洗衣人类视频最低档采集<small>第 0–11 月 · 每月几百小时，方案 B 启动时直接可用</small></th><td>—</td><td>—</td><td>—</td><td>—</td><td>—</td><td>105–210</td><td>—</td><td><strong>105–210</strong></td></tr>
-<tr class="sum"><th>方案 A 合计<small>11 个月</small></th><td><strong>900–1,500</strong></td><td><strong>125–185</strong></td><td><strong>50–115</strong></td><td><strong>155–405</strong></td><td><strong>90–240</strong></td><td><strong>105–210</strong></td><td><strong>95–255</strong></td><td><strong>1,525–2,915</strong></td></tr>
+<tr><th>A0 基建与验证<small>第 0–1 月 · 录制链路、Thor 推理基准、相机同步、夹持力阈值（干 / 湿）、评测集</small></th><td>19–31</td><td>—</td><td>—</td><td>2–3</td><td>3–8</td><td>—</td><td>—</td><td><strong>23–42</strong></td></tr>
+<tr><th>A1 脏衣服分类<small>第 1–3 月 · 从衣堆单件抓取、按颜色 / 面料 / 洗标分筐，15–25 h</small></th><td>23–39</td><td>3–5</td><td>5–9</td><td>5–16</td><td>3–8</td><td>—</td><td>—</td><td><strong>39–77</strong></td></tr>
+<tr><th>A2 洗衣服（装卸洗衣机）<small>第 2–5 月 · 开关门、装入、取出湿衣、取空确认，40–70 h；程序启动走机器接口，兜底为机器人按面板；洗涤剂改自动投放</small></th><td>38–62</td><td>6–9</td><td>—</td><td>6–16</td><td>5–16</td><td>—</td><td>—</td><td><strong>55–102</strong></td></tr>
+<tr><th>A3 烘干（转移与取出）<small>第 3–5 月 · 湿衣转入烘干机、烘后取出入筐，25–40 h</small></th><td>23–39</td><td>5–6</td><td>—</td><td>5–12</td><td>5–12</td><td>—</td><td>—</td><td><strong>38–70</strong></td></tr>
+<tr><th>A4 VLM 大脑 v1<small>第 1–5 月 · 衣物识别与分类判别、SOP 状态机、机器联网、站位原语、成败判别</small></th><td>33–55</td><td>—</td><td>6–14</td><td>9–22</td><td>—</td><td>—</td><td>—</td><td><strong>48–91</strong></td></tr>
+<tr><th>A5 交付一：分类 → 洗 → 烘 试点<small>第 5–6 月 · 洗衣房现场连续运行 8 h，驻场值守，客户验收</small></th><td>19–31</td><td>6–9</td><td>—</td><td>2–5</td><td>5–9</td><td>—</td><td>16–41</td><td><strong>45–94</strong></td></tr>
+<tr><th>A6 叠衣服<small>第 6–9 月 · 毛巾 → T 恤 → 裤子，5–6 个子技能，40–60 h</small></th><td>33–55</td><td>5–6</td><td>—</td><td>5–16</td><td>—</td><td>—</td><td>—</td><td><strong>42–77</strong></td></tr>
+<tr><th>A7 晾衣服<small>第 6–9 月 · 不可烘衣物：夹式晾挂、治具辅助衣架、挂杆，50–80 h；自由穿衣架放第二批</small></th><td>33–55</td><td>6–9</td><td>—</td><td>6–16</td><td>3–8</td><td>—</td><td>—</td><td><strong>48–86</strong></td></tr>
+<tr><th>A8 收纳<small>第 8–10 月 · 叠好衣物入柜 / 上架 / 按客户分袋，10–20 h</small></th><td>14–23</td><td>2–3</td><td>—</td><td>2–6</td><td>2–6</td><td>—</td><td>—</td><td><strong>20–39</strong></td></tr>
+<tr><th>A9 VLM 大脑 v2 与全流程串联<small>第 7–10 月 · 折法 / 晾法 SOP、质检判别、六任务串联</small></th><td>23–39</td><td>—</td><td>6–14</td><td>6–16</td><td>—</td><td>—</td><td>—</td><td><strong>34–67</strong></td></tr>
+<tr><th>A10 交付二：晾 → 叠 → 收纳 试点<small>第 9–11 月 · 全流程连续运行 8 h → 24 h，客户质检</small></th><td>23–39</td><td>8–11</td><td>—</td><td>2–5</td><td>3–8</td><td>—</td><td>16–41</td><td><strong>52–103</strong></td></tr>
+<tr><th>A11 保选项：洗衣人类视频最低档采集<small>第 0–11 月 · 每月几百小时，方案 B 启动时直接可用</small></th><td>—</td><td>—</td><td>—</td><td>—</td><td>—</td><td>33–66</td><td>—</td><td><strong>33–66</strong></td></tr>
+<tr class="sum"><th>方案 A 合计<small>11 个月</small></th><td><strong>281–469</strong></td><td><strong>39–58</strong></td><td><strong>16–36</strong></td><td><strong>48–127</strong></td><td><strong>28–75</strong></td><td><strong>33–66</strong></td><td><strong>30–80</strong></td><td><strong>477–911</strong></td></tr>
 </tbody></table></div>
-  <p class="note"><strong>交付一</strong>（A0–A5 + 前 6 个月保选项采集）= <strong>850–1,630 万</strong>，第 6 个月验收；<strong>交付二</strong>（A6–A10 + 后 5 个月保选项采集）= <strong>680–1,285 万</strong>，第 11 个月验收。两次交付各自可独立止损。</p>
+  <p class="note"><strong>交付一</strong>（A0–A5 + 前 6 个月保选项采集）= <strong>$266–509k</strong>，第 6 个月验收；<strong>交付二</strong>（A6–A10 + 后 5 个月保选项采集）= <strong>$212–402k</strong>，第 11 个月验收。两次交付各自可独立止损。</p>
   <h3>方案 B：在 A 之上增加的步骤</h3>
   <div class="scroll"><table class="num">
 <thead><tr><th>步骤</th><th>工程人力</th><th>遥操作 / 现场人力</th><th>标注人力</th><th>训练与推理算力</th><th>环境件与配套硬件</th><th>人类视频采购</th><th>伪动作算力与存储</th><th>试点现场与合规</th><th class="b">小计</th></tr></thead><tbody>
-<tr><th>B1 预训练验证<small>第 0–6 月 · 2B 模型，1 万小时（自采洗衣 ≥3 千），验证联合预测优于只预测动作</small></th><td>360–600</td><td>—</td><td>—</td><td>95–190</td><td>—</td><td>60–115</td><td>60–130</td><td>15–50</td><td><strong>590–1,080</strong></td></tr>
-<tr><th>B2 预训练放大与换基座<small>第 6–14 月 · 5B 模型，3–5 万小时，用自有基座重跑各任务的后训练</small></th><td>600–1,000</td><td>75–130</td><td>—</td><td>415–640</td><td>—</td><td>480–1,535</td><td>255–640</td><td>65–160</td><td><strong>1,895–4,100</strong></td></tr>
-<tr class="sum"><th>B 的增量合计</th><td><strong>965–1,595</strong></td><td><strong>75–130</strong></td><td><strong>—</strong></td><td><strong>510–830</strong></td><td><strong>—</strong></td><td><strong>540–1,650</strong></td><td><strong>315–770</strong></td><td><strong>80–210</strong></td><td><strong>2,485–5,185</strong></td></tr>
+<tr><th>B1 预训练验证<small>第 0–6 月 · 2B 模型，1 万小时（自采洗衣 ≥3 千），验证联合预测优于只预测动作</small></th><td>112–188</td><td>—</td><td>—</td><td>30–59</td><td>—</td><td>19–36</td><td>19–41</td><td>5–16</td><td><strong>184–338</strong></td></tr>
+<tr><th>B2 预训练放大与换基座<small>第 6–14 月 · 5B 模型，3–5 万小时，用自有基座重跑各任务的后训练</small></th><td>188–312</td><td>23–41</td><td>—</td><td>130–200</td><td>—</td><td>150–480</td><td>80–200</td><td>20–50</td><td><strong>592–1,281</strong></td></tr>
+<tr class="sum"><th>B 的增量合计</th><td><strong>302–498</strong></td><td><strong>23–41</strong></td><td><strong>—</strong></td><td><strong>159–259</strong></td><td><strong>—</strong></td><td><strong>169–516</strong></td><td><strong>98–241</strong></td><td><strong>25–66</strong></td><td><strong>777–1,620</strong></td></tr>
 </tbody></table></div>
-  <p class="note">方案 B 全程 = 方案 A（去掉保选项采集）+ B1 + B2 = <strong>3,905–7,885 万</strong>，14 个月。B2 的"遥操作 / 现场人力"是 1 名数据运营 × 8 个月。</p>
+  <p class="note">方案 B 全程 = 方案 A（去掉保选项采集）+ B1 + B2 = <strong>$1.22–2.46M</strong>，14 个月。B2 的"遥操作 / 现场人力"是 1 名数据运营 × 8 个月。</p>
   <h3>按类型汇总</h3>
   <div class="scroll"><table class="num">
 <thead><tr><th>类型</th><th class="a">方案 A</th><th class="a">占比</th><th class="b">方案 B 全程</th><th class="b">占比</th></tr></thead><tbody>
-<tr><th>工程人力</th><td>900–1,500</td><td>54%</td><td>1,865–3,095</td><td>42%</td></tr>
-<tr><th>遥操作 / 现场人力</th><td>125–185</td><td>7%</td><td>205–315</td><td>4%</td></tr>
-<tr><th>标注人力</th><td>50–115</td><td>4%</td><td>50–115</td><td>1%</td></tr>
-<tr><th>训练与推理算力</th><td>155–405</td><td>13%</td><td>670–1,240</td><td>16%</td></tr>
-<tr><th>环境件与配套硬件</th><td>90–240</td><td>7%</td><td>90–240</td><td>3%</td></tr>
-<tr><th>人类视频采购</th><td>105–210</td><td>7%</td><td>540–1,650</td><td>19%</td></tr>
-<tr><th>伪动作算力与存储</th><td>—</td><td>0%</td><td>315–770</td><td>9%</td></tr>
-<tr><th>试点现场与合规</th><td>95–255</td><td>8%</td><td>175–465</td><td>5%</td></tr>
-<tr class="sum"><th>合计</th><td><strong>1,525–2,915</strong></td><td>100%</td><td><strong>3,905–7,885</strong></td><td>100%</td></tr>
+<tr><th>工程人力</th><td>281–469</td><td>54%</td><td>583–967</td><td>42%</td></tr>
+<tr><th>遥操作 / 现场人力</th><td>39–58</td><td>7%</td><td>64–98</td><td>4%</td></tr>
+<tr><th>标注人力</th><td>16–36</td><td>4%</td><td>16–36</td><td>1%</td></tr>
+<tr><th>训练与推理算力</th><td>48–127</td><td>13%</td><td>209–388</td><td>16%</td></tr>
+<tr><th>环境件与配套硬件</th><td>28–75</td><td>7%</td><td>28–75</td><td>3%</td></tr>
+<tr><th>人类视频采购</th><td>33–66</td><td>7%</td><td>169–516</td><td>19%</td></tr>
+<tr><th>伪动作算力与存储</th><td>—</td><td>0%</td><td>98–241</td><td>9%</td></tr>
+<tr><th>试点现场与合规</th><td>30–80</td><td>8%</td><td>55–145</td><td>5%</td></tr>
+<tr class="sum"><th>合计</th><td><strong>477–911</strong></td><td>100%</td><td><strong>1,220–2,464</strong></td><td>100%</td></tr>
 </tbody></table></div>
   <div class="scroll"><table>
 <thead><tr><th>不在上表内</th><th>金额</th><th>说明</th></tr></thead><tbody>
-<tr><th>可选：仿真批量 RL + 真机车队 RL</th><td>340–715 万</td><td>仿真工程 2 人 × 6 个月、资产、批量 rollout 算力、真机 RL 基础设施；仿真只用于刚体类子技能，布料靠真机</td></tr>
-<tr><th>之后每扩一个站点</th><td>95–255 万</td><td>集成、驻场与现场件；6 台可支撑 1–2 个站点</td></tr>
+<tr><th>可选：仿真批量 RL + 真机车队 RL</th><td>$106–223k</td><td>仿真工程 2 人 × 6 个月、资产、批量 rollout 算力、真机 RL 基础设施；仿真只用于刚体类子技能，布料靠真机</td></tr>
+<tr><th>之后每扩一个站点</th><td>$30–80k</td><td>集成、驻场与现场件；6 台可支撑 1–2 个站点</td></tr>
 <tr><th>本体</th><td>0</td><td>自有 6 台，不新购</td></tr>
 </tbody></table></div>
 </section>
 
 <section>
   <h2>如果团队放在中国大陆</h2>
-  <p class="note">同一套步骤与人月，只换人力单价和受地点影响的非人力项。单位人民币万元，括号内为新台币万元。大陆人力全成本为我方估算，未取得薪资调查来源：一线城市工程师 60–100 万元 / 人年，新一线 40–70 万元 / 人年；遥操作员 8–15 万元；标注员 6–12 万元。</p>
+  <p class="note">同一套步骤与人月，只换人力单价和受地点影响的非人力项。单位千美元，按 7.1 人民币 / 美元、32 新台币 / 美元换算。大陆人力全成本为我方估算，未取得薪资调查来源：一线城市工程师 $85–141k / 人年，新一线 $56–99k / 人年；遥操作员 $11–21k；标注员 $8–17k。</p>
   <div class="scroll"><table class="num">
 <thead><tr><th></th><th>团队在台湾（基准）</th><th>团队在大陆一线城市（北上深杭）</th><th>团队在大陆新一线城市（成都 / 武汉 / 合肥 / 苏州等）</th><th>混合：工程在大陆新一线，遥操作与试点留在台湾</th></tr></thead><tbody>
-<tr><th>交付一（分类 → 洗 → 烘）</th><td>190–360<small>（850–1,630）</small></td><td>220–435<small>（1,000–1,965）</small></td><td>165–350<small>（740–1,570）</small></td><td>190–400<small>（855–1,790）</small></td></tr>
-<tr><th>交付二（晾 → 叠 → 收纳）</th><td>150–285<small>（680–1,285）</small></td><td>180–350<small>（805–1,570）</small></td><td>130–275<small>（590–1,245）</small></td><td>155–320<small>（695–1,440）</small></td></tr>
-<tr class="sum"><th>方案 A 合计</th><td><strong>340–645</strong><small>（1,525–2,915）</small></td><td><strong>400–785</strong><small>（1,805–3,535）</small></td><td><strong>295–625</strong><small>（1,335–2,810）</small></td><td><strong>345–720</strong><small>（1,545–3,235）</small></td></tr>
-<tr><th>B1 预训练验证</th><td>130–240<small>（590–1,080）</small></td><td>160–305<small>（720–1,385）</small></td><td>120–245<small>（540–1,115）</small></td><td>125–255<small>（560–1,160）</small></td></tr>
-<tr><th>B2 预训练放大</th><td>420–910<small>（1,895–4,100）</small></td><td>415–920<small>（1,870–4,140）</small></td><td>345–810<small>（1,555–3,660）</small></td><td>370–920<small>（1,675–4,155）</small></td></tr>
-<tr class="sum"><th>方案 B 全程</th><td><strong>865–1,750</strong><small>（3,905–7,885）</small></td><td><strong>965–1,980</strong><small>（4,340–8,930）</small></td><td><strong>750–1,655</strong><small>（3,375–7,460）</small></td><td><strong>825–1,855</strong><small>（3,710–8,355）</small></td></tr>
+<tr><th>交付一（分类 → 洗 → 烘）</th><td>83–159</td><td>98–192</td><td>72–153</td><td>83–175</td></tr>
+<tr><th>交付二（晾 → 叠 → 收纳）</th><td>66–126</td><td>79–153</td><td>58–122</td><td>68–141</td></tr>
+<tr class="sum"><th>方案 A 合计</th><td><strong>149–285</strong></td><td><strong>176–345</strong></td><td><strong>130–274</strong></td><td><strong>151–316</strong></td></tr>
+<tr><th>B1 预训练验证</th><td>58–106</td><td>70–135</td><td>53–109</td><td>55–113</td></tr>
+<tr><th>B2 预训练放大</th><td>185–400</td><td>182–404</td><td>152–358</td><td>163–406</td></tr>
+<tr class="sum"><th>方案 B 全程</th><td><strong>381–770</strong></td><td><strong>424–872</strong></td><td><strong>330–728</strong></td><td><strong>362–816</strong></td></tr>
 <tr><th>方案 A 相对台湾基准</th><td>—</td><td>+20%</td><td>-7%</td><td>+8%</td></tr>
 <tr><th>方案 B 相对台湾基准</th><td>—</td><td>+13%</td><td>-8%</td><td>+2%</td></tr>
 </tbody></table></div>
@@ -333,8 +333,8 @@ footer{font-size:13px;color:var(--muted);display:flex;flex-direction:column;gap:
     <tr><th>交付二</th><td>第 6–11 月</td><td>第 3–8 月，与交付一 b 并行</td></tr>
     <tr><th>工程团队</th><td>5–6 人，平稳</td><td><strong>第 0 天即 9 人</strong>，第 3–5 月峰值 9–10 人</td></tr>
     <tr><th>遥操作</th><td>2–3 个工位</td><td>3 个工位、4 台机并行、操作员 4–5 人，第 2 周开工</td></tr>
-    <tr><th>交付一投入</th><td>850–1,630 万新台币</td><td>a：730–1,395 万；b：165–305 万；合计 895–1,700 万（约 +5%）</td></tr>
-    <tr class="sum"><th>方案 A 合计</th><td>1,525–2,915 万 · 11 个月</td><td><strong>1,570–2,990 万 · 8 个月</strong></td></tr>
+    <tr><th>交付一投入</th><td>$266–509k</td><td>a：$228–436k；b：$52–95k；合计 $280–531k（约 +5%）</td></tr>
+    <tr class="sum"><th>方案 A 合计</th><td>$477–911k · 11 个月</td><td><strong>$491–934k · 8 个月</strong></td></tr>
   </tbody></table></div>
   <p class="note">压缩不省钱，只是把钱和人提前：人月总量基本不变，多出来的是并行协调成本。</p>
   <div class="scroll"><table>
@@ -441,7 +441,7 @@ footer{font-size:13px;color:var(--muted);display:flex;flex-direction:column;gap:
     <tr><th>交付二范围</th><td>晾衣收窄为夹式晾挂与治具辅助衣架，自由穿衣架放第二批；床单不进白名单；洗后内翻件先进人工筐</td></tr>
     <tr><th>试点方式</th><td>先跑内部洗衣服务；试点合同含赔付上限与保险</td></tr>
   </tbody></table></div>
-  <p class="note">新增环境件（软垫台面、机器垫高、门磁吸、标记物、停靠导向件、筐位秤、固定俯视相机、腕部补光、夹式晾架与治具）约 15–40 万新台币，未询价，落在原环境件预算区间内上沿，总数不调。本节判断为工程推断，没有实测支撑。完整评审见仓库 docs/plans-review-hard-points.md。</p>
+  <p class="note">新增环境件（软垫台面、机器垫高、门磁吸、标记物、停靠导向件、筐位秤、固定俯视相机、腕部补光、夹式晾架与治具）约 $5–12k，未询价，落在原环境件预算区间内上沿，总数不调。本节判断为工程推断，没有实测支撑。完整评审见仓库 docs/plans-review-hard-points.md。</p>
 </section>
 
 <section>
@@ -455,7 +455,7 @@ footer{font-size:13px;color:var(--muted);display:flex;flex-direction:column;gap:
         <tr><th>布料与湿衣泛化不足</th><td>高（集中在交付二）</td><td>中</td><td>第 7 个月泛化探针专门检验；不过则启动 B。交付一只涉及整把抓取，受影响小</td></tr>
         <tr><th>湿衣缠绕、筒内取衣碰撞</th><td>中</td><td>中</td><td>夹持力干、湿两档阈值；关节电流阈值做碰撞保护；筒内避碰可先在仿真里训</td></tr>
         <tr><th>错分导致染色或缩水赔付</th><td>中</td><td>中</td><td>分类判别低置信度一律转人工筐；错分率单列为验收项</td></tr>
-        <tr><th>关键参数凭估算、结论无第三方复现</th><td>低</td><td>高</td><td>B 第一阶段即复核核心主张，不成立则关闭，损失封顶约 590–1,080 万（B1 步骤）</td></tr>
+        <tr><th>关键参数凭估算、结论无第三方复现</th><td>低</td><td>高</td><td>B 第一阶段即复核核心主张，不成立则关闭，损失封顶约 $184–338k（B1 步骤）</td></tr>
         <tr><th>人类视频成本失控</th><td>—</td><td>高</td><td>按通过分钟计酬；单价超过每可用小时 $12 即暂停采购</td></tr>
         <tr><th>Thor 上两个模型同机延迟不达标</th><td>中</td><td>中高</td><td>第 1 个月实测；不达标则大脑下放到站点服务器</td></tr>
         <tr><th>上肢力控上线改变动力学</th><td>中</td><td>中</td><td>交付一期间冻结控制器版本，力控只在交付边界切换；每条数据记控制器版本，切换后先做新旧数据混训消融</td></tr>
@@ -473,14 +473,14 @@ footer{font-size:13px;color:var(--muted);display:flex;flex-direction:column;gap:
 <section class="ask">
   <h2>请您决策的三件事</h2>
   <ol>
-    <li><b>批准方案 A 的交付一</b>（脏衣分类 → 洗 → 烘）：6 个月、5–6 人、850–1,630 万新台币；其中前 3 个月约 400–760 万，第 3 个月过程门不过即停。</li>
-    <li><b>批准保选项的人类视频最低档采集</b>：每月 10–19 万新台币（已含在上述数字内），让方案 B 随时可以启动。</li>
-    <li><b>确认方案 B 的决策点放在第 7 个月</b>：依据是交付一的现场验收结果，加上 2–3 周的泛化探针（训两类衣物、测第三类）。交付二（晾 → 叠 → 收纳）预算 680–1,285 万，届时一并审批。</li>
+    <li><b>批准方案 A 的交付一</b>（脏衣分类 → 洗 → 烘）：6 个月、5–6 人、$266–509k；其中前 3 个月约 $125–238k，第 3 个月过程门不过即停。</li>
+    <li><b>批准保选项的人类视频最低档采集</b>：每月 $3–6k（已含在上述数字内），让方案 B 随时可以启动。</li>
+    <li><b>确认方案 B 的决策点放在第 7 个月</b>：依据是交付一的现场验收结果，加上 2–3 周的泛化探针（训两类衣物、测第三类）。交付二（晾 → 叠 → 收纳）预算 $212–402k，届时一并审批。</li>
   </ol>
 </section>
 
 <footer>
-  <span>三条路径的总投入：只做 A 为 1,525–2,915 万新台币（11 个月，两次交付）；先 A、交付一之后再定 B（建议）为 1,525–2,915 万，启动 B 则至 3,905–7,885 万，最晚第 21 个月换上自有基座；A、B 同时起步为 3,905–7,885 万，第 14 个月换上自有基座。</span>
+  <span>三条路径的总投入：只做 A 为 $477–911k（11 个月，两次交付）；先 A、交付一之后再定 B（建议）为 $477–911k，启动 B 则至 $1.22–2.46M，最晚第 21 个月换上自有基座；A、B 同时起步为 $1.22–2.46M，第 14 个月换上自有基座。</span>
   <span>算力按公有云挂牌价 $2–2.5 / H100·h，自有集群或长约可再降 30–50%。环境件未询价。相机规格与 Thor 同机推理能力为经验判断，列入第 1 个月实测项。</span>
   <span>详细推算与来源：仓库 docs/laundry-two-plans-brief.md 与 docs/dyna-replica-plan.md。</span>
 </footer>
