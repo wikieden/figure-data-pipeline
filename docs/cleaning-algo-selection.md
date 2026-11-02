@@ -83,6 +83,8 @@ IMU 角速度积分（有 IMU 的轨）为主，稀疏 LK 光流（OpenCV，传�
 候选：InternVideo2 / VideoMAE V2（⚠️逐个核查，部分权重非商用）；**SigLIP 帧特征聚合（Apache-2.0）为商用安全兜底**。
 **论证**：去重是语义相似问题（原则 2）；视频原生模型效果更好但 license 混乱，SigLIP 聚合在"近重复检测"上已够用，语义级重复反正只降权不删。**结论：SigLIP 起步，license 核查通过后升级视频模型。**
 
+**演示库检索是另一个问题**（2026-11-02 增补）：去重只需判断"像不像"，演示库检索（curation-pipeline §0 的 3–12s 切片按任务检索）要区分动作方向、左右手、顺逆时针，CLIP/SigLIP 类双塔在这里分不开。候选：**Qwen3-VL-Embedding（召回）+ Qwen3-VL-Rerank（精排）**两阶段，原生视频输入，32K token，向量 64–2048 维可裁剪（[research-qwen-robotics.md](research-qwen-robotics.md) §7.5）。⚠️ license 与权重是否开放待核查，核查前只能用在研究分支，默认路径仍用 SigLIP。
+
 ### 1.10 子任务分割 —— 传统信号优先、AI 兜底
 
 优先级（curation-pipeline §3.2 的论证补全）：夹爪开合沿/接触力（**纯信号处理，传统**）→ 手-物接触（MediaPipe + Grounding DINO（Apache）/SAM2（Apache-2.0））→ 速度极小值（传统）→ VLM 时序定位（贵，做语义合并）。PySceneDetect 类镜头切分工具**不适用**——我们切的是动作单元不是镜头。

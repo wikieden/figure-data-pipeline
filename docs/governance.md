@@ -170,7 +170,7 @@
 | research-opensource.md | architecture §7 选型、CLAUDE.md 决策 1/5 | 2026-09-08（版本回填、DexMimicGen） |
 | research-generalist-dora.md | architecture §6.5、index-replica-plan §1.0、training §1.2-6 | 2026-09-14（一手补充指向 research-four-routes §4） |
 | research-vla-pretraining.md | training-pipeline §1.1/§2、curation §5 | 2026-09-08（Stage/阶段命名与档位门槛统一） |
-| research-qwen-robotics.md | curation §1.4b/§4.1、cleaning §1.6–1.7、training §1.2 | 2026-09-08（Ego2Robot 数字统一） |
+| research-qwen-robotics.md | curation §1.1/§1.2/§1.4b/§1.5/§3.2/§4.1/§5/§7/§9、cleaning §1.6–1.7/§1.9、training §1.2、data-format-contract | 2026-11-02（补入阿里云客户交流 PDF；§8 第 6–13 条已回灌 curation/cleaning，格式类进契约 0.3 待入项） |
 | research-sunday.md | architecture §2.3、index-replica-plan §1.0、device-track-umi §4 | 2026-09-14（ACT-2 一手补充指向 research-four-routes §3） |
 | research-twindex.md | index-replica-plan §1.0、device-landscape §5、U-04 | 2026-09-04 |
 | device-landscape.md | index-replica-plan §1、robot-track-teleop §1 | 2026-09-04 |

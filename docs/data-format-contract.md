@@ -139,6 +139,9 @@ episode 级元数据（`EpisodeMeta` 全量 JSON）写入 `meta/episodes/*.parqu
 
 - **`grasp_aperture`**（human 轨伪动作，浮点 0–1 或 mm，可空）：拇指-食指开合度作为与 device 轨 `gripper_width` 同义的连续抓取信号（Dyna-2 伪动作口径；U-23 裁决的"手部状态"显式化）。D2+D1 同戴配对（capture-devices-design §7 ①）用它做伪标签校准。
 - **连续帧对导出**：视频流的训练态抽帧不得只保留关键帧；`export` 需支持按 `frame_pair_stride` 输出 (t, t+Δ) 帧对索引，供 WAM 目标（training-pipeline §1.3，U-37）消费。MCAP 采集态不变。
+- **子任务槽位化字段**（2026-11-02，依据 [research-qwen-robotics.md](research-qwen-robotics.md) §7.4 与 curation-pipeline §3.2/§4.1）：`Subtask` 增加可选字段 `hand`（`left`/`right`/`both`/None）、`outcome`（`success`/`failure`/None）、`contact`（bool \| None）、`keyframe_ns`（int \| None），以及结构化描述槽位（动作、操作对象、目标位置、结果状态）与 `boundary_basis`（边界判据：硬件事件 / 接触 / 速度极小值 / VLM / 人工）。全部可空，属 minor 升级；现在采集时几乎不费事，以后补标代价很高。现行 schema 0.2 尚不支持。
+- **采集端事件下传**：`/event/task` 中的失败、重拍、换道具、中止事件在 export 时写入 `meta/fdp_subtasks.parquet` 的事件列，供标注端读取（curation-pipeline §4.1）。MCAP 采集态不变。
+- **human 轨估计内参**：GeoCalib/DroidCalib 从视频估出的内参（cleaning-algo-selection §1.7）写入 episode 元数据并注明来源为估计值，另导出可选列 `fdp.camera_fov.<camera>` float32[2]（参照阿里导出的 `camera_fov[2]`）。`action_mask` 已在 §2.1，无需新增。
 - 其余 0.3 项（逐帧 subtask/plan/progress/reward 列、tactile (N,6)、wrench frame_id、effort measured/estimated、段级表、同意/来源图）见 data-strategy-roadmap §7.2。
 
 ## 4. 版本迁移政策
