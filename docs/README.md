@@ -76,7 +76,7 @@
 | [research-opensource.md](research-opensource.md) | 开源生态选型（MCAP/LeRobot/rerun/AV1/仿真） | 2026-08-29 |
 | [research-generalist-dora.md](research-generalist-dora.md) | Generalist GEN 系、Data Hands、dora-rs | 2026-08-29 |
 | [research-vla-pretraining.md](research-vla-pretraining.md) | 清洗→VLA/WAM 0→1 预训练全链路，含可行计划 | 2026-08-30 |
-| [research-vendor-robotics.md](research-vendor-robotics.md) | 某大模型厂商机器人栈（现场 slide，非公开） | 2026-09-04 |
+| [research-vendor-robotics.md](research-vendor-robotics.md) | 某大模型厂商机器人栈 + 云厂商具身数据管线方案（现场 slide + 客户交流 PDF，非公开） | 2026-11-02 |
 | [research-sunday.md](research-sunday.md) | Sunday Memo / Skill Capture Glove | 2026-09-04 |
 | [research-sensor-layouts.md](research-sensor-layouts.md) | 已调研产品机器人本体的传感器设计对照（Figure 03 / Dyna / Sunday Memo / Generalist 机器人端），每台一张布局示意图，位置可信度分级 | 2026-09-16 |
 | [research-end-effector-torso.md](research-end-effector-torso.md) | 四家末端机构与腰部/躯干机构对比（谁服从谁：采集端同构 vs 真值维度），直接服务 U-04 与本体选型 | 2026-09-16 |
