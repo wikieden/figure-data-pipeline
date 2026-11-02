@@ -1,0 +1,53 @@
+SOURCE ARCHIVE (fdp docs/sources)
+URL: https://x2robot.com/en/news/6a28d6b58b9815cbb40e46ae
+Title: X Square Robot Open-Sources XRZero-G0 to Scale Robot Learning with Robot-Free Data and a 2,000-Hour Dataset
+Page date: 2026-06-10
+Fetched: 2026-11-02 via curl (UA: desktop Chrome), HTML → text extraction (tags stripped, nav/footer removed)
+Raw HTML sha256: b061e1e67a096d70a88b3d1753dd253dc4aac0a389e8b4f6c7b66abab61ef095
+Raw HTML bytes: 149759
+Rights: © the publishing company; archived verbatim for citation/verification only, not for redistribution.
+========================================================================
+
+2026-06-10 20:00:00
+X Square Robot Open-Sources XRZero-G0 to Scale Robot Learning with Robot-Free Data and a 2,000-Hour Dataset
+
+XRZero-G0: A framework for high-quality robot-free data collection and embodied AI training
+Scaling embodied AI has long been bottlenecked by data. Teleoperating real robots is expensive and slow, yielding only a limited number of demonstrations per day. While robot-free data collection offers a promising alternative, the lack of systematic quality control and training integration has limited its effectiveness for policy learning.
+
+X Square Robot announces the open-source release of XRZero-G0, a hardware-software co-designed framework for robot-free data collection, trainable policy generation, and real-robot evaluation. Alongside it, the team releases G0-Dataset, a large-scale validated multimodal dataset produced by XRZero-G0, providing reproducible high-quality robot-free data for the global robotics community.
+
+Bridging robot-free and real-world perception
+Physical robots perceive the world through multiple viewpoints, typically a head-mounted camera for global context and wrist-mounted cameras for fine-grained manipulation. In contrast, most robot-free systems rely only on wrist-view observations from human demonstrators, creating a gap between training and deployment.
+XRZero-G0 addresses this gap with a multi-view aligned sensing system that aligns human demonstration with robot observation spaces.
+The system combines a head-mounted camera and dual wrist cameras to capture both global context and detailed hand-object interactions. These synchronized observations are mapped into a shared representation compatible with robot perception.
+A wearable VR interface and interchangeable grippers allow human operators to generate demonstrations that are directly transferable to different robot embodiments, enabling high-throughput robot-free data collection across diverse environments.
+
+Making robot-free demonstrations truly trainable
+Data quality has been a critical barrier in robot-free learning. XRZero-G0 formalizes trainability governance via a closed-loop Collection–Inspection–Training–Evaluation pipeline:
+l Observation level: multi-view geometric consistency suppresses visual-kinematic misalignment.
+l Kinematic level: full-body inverse kinematics with collision and joint-limit constraints filters invalid trajectories.
+l Policy level: real-robot playback serves as the final validation criterion.
+This pipeline improves the usability of robot-free demonstrations, with experiments showing an effective data yield of around 85% under controlled experimental settings, significantly increasing the proportion of trainable samples.
+
+A 10:1 mixing law reduces real-robot data requirements
+A key finding of the XRZero-G0 study is that robot-free data and real-robot data can complement each other effectively.
+Controlled experiments show that combining approximately 10 robot-free episodes with 1 real-robot episode achieves performance comparable to purely real-robot datasets in evaluated tasks.
+Robot-free data provides broad behavioral coverage and task understanding, while a small amount of real-robot data anchors embodiment-specific factors such as motor latency and friction. This strategy reduces the need for real-robot data by up to 20× under experimental conditions.
+
+G0-Dataset scales XRZero-G0 into a 2,000-hour dataset
+Built on XRZero-G0, G0-Dataset provides over 2,000 hours of validated multimodal demonstrations spanning vision, tactile, and audio modalities.
+ The dataset integrates robot-free collection, automated quality inspection, mixed-data training, and real-robot evaluation for research purposes. G0-Dataset supports large-scale pretraining and cross-embodiment transfer experiments, providing a reproducible open resource for robotics research.
+
+Zero-shot transfer across robot embodiments
+Experiments indicate that policies trained with XRZero-G0 exhibit improved generalization across collection environments, including varying robot poses, table heights, and viewpoints.
+They also demonstrate zero-shot cross-embodiment transfer ability in evaluated settings, where policies trained with mixed data can be transferred to unseen robot platforms without task-specific fine-tuning.
+
+Building an open ecosystem
+By open-sourcing XRZero-G0 and releasing G0-Dataset, X Square Robot provides hardware designs, automated inspection pipelines, training methodologies, and high-quality datasets to the research community.
+These resources aim to accelerate the development of general-purpose robots and scalable embodied AI, supporting a transition toward more systematic and large-scale data generation approaches.
+XRZero-G0 and G0-Dataset are now publicly available for researchers and developers worldwide.
+
+Project Homepage: https://x2robot.com/x2go
+Paper: https://arxiv.org/abs/2604.13001
+Code: https://github.com/X-Square-Robot/XRZero-G0
+Open Dataset: https://huggingface.co/datasets/x-square-robot/XRZero-G0-3K

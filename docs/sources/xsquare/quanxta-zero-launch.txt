@@ -1,0 +1,70 @@
+SOURCE ARCHIVE (fdp docs/sources)
+URL: https://en.prnasia.com/releases/global/x-square-robot-launches-quanxta-zero-series-reframing-embodied-data-production-through-universal-manipulation-interfaces-539842.shtml
+Title: X Square Robot Launches QUANXTA Zero Series, Reframing Embodied Data Production Through Universal Manipulation Interfaces（公司新闻稿，PR Newswire APAC）
+Page date: 2026-07-07
+Fetched: 2026-11-02 via curl (UA: desktop Chrome), HTML → text extraction (tags stripped, nav/footer removed)
+Raw HTML sha256: 01f3e2b5f5624dc26b62ddea400de420d49d86046c16a3c3a2e007bd3b162a84
+Raw HTML bytes: 82072
+Rights: © the publishing company; archived verbatim for citation/verification only, not for redistribution.
+========================================================================
+
+X Square Robot Launches QUANXTA Zero Series, Reframing Embodied Data Production Through Universal Manipulation Interfaces
+
+X Square Robot
+
+ 2026-07-07 09:28
+ 3147
+
+Share:
+
+SHENZHEN, China, July 7, 2026 /PRNewswire/ -- Data is the source of intelligence for foundation models. The scaling of language models has shown that model capability depends heavily on both data scale and data quality. But robotics data is far harder to obtain than language data.
+
+Today, embodied AI still faces three major bottlenecks: limited data volume, low collection efficiency and inconsistent data quality. Traditional robot teleoperation systems are costly to purchase, difficult to deploy and often generate raw data that loses much of its value in downstream training because of weak quality control and fragmented processing.
+
+To address this challenge, X Square Robot has launched the QUANXTA Zero Series, a software-hardware integrated platform for embodiment-free embodied data production. QUANXTA Zero is not just a lightweight data collection device. It connects data collection, high-fidelity synchronization, automated cleaning, intelligent annotation, model training, robot inference and evaluation into one closed-loop workflow, helping bridge the last mile from data to deployable models.
+
+An Integrated Product Matrix for Full-Scenario Data Collection
+
+The QUANXTA Zero Series includes three products for different data collection needs:
+
+QUANXTA Zero-G1 (UMI-VIO version): The flagship product, using a single headband plus dual grippers to balance data quality, user experience and endurance.
+
+QUANXTA Zero-G0 (UMI-VR version): A PICO 4 VR headset, dual-gripper and backpack system for whole-body mobile data collection with precise and stable localization.
+
+QUANXTA Zero-E0 (Ego version): A lightweight first-person context collection device with six cameras.
+
+Built on X Square Robot's whole-body mobile manipulation data collection approach, QUANXTA Zero-G1 can rapidly collect embodiment-free data across movement, dual-arm manipulation, lifting and other full-body behaviors. It captures visual, tactile and audio data in one system.
+
+G1's multi-view coverage combines first-person perception with close-range wrist views, capturing both the overall environment and key manipulation details such as grasping, contact and occlusion. Sensor synchronization is controlled within 1ms, with 100% frame-level video alignment, enabling high-fidelity replay across different robot embodiments.
+
+G1 is also designed for efficiency. With one-click start and stop on the device side and automated downstream annotation, operators can focus on the action itself. In testing, collection speed reached nearly 100 demonstrations per hour, a 2.33x improvement over conventional teleoperation methods.
+
+The hardware is lightweight as well. G1 removes the backpack and adopts a "one headband plus two grippers" design. Its magnetic hot-swappable battery supports fast replacement and all-day continuous operation.
+
+A Software-Hardware Closed Loop: Turning Raw Data Into Trainable Assets
+
+Hardware solves the collection problem. The harder part is turning collected data into trainable assets. That is where QUANXTA Zero's full data pipeline comes in.
+
+QUANXTA Zero App: Simplifying Complex Collection Tasks
+
+The QUANXTA Zero App provides a clear task marketplace and data dashboard for high-dimensional, long-sequence collection tasks. Operators can claim tasks, check device status, start and stop collection, and receive instant feedback without manually breaking tasks into multiple steps.
+
+Data Pipeline: A One-Stop Full-Process Data Service Platform
+
+X Square Robot's self-built data pipeline upgrades raw data into manageable, processable and trainable assets across four stages:
+
+1. High-fidelity multi-source synchronization: Directly connects to collection interfaces and uses high-frequency temporal alignment and interpolation-based cleaning to achieve microsecond-level timestamp alignment.
+
+2. Automated cleaning and intelligent annotation: Removes low-value segments such as pauses, preparation motions, failures and abnormal trajectories, while using multimodal foundation models for action segmentation and semantic labeling.
+
+3. Human-AI quality control and secure annotation: Uses AI confidence-based routing, with high-confidence data flowing automatically and lower-confidence samples sent for human review, raising data yield to up to 85%. The platform also supports face and sensitive-background blurring, dynamic watermarking and short-term access controls.
+
+4. Training and evaluation closed loop: Cleaned and annotated data flows directly into model training, fine-tuning and evaluation. Based on model performance, weak scenarios can be identified and supplemented with targeted new data.
+
+With QUANXTA Zero, X Square Robot is turning embodied data collection from a fragmented hardware task into an industrial-grade data production workflow, accelerating the data flywheel behind general-purpose robots.
+
+Project：https://x2robot.com/en/pages/quanxtazero
+
+Media Inquiries: contact@x2robot.com
+
+Source: X Square Robot

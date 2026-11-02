@@ -1,6 +1,6 @@
 # 治理登记：风险 · 未决决策 · 自报数字
 
-> 2026-09-08 建立，2026-09-09 增补（战略路线图引出的 U-23–U-33 / R-14–R-19 / D-13–D-21；2026-09-14 增补 U-37 / R-20 / D-22–D-24，U-11 表 23–30 行；2026-09-19 增补 U-39 / R-21，U-11 表 31–32 行；2026-09-20 增补 U-40；同日方案评审增补 R-22–R-25、U-41、U-42）；同日逐项裁决 data-strategy-roadmap §6 的 10 项决策（U-03/U-23/U-24/U-25/U-27/U-28/U-30/U-32 closed，U-26 部分裁决，U-29 拆表后逐项待 LEGAL）；同日追加裁决 U-09/U-22/U-31/U-33；2026-09-12 增 U-34–U-36（采集设备五件套）；2026-09-14 增 U-38 / D-25–D-27（四家路线精读 research-four-routes.md），同日 D-23 由第三方改一手（research-skild.md）。来源为全局 review 三路审计（一致性 / 覆盖缺口 / 风险与未决项）的合并结果。三张表是活文档：每条有 owner（按角色，非人名）与复检时点；状态字段只有 `open / mitigating / closed / accepted`。新增风险、新增依赖他家数字的设计决策、新增待裁决项都必须先在这里登记再写进设计文档（CLAUDE.md 约定）。
+> 2026-09-08 建立，2026-09-09 增补（战略路线图引出的 U-23–U-33 / R-14–R-19 / D-13–D-21；2026-09-14 增补 U-37 / R-20 / D-22–D-24，U-11 表 23–30 行；2026-09-19 增补 U-39 / R-21，U-11 表 31–32 行；2026-09-20 增补 U-40；同日方案评审增补 R-22–R-25、U-41、U-42）；同日逐项裁决 data-strategy-roadmap §6 的 10 项决策（U-03/U-23/U-24/U-25/U-27/U-28/U-30/U-32 closed，U-26 部分裁决，U-29 拆表后逐项待 LEGAL）；同日追加裁决 U-09/U-22/U-31/U-33；2026-09-12 增 U-34–U-36（采集设备五件套）；2026-09-14 增 U-38 / D-25–D-27（四家路线精读 research-four-routes.md），同日 D-23 由第三方改一手（research-skild.md）；2026-11-02 增 D-31 / D-32（自变量数据管线 research-xsquare.md），D-04 来源与 R-08 补注。来源为全局 review 三路审计（一致性 / 覆盖缺口 / 风险与未决项）的合并结果。三张表是活文档：每条有 owner（按角色，非人名）与复检时点；状态字段只有 `open / mitigating / closed / accepted`。新增风险、新增依赖他家数字的设计决策、新增待裁决项都必须先在这里登记再写进设计文档（CLAUDE.md 约定）。
 
 角色缩写：**DATA** 数据层（recorder/ingest/export/schema）、**CUR** 策展层、**TRAIN** 训练层、**HW** 采集硬件、**PLAT** 数据平台/运维、**LEGAL** 法务合规、**PM** 项目管理。
 
@@ -17,7 +17,7 @@
 | R-05 | 平台 | 众包欺诈；漏检率无 ground truth | 中 | 欺诈率 >1% 或漏检率不可测 | 红队植入测试集（每月投放已知欺诈样本测漏检率，[data-platform.md](data-platform.md) §5）；计酬锚定通过分钟 | PLAT | 每月 | mitigating |
 | R-06 | 数据 | 伪标签质量上限；六因子质量分公式未验证 | 高 | 金标准配对集 Spearman <0.5；H0 "伪标签→仿真收益"不见收益 | curation-pipeline §7 增加公式验收；H0 止损门；金标准来源与规模在 [sim-track.md](sim-track.md) §6 动捕条目 | CUR | H0 末 | open |
 | R-07 | 硬件 | 设备标定漂移与 GoPro 时戳抖动导致大批拒收 | 中 | `flag:calib_stale` 或 `reject_timing` 占比 >5% | architecture §8.5 在线再估计 + 待重标队列；ingest 先实测 GoPro 抖动分布再定阈值（[ingest-spec.md](ingest-spec.md) §2） | DATA | M1 ingest 实现时 | open |
-| R-08 | 流程 | 调研证据链不完整：research-opensource 由挂起 agent 的 13 组结果综合；architecture 对抗核查未完成；Generalist/TwinDEX 官网抓取受限 | 中 | 选型依赖单一来源 | 补做清单：lerobot-dataset API 面核查（M1 export 前）、MuJoCo 侧仿真现状（sim-track）、Foxglove 转型影响评估；单来源论断保持 ⚠️ 标注 | PM | M1 末 | open |
+| R-08 | 流程 | 调研证据链不完整：research-opensource 由挂起 agent 的 13 组结果综合；architecture 对抗核查未完成；Generalist/TwinDEX 官网抓取受限（TwinDEX 于 2026-11-02 经公司 PR Newswire 原文归档补齐；x2robot.com 详情页仍为 SPA 不可抓） | 中 | 选型依赖单一来源 | 补做清单：lerobot-dataset API 面核查（M1 export 前）、MuJoCo 侧仿真现状（sim-track）、Foxglove 转型影响评估；单来源论断保持 ⚠️ 标注 | PM | M1 末 | open |
 | R-09 | 依赖 | 商业 VLM API 在数据生产关键路径：可用性、版本漂移无权重哈希、输出用于训练数据的条款未审 | 中 | API 不可用 >1h；API 版本变更 | 本地 Qwen-VL 主力，API 只做分歧仲裁且可降级；lineage 记模型名+API 版本+日期（cleaning-algo-selection 纪律 4）；ToS 进 license 终审 | CUR + LEGAL | H0 末 | mitigating |
 | R-10 | 依赖 | 上游生态单点：LeRobotDataset v3 唯一训练格式；MCAP/Foxglove/Rerun 生态方向变化 | 中 | **2026-09-09 重开**：`lerobot-dataset` 独立包停在 0.5.0 无更新；LeRobot 0.7 路线图"流优先"重设计；Rerun 发布 .rrd 数据层 + Hub 成为第三种持久化格式候选 | 训练态依赖改为 `lerobot` 核心包（≥0.6）并锁版本；export 层 writer 接口保留以承接 0.7 流优先；Rerun .rrd 只作可视化缓存不作持久化（决策 1 不变）；MCAP 规范开放可自维护 reader | DATA | 每季度 | open |
 | R-11 | 合规/安全 | 人口与地域偏差；按分钟计酬的用工性质；上门服务人身安全；上传内容安全 | 中 | 再平衡簇覆盖按地域/人群严重不均；任一区域劳动法咨询意见为"雇佣" | 再平衡加操作者轴（curation §2.2）；劳动合规、背景审查、内容安全流程在 [compliance-and-security.md](compliance-and-security.md) §7–§9 | LEGAL + PLAT | H1 前 | open |
@@ -133,7 +133,7 @@
 | D-01 | Index 五阶段策展（五个名词） | Figure 官方，规则未公开 | curation 层骨架 | 阶段划分错，状态机/漏斗重排 | 各阶段方法全部来自可验证一手来源（Wall-OSS/Cosmos/Ego2Robot），五阶段正确性实质不依赖 Figure；状态机设计为可插拔 | 每次 Figure 新披露 |
 | D-02 | "8 小时精策划即可出策略"、500h、60h vs 10h +58% | Figure 官方 | CLAUDE.md 决策 6（质量优先）、Stage A 10–50h 门槛 | 优先级排序失据；Stage A 长期不放行 | 第二锚点 GR00T 88h 真机、第三锚点 π0.5 目标域 2.4%；Stage A 放行不达时回退到"扩数据"分支 | Stage A 结果 |
 | D-03 | 采集效率 PrimeU 4.8–7.2×（学术实测，人类视频）与 TwinDEX 5.3×（自报，外骨骼） | 混合；两者形态不同，**不是互证** | H1 成本验收 <1/5（中间检查点 1/3） | 成本验收失守 | R-02 止损阈值；每季度实测自家倍率替换外部数字 | 每季度 |
-| D-04 | TwinDEX "几百条完成后训练"、无本体≈遥操等效 | 公司自报 | 采集矩阵 TwinDEX 行、P2 演进 | robot 轨遥操预算不能降 | 已降权（隐含 WALL 基座）；P2 触发条件依赖自家消融 U-04 | U-04 后 |
+| D-04 | TwinDEX "几百条完成后训练"、无本体≈遥操等效 | 公司自报（2026-11-02 起有一手新闻稿 [sources/xsquare/twindex-launch.txt](sources/xsquare/twindex-launch.txt)："a few hundred robot-free episodes, without any on-robot training data"） | 采集矩阵 TwinDEX 行、P2 演进 | robot 轨遥操预算不能降 | 已降权（隐含 WALL 基座）；P2 触发条件依赖自家消融 U-04 | U-04 后 |
 | D-05 | Sunday ACT-2 99.1%、Skill Transform 90%+、$200/$400 | 公司/投资方自报，两来源单价不一致 | 采集矩阵手套行、具身转换阶段 | 90% 若为 60%，该档位产出率崩塌 | 具身转换有专属质量门，失败只标记；P1 先自制 5 只手套实测转换成功率再决定量产 | P1 评估 |
 | D-06 | Generalist 50 万+h、物理提示 59%/83%、64%→99% | 公司自报 | 演示库为一等产物、fewshot-bench、demo 槽位接口 | 演示库切片/质量位成沉没成本 | 接口预留零成本；fewshot-bench 从 Stage B 起持续测不等 L 档 | Stage B 起每版本 |
 | D-07 | GEN-0 骨化相变（1B/6B/7B+）、L(D) 幂律 | 单家博客，无复现 | S/M/L 规模阶梯触发门槛、scaling-fitter | 阶梯门槛失据 | Lin et al. 学术幂律作独立印证（度量不同）；scaling-fitter 用自家曲线替换外部门槛 | 每次数据翻倍 |
@@ -157,6 +157,8 @@
 | D-25 | Sunday ACT-2：泛化差距（域内−域外）随预训练规模 82→10→8→4→0；高质量子采样 12.5%/25%/50% → 75.6/87.9/92.3% vs 均匀 43.8/53.6/64.1%；785 次 99.1%±0.3、每户零适配；单条示例 SFT 教会可泛化折法 | sunday.ai ACT-2 预览一手（2026-09-14 curl）；自评标注（两轮独立、评分表事前固定）、单任务族、模型架构与数据小时数未披露 | eval-protocol 泛化差距指标与 Solve 声明格式；curation §7 高质量子采样消融目标量级；L3 估值排序器（D-14）价值预期 | 策展增益量级不复现 → 估值线降级（G5） | 自家 human/device 轨复现同一消融，目标只作量级 | M2 |
 | D-26 | Dyna 生产指标：DYNA-1 35 条/h、75% 达标 → DYNA-2 95 条/h、93% 达标（1,590/天）；新站点 3 天达 ROI；车队每站每天 >1 TB；鼎泰丰全门店扩张、2027 上半年数百台 | dyna.co《Not Just a Model, But a Product》一手；首页 KPI（100/180/200 件/h、≥98%、<90 s、±2 mm）自 2026-09-16 起为 dyna.co 首页一手（sources/dyna/home.txt）；单客户单任务族，无第三方 | data-platform 容量模型（1 TB/站/天）；R-20 飞轮反证的对照面；D5 触发式固化「两家验证」状态 | 容量模型分母偏高一档 | 容量按自家 D5 码率重算；D5 状态不依赖 Dyna 商业数字 | M3 |
 | D-27 | Figure 产能与车队：350+ 台 F03、1 台/小时、末端首检良率 >80%、电池线 99.3%、9,000+ 执行器；BMW 1,250 h / 9 万件 / 3 万台 X3、KPI 84 s / >99% / 零干预；Index 周活 69,943、35 min/s（第三方 ⚠️） | figure.ai 一手（产能、BMW）；Humanoids Daily 转述（周活） | 战略 §1.1 对标分母；robot-track-teleop §6 车队 KPI 模板（周期/精度/干预三项） | 无设计依赖，仅作量级 | — | H1 |
+| D-31 | 自变量 XRZero-G0："10:1（500 无本体 + 50 真机）≈ 500 纯真机"、"无本体数据成本 ≈ 遥操 1/20"、"有效率 85%"、"G0-Dataset 2,000 h" | 公司自报（技术报告 + 新闻稿，[sources/xsquare/xrzero-g0-paper.txt](sources/xsquare/xrzero-g0-paper.txt)）；5 个桌面双臂任务，评测次数未披露；85% 为受控条件且含人工复核；开放的 XRZero-G0-3K 仅 34 GB / 10,726 行、无数据卡，与 2,000 h 不符 ⚠️ | [research-xsquare.md](research-xsquare.md) §7/§9-3；device 轨与 robot 轨配比消融模板（G2）、物理回放门的必要性 | 配比律不迁移到我们的任务/本体：robot 轨遥操预算不能按 1/10 削减 | 只作消融起点：mixture-runner 预置 0/1×/10× 与总量可比替代组，自家 G2 结果替换外部数字；外部数据集不进默认路径 | G2 后 |
+| D-32 | 自变量 QUANXTA Zero："数采成本降低 60%"、"近 100 条/小时（2.33×）"、"传感器同步 ≤1 ms" | 公司新闻稿（[sources/xsquare/quanxta-zero-launch.txt](sources/xsquare/quanxta-zero-launch.txt)）；60% 仅见官网新闻列表标题，第三方另称 95% / 33× ⚠️；2.33× 是简单任务倍率（中/难 1.88× / 1.71×） | [research-xsquare.md](research-xsquare.md) §3.2/§9-8；PL3"策展即服务"的竞品定位、device 轨采集效率外部参照（与 D-03 并列） | 无设计依赖，只影响 PL3 定价与差异化论证 | 自家 device 轨实测吞吐与成本每季度替换（同 D-03） | 每季度 |
 
 ---
 
@@ -172,7 +174,8 @@
 | research-vla-pretraining.md | training-pipeline §1.1/§2、curation §5 | 2026-09-08（Stage/阶段命名与档位门槛统一） |
 | research-qwen-robotics.md | curation §1.1/§1.2/§1.4b/§1.5/§3.2/§4.1/§5/§7/§9、cleaning §1.6–1.7/§1.9、training §1.2、data-format-contract | 2026-11-02（补入阿里云客户交流 PDF；§8 第 6–13 条已回灌 curation/cleaning，格式类进契约 0.3 待入项） |
 | research-sunday.md | architecture §2.3、index-replica-plan §1.0、device-track-umi §4 | 2026-09-14（ACT-2 一手补充指向 research-four-routes §3） |
-| research-twindex.md | index-replica-plan §1.0、device-landscape §5、U-04 | 2026-09-04 |
+| research-twindex.md | index-replica-plan §1.0、device-landscape §5、U-04 | 2026-09-04（2026-11-02 一手新闻稿补齐，确认指尖触觉，见 research-xsquare §3.3） |
+| research-xsquare.md | governance D-31/D-32、D-04 来源（已登记）；curation §1.3（物理回放门、帧级静止处理，待 H1/M2）、§4.1（brief/detailed 指令 + 具身桥接样本，待 Stage B）、§9（置信度分流，待 M2）；data-format-contract 0.3（动作语义约定：轴向/零旋转/夹爪极性）；sim-track（Task-DAG 谓词自动子任务标签）；training-pipeline/configs/mixtures（配比消融模板，M3）；data-strategy-roadmap PL3（QUANXTA Zero 竞品） | 2026-11-02（登记，设计文档待 M1–M3） |
 | device-landscape.md | index-replica-plan §1、robot-track-teleop §1 | 2026-09-04 |
 | research-simfoundry.md | sim-track §1–§3/§5、eval-protocol §2/§5、governance U-20/U-11 | 2026-09-09 |
 | research-skild.md | governance D-23（已改一手）；eval-protocol §3（L1–L5 扰动阶梯、干预记账，待 M2）；device-track-umi §0（Skild 三轴表引用，待 M1）；data-format-contract 秒级切片含 human 轨（待契约 0.3） | 2026-09-14（登记，设计文档待 M1/M2） |

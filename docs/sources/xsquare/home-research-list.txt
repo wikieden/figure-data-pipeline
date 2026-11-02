@@ -1,0 +1,187 @@
+SOURCE ARCHIVE (fdp docs/sources)
+URL: https://x2robot.com/
+Title: X Square Robot 官网首页（研究成果时间线 + 公司简介）
+Page date: 无（研究条目各带日期，最新 2026-10-13）
+Fetched: 2026-11-02 via curl (UA: desktop Chrome), HTML → text extraction (tags stripped, nav/footer removed)
+Raw HTML sha256: 548ed62b2470ac2321f49d3996404bedee02275e3e41414afbd7586d74a206bd
+Raw HTML bytes: 252408
+Rights: © the publishing company; archived verbatim for citation/verification only, not for redistribution.
+========================================================================
+
+X2Real
+We present X2Real, an evolvable simulation benchmark for faithfully evaluating the real-world performance of robotic manipulation policies based on Nvidia Isaac Lab-Arena. Following three core principles (faithfulness, diversity, and fairness), X2Real calibrates simulation visual and physical properties to align with real hardware, achieving a 0.84 linear correlation between simulated and real-robot evaluation results. It features a comprehensive taxonomy with 10 capability dimensions and 44 hierarchical long-horizon tasks, covering basic manipulation skills and advanced capacities such as visual grounding, language understanding, and bimanual control. We further adopt multi-axis domain randomization and strictly disjoint training-evaluation pipelines to mitigate benchmark exploitation and ensure credible evaluation.
+
+X2Real
+We present X2Real, an evolvable simulation benchmark for faithfully evaluating the real-world performance of robotic manipulation policies based on Nvidia Isaac Lab-Arena. Following three core principles (faithfulness, diversity, and fairness), X2Real calibrates simulation visual and physical properties to align with real hardware, achieving a 0.84 linear correlation between simulated and real-robot evaluation results. It features a comprehensive taxonomy with 10 capability dimensions and 44 hierarchical long-horizon tasks, covering basic manipulation skills and advanced capacities such as visual grounding, language understanding, and bimanual control. We further adopt multi-axis domain randomization and strictly disjoint training-evaluation pipelines to mitigate benchmark exploitation and ensure credible evaluation. 2026.10.13
+
+TwinDEX
+A pair of co-designed, three-finger, nine-DoF dexterous manipulation interface: one wearable for data collection, one for robot deployment.2026.09.02
+
+WALL-SS
+A generative world model for action-controllable, long-horizon robotic simulation. Built on next-scale autoregression with scale-compressed streaming memory and on-policy alignment, it generates visual futures in a coarse-to-fine manner, achieving calibrated task outcomes and consistent policy rankings across 600+ matched sim-to-real closed-loop rollouts.2026.08.27
+
+Human-to-robot One-Shot Skill Acquisition (HOST)
+A training-free framework that enables robots to acquire new manipulation skills in seconds from a single human video while retaining previously mastered capabilities.2026.08.03
+
+X-Tokenizer
+A multimodal action tokenizer that doubles as a semantic interface between vision-language reasoning and continuous robot control.2026.06.30
+
+XRZero-G0
+XRZero-G0 is an embodied data acquisition and strategy learning system designed through deep collaboration between hardware and software. It aims to overcome the fundamental bottleneck of acquiring high-quality, motion-aligned demonstration data in the field of dexterous robot operation.2026.06.10
+
+WALL-WM
+Carving World Action Modeling at Their Event Joints2026.05.29
+
+WALL-OSS-0.5
+fully open-source, trained with gradient-bridged co-training, and deployable on real robots straight from pretraining.2026.05.28
+
+WALL-OSS
+An end-to-end embodied foundation model that leverages large-scale multimodal pretraining to achieve (1) embodiment-aware vision--language understanding, (2) strong language--action association, and (3) robust manipulation capability.2025.09.08
+
+穿越物理世界的智能奇点
+
+自变量机器人致力于研发由端到端大模型驱动的通用机器人，聚焦具身大模型的通用性与泛化能力，是国内具身智能基础模型的标杆企业，
+
+2026年发布全球首个世界统一模型，并自主研发、持续优化原生适配基础模型控制的机器人本体。
+
+公司自研“数据采集-大模型算法-核心零部件-硬件本体”，实现全栈闭环，目前已率先在家庭、
+物流等真实场景实现通用具身智能技术的落地，
+
+长远目标是构建能够精细操作的通用智能机器人。
+
+关于我们
+
+具身大模型驱动全栈进化
+引领通用机器人走进真实应用
+
+全球首个基于世界统一模型架构的具身智能基础模型WALL-B
+
+世界统一模型架构（World Unified Model)
+从“VLA“到”原生多模态融合架构“，单模型适配全模态，全任务
+
+原生多模态与本体感
+
+物理世界规律的理解与零样本泛化
+
+主动交互与自我进化
+
+国内最早的具身大模型少样本学习 跨任务迁移强化学习三指灵巧操作手高自由度 灵巧手柔性物体长序列复杂操作长序列训推泛化性具身思维链
+
+量子 2 号
+
+量子 2 号
+新一代通用轮式仿人形机器人了解详情
+
+整体参数
+
+全身自由度
+
+身高
+
+垂直操作空间
+
+躯干自由度
+
+机械臂参数
+
+单臂展
+
+重复定位精度
+
+末端速度
+
+单臂额定负载
+
+任务负载能力
+
+末端执行器参数
+
+夹爪自由度
+
+灵巧手自由度
+
+底盘参数
+
+移动速度
+
+底盘自由度
+
+传感器配置
+
+2D激光雷达
+
+超声波传感器
+
+RGBD相机
+
+单点TOF
+
+BEV环视摄像头
+
+搭载模型
+
+模型
+
+参数规模
+
+端到端具身模型驱动
+
+端到端架构的具身基础模型
+自主感知 - 决策 - 行动
+支持真实物理世界跨模态推理
+强泛化性与适应性
+
+软硬件联合设计
+
+模型驱动的高自由度手臂协同设计
+媲美人类灵活度的全身运动控制
+高动态力控安全设计
+
+高环境适应性
+
+高地面通过性
+类人工作空间
+视听觉流畅交互
+灵活使用工具
+
+通用轮式双臂机器人
+量子 1 号 PRO
+QUANTA X1 PRO
+
+新一代具身轮式仿人形机器人
+量子 2 号
+QUANTA X2
+
+高自由度仿人五指灵巧手
+灵巧手
+ArtiXon Hand
+
+多场景智能机器人
+一体化解决方案
+
+ 全自研 WALL-A 操作大模型
+
+围绕自研的 WALL-A 操作大模型，实现从感知、理解到动作控制的全流程智能统一，
+彻底突破传统机器人依赖规则与编程的局限。实现复杂环境中的高精度、自主化作业。
+
+居家服务科研教育商业清洁物流分拣
+
+居家服务科研教育商业清洁物流分拣
+
+新闻动态
+
+新闻资讯 2026-08-26
+深圳经济特区46岁生日，南方日报要闻整版聚焦这家“具身大脑”
+了解详情
+
+新闻资讯 2026-08-19
+自变量机器人亮相WRC：最“广”家庭服务走进千家万户，最“深”物流分拣突破行业极限
+了解详情
+
+科技动态 2026-08-03
+较主流方法提速500倍！自变量开源HOST框架，让机器人看一条数十秒视频学会新技能
+了解详情
+
+新闻资讯 2026-07-24
+深圳机器人亮相APEC数字和人工智能部长会议
+了解详情

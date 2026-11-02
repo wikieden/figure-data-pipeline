@@ -1,0 +1,40 @@
+SOURCE ARCHIVE (fdp docs/sources)
+URL: https://raw.githubusercontent.com/X-Square-Robot/XRZero-G0/main/README.md
+Title: XRZero-G0 GitHub README（MIT）
+Page date: 无（抓取时 main 分支）
+Fetched: 2026-11-02 via curl (UA: desktop Chrome), HTML → text extraction (tags stripped, nav/footer removed)
+Raw HTML sha256: a8fcf56c4639fdeaa555b9f97d4530c9a85eef0895cd8ab819461f52ea2df598
+Raw HTML bytes: 1997
+Rights: © the publishing company; archived verbatim for citation/verification only, not for redistribution.
+========================================================================
+
+# 🚀 XRZero-G0: Pushing the Frontier of Dexterous Robotic Manipulation with Interfaces, Quality and Ratios
+
+<p align="center">
+  <a href="https://x2robot.com/x2go"><img src="https://img.shields.io/badge/Homepage-x2robot.com-brightgreen" height="28"></a>
+  <a href="https://arxiv.org/abs/2604.13001"><img src="https://img.shields.io/badge/Paper-arXiv-red" height="28"></a>
+  <a href="https://github.com/X-Square-Robot/XRZero-G0"><img src="https://img.shields.io/badge/Code-GitHub-black" height="28"></a>
+  <a href="https://huggingface.co/datasets/x-square-robot/XRZero-G0-3K"><img src="https://img.shields.io/badge/Dataset-HuggingFace-blue" height="28"></a>
+  <a href="https://opensource.org/licenses/MIT"><img src="https://img.shields.io/badge/License-MIT-yellow.svg" height="28"></a>
+</p>
+
+> **XRZero-G0** is a hardware-software co-designed framework for scalable, high-fidelity, and ergonomic robot-free data collection. By systematically addressing the "quality black-box" and establishing empirical **Data Mixing Laws**, XRZero-G0 achieves performance comparable to purely real-robot datasets at **1/20th of the acquisition cost**.
+
+<div align="center">
+  <img src="imgs/head.png" alt="XRZero-G0 Teaser" width="100%">
+  <p><em>Figure 1: XRZero-G0 enables scalable robot-free data collection and cross-embodiment policy transfer.</em></p>
+</div>
+
+---
+
+## ✨ Highlights
+* 🕹️ **Ergonomic Decoupled Interface**
+* 🛡️ **Closed-Loop Quality Verification**
+* ⚖️ **Empirical Data-Mixing Laws**
+* 🌍 **Zero-Shot Cross-Embodiment**
+
+## 📦 The G0-Dataset
+Using the XRZero-G0 framework, we have collected one of the most comprehensive human-centric embodied datasets to date.
+* **Scale:** High-fidelity, multi-modal data.
+* **Diversity:** **3,000 distinct manipulation tasks** following a pronounced long-tail distribution (from fundamental operations to fine-grained semantic tasks).
+* **Throughput:** Operators achieved a peak collection speed of up to **93.2 episodes per hour**.

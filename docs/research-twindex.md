@@ -1,6 +1,8 @@
 # TwinDEX（自变量机器人 X Square）调研
 
 > 2026-09-04。来源：[IT之家](https://www.ithome.com/0/997/614.htm)、[量子位深度报道](https://www.qbitai.com/2026/09/483351.html)、官网 [x2robot.com/pages/twindex](https://x2robot.com/pages/twindex)（SPA 未能抓取细节 ⚠️）。自变量即 WALL-OSS/WALL-B 团队（见 [research-vla-pretraining.md](research-vla-pretraining.md) §1.8）。数字为公司自报，独立验证有限。
+>
+> 2026-11-02 补：一手新闻稿已归档 [sources/xsquare/twindex-launch.txt](sources/xsquare/twindex-launch.txt)，确认同步记录**指尖触觉**（"fingertip tactile signals"），并且把感知-推理-执行的时延纳入了一致性设计。自变量整条数据管线（无本体采集、质检、配比律）见 [research-xsquare.md](research-xsquare.md)。
 
 ## 1. 方案本质：孪生同构，把"接口对齐"推进到灵巧手
 
