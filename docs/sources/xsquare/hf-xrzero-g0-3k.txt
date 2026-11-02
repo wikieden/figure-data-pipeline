@@ -1,0 +1,115 @@
+SOURCE ARCHIVE (fdp docs/sources)
+URL: https://huggingface.co/datasets/x-square-robot/XRZero-G0-3K
+Title: XRZero-G0-3K 数据集页（无 dataset card；空表格单元已压缩）
+Page date: 仓库创建 2026-05-16
+Fetched: 2026-11-02 via curl (UA: desktop Chrome), HTML → text extraction (tags stripped, nav/footer removed)
+Raw HTML sha256: 3e0e7a21bf58615fb11af5c1f742a1be97e5c19e5dc45d206cace0fbc98a5ed3
+Raw HTML bytes: 307964
+Rights: © the publishing company; archived verbatim for citation/verification only, not for redistribution.
+========================================================================
+
+Hugging Face
+
+ Datasets:
+
+ x-square-robot
+/
+XRZero-G0-3K
+ Like 14
+
+Follow X Square Robot 105
+
+Modalities:
+ Video
+Size:
+ 10K - 100K
+Libraries:
+ Datasets
+
+ Croissant
+
+ Dataset card Data Studio Files Files and versions
+ xet Community
+1
+
+Dataset Viewer Auto-converted to Parquet API Embed Duplicate Data Studio
+
+Subset (1)
+default · 10.7k rows default (10.7k rows)
+Split (1)
+train · 10.7k rows train (10.7k rows)
+
+Search is not available for this dataset
+
+SQL Console
+video
+video
+
+2.7
+104
+|
+|
+|
+|
+|
+|
+|
+|
+|
+|
+|
+|
+|
+|
+|
+|
+|
+|
+|
+|
+|
+|
+|
+|
+|
+|
+|
+|
+|
+|
+|
+|
+|
+|
+|
+|
+|
+|
+|
+|
+|
+|
+|
+|
+|
+|
+|
+|
+|
+|
+
+End of preview. Expand in Data Studio
+
+No dataset card yet
+
+ Copy to bucket
+
+ Use this dataset
+
+ Downloads last month
+ 10,219
+
+Number of rows:
+10,726
+Total file size:
+34 GB

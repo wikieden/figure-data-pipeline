@@ -82,12 +82,13 @@
 | [research-end-effector-torso.md](research-end-effector-torso.md) | 四家末端机构与腰部/躯干机构对比（谁服从谁：采集端同构 vs 真值维度），直接服务 U-04 与本体选型 | 2026-09-16 |
 | [research-model-recipes.md](research-model-recipes.md) | 五家模型实现对比（Helix VLA / DYNA-2 WAM / ACT / GEN / Skild Brain）：架构、训练流程、目标函数、推理回路、五个分歧轴 | 2026-09-16 |
 | [research-twindex.md](research-twindex.md) | 自变量 TwinDEX 孪生灵巧手 | 2026-09-04 |
+| [research-xsquare.md](research-xsquare.md) | 自变量数据管线全景（13 份一手归档）：真机遥操 + XRZero-G0/QUANXTA Zero 无本体采集 + TwinDEX + X2Real 仿真合成；同步、清洗质检（含真机物理回放门）、两级指令与具身桥接样本、无本体:真机 1:1/10:1 配比律、幂采样；自报数字可信度与行动项 | 2026-11-02 |
 | [device-landscape.md](device-landscape.md) | 领先采集设备构型横评（多角度图集） | 2026-09-04 |
 | [research-simfoundry.md](research-simfoundry.md) | NVIDIA SimFoundry：单视频→仿真孪生/数字表亲，real2sim 评测与 sim2real 训练，license 边界 | 2026-09-09 |
 | [research-dyna-comparison.md](research-dyna-comparison.md) | Dyna DYNA-1/DYNA-2 模型与数据方案；与 Generalist GEN-0/1/1.5、Skild S1、已研究厂商及学术四个接口的横向对比 | 2026-09-14 |
 | [research-four-routes.md](research-four-routes.md) | Figure / Dyna / Sunday / Generalist 四家技术路线精读（37 篇一手页面）：本体·数据·模型·部署评测四层对照，分歧与收敛点，回写清单 | 2026-09-14 |
 | [research-skild.md](research-skild.md) | Skild AI 一手调研（11 篇博客）：Skild Brain 分层、全身体仿真、S1 视频提示 ICL 与 1k–100k h scaling、L1–L5 扰动阶梯、$1:$3 质控、部署飞轮观 | 2026-09-14 |
-| [sources/MANIFEST.md](sources/MANIFEST.md) | 一手资料归档：Figure 18 / Dyna 6 / Sunday 4 / Generalist 10 篇官网原文文本（URL、页面日期、抓取日期、HTML sha256），research 文档的引用目标 | 2026-09-14 |
+| [sources/MANIFEST.md](sources/MANIFEST.md) | 一手资料归档：Figure 18 / Dyna 8 / Sunday 4 / Generalist 10 / Skild 11 / 自变量 13 篇官网原文文本（URL、页面日期、抓取日期、HTML sha256），research 文档的引用目标 | 2026-09-14 |
 
 `reports/` 存管理层汇报页的单文件 HTML（[洗衣房两套方案](reports/laundry-two-plans.html)、[追平 Dyna 最快路线](reports/dyna-parity-fast-track.html)、[业内七条路线对照与取舍](reports/industry-routes.html)），前两份分别对应 laundry-two-plans-brief.md 与 dyna-parity-fast-track.md，第三份汇总 research-*.md 与 data-strategy-roadmap.md §1 的已核查条目，更新汇报页时同步覆盖。
 

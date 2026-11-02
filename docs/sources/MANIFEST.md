@@ -56,7 +56,21 @@
 | skild | [`skild/skild-zebra.txt`](skild/skild-zebra.txt) | Skild AI Acquires Zebra Technologies' Robotics Arm | 2026-04-15 | https://www.skild.ai/blogs/skild-zebra | 3,806 | `2b785a385635` |
 | skild | [`skild/s1.txt`](skild/s1.txt) | Introducing S1: In-Context Learning for Robotics | 2026-08（页面只写月份；100M ARR 文说 S1 发布于其两周前，即约 2026-08-27） | https://www.skild.ai/blogs/s1 | 23,821 | `18fb93bfaec8` |
 | skild | [`skild/skild-crosses-100m-arr.txt`](skild/skild-crosses-100m-arr.txt) | The Hidden Pillar of Robotics (Skild AI crossed $100 million in ARR) | 2026-09-10 | https://www.skild.ai/blogs/skild-crosses-100m-arr | 8,357 | `39535a1a56af` |
-共 51 篇：Figure 18、Dyna 8（首页与公司页于 2026-09-16 归档）、Sunday 4、Generalist 10、Skild 11（skild.ai 于 2026-09-14 晚间可达，全部博客归档）。
+| xsquare | [`xsquare/xrzero-g0-paper.txt`](xsquare/xrzero-g0-paper.txt) | XRZero-G0: Pushing the Frontier of Dexterous Robotic Manipulation with Interfaces, Quality and Ratios（arXiv:2604.13001v2，至 References 前） | 2026-04-15 | https://arxiv.org/html/2604.13001 | 42,628 | `8912b07a8f9a` |
+| xsquare | [`xsquare/wall-oss-0.5-report.txt`](xsquare/wall-oss-0.5-report.txt) | Wall-OSS-0.5 技术报告（arXiv:2605.30877，至 Contributors 前） | 2026-05-28 | https://arxiv.org/html/2605.30877 | 73,653 | `c5478ffb4b4e` |
+| xsquare | [`xsquare/news-xrzero-g0-open-source.txt`](xsquare/news-xrzero-g0-open-source.txt) | X Square Robot Open-Sources XRZero-G0 … and a 2,000-Hour Dataset | 2026-06-10 | https://x2robot.com/en/news/6a28d6b58b9815cbb40e46ae | 5,031 | `b061e1e67a09` |
+| xsquare | [`xsquare/quanxta-zero-launch.txt`](xsquare/quanxta-zero-launch.txt) | X Square Robot Launches QUANXTA Zero Series（公司新闻稿，PR Newswire APAC） | 2026-07-07 | https://en.prnasia.com/releases/global/x-square-robot-launches-quanxta-zero-series-reframing-embodied-data-production-through-universal-manipulation-interfaces-539842.shtml | 5,132 | `01f3e2b5f562` |
+| xsquare | [`xsquare/wrc-2026-full-loop.txt`](xsquare/wrc-2026-full-loop.txt) | X Square Robot Shows the Full Embodied AI Loop at WRC 2026（公司新闻稿） | 2026-08-19 | http://www.prnewswire.com/news-releases/x-square-robot-shows-the-full-embodied-ai-loop-at-wrc-2026-from-foundation-model-to-real-world-deployment-302855287.html | 3,899 | `b680c1354679` |
+| xsquare | [`xsquare/twindex-launch.txt`](xsquare/twindex-launch.txt) | TwinDEX Introduces a Scalable Path from Robot-Free Data Collection to Real-World Dexterous Manipulation（公司新闻稿） | 2026-09-02 | https://www.prnewswire.com/news-releases/twindex-introduces-a-scalable-path-from-robot-free-data-collection-to-real-world-dexterous-manipulation-302867559.html | 5,523 | `122a2cf843a7` |
+| xsquare | [`xsquare/x2real-report.txt`](xsquare/x2real-report.txt) | X2Real Technical Report（arXiv:2609.27449v2，节选 §1–§4） | 2026-10-13 | https://arxiv.org/html/2609.27449 | 114,514 | `51ec685bda8d` |
+| xsquare | [`xsquare/home-research-list.txt`](xsquare/home-research-list.txt) | 官网首页：研究成果时间线 + 公司简介 | 无（条目最新 2026-10-13） | https://x2robot.com/ | 6,617 | `548ed62b2470` |
+| xsquare | [`xsquare/news-list-cn.txt`](xsquare/news-list-cn.txt) | 新闻动态列表（中文摘要；详情页为 SPA，正文未能抓取） | 无（条目最新 2026-08-26） | https://x2robot.com/cn/news | 6,603 | `7168e36ff751` |
+| xsquare | [`xsquare/xrzero-g0-readme.txt`](xsquare/xrzero-g0-readme.txt) | XRZero-G0 GitHub README（MIT） | 无 | https://raw.githubusercontent.com/X-Square-Robot/XRZero-G0/main/README.md | 1,996 | `a8fcf56c4639` |
+| xsquare | [`xsquare/wall-x-readme.txt`](xsquare/wall-x-readme.txt) | Wall-X GitHub README | 无（News 最新 2026-06） | https://raw.githubusercontent.com/X-Square-Robot/wall-x/main/README.md | 7,448 | `41ed3bd50524` |
+| xsquare | [`xsquare/hf-org-listing.txt`](xsquare/hf-org-listing.txt) | Hugging Face x-square-robot 数据集与模型清单（API JSON 摘要） | 抓取当日快照 | https://huggingface.co/api/datasets?author=x-square-robot ；…/api/models?author=x-square-robot | 2,631 | `64aabbede996` |
+| xsquare | [`xsquare/hf-xrzero-g0-3k.txt`](xsquare/hf-xrzero-g0-3k.txt) | XRZero-G0-3K 数据集页（无数据卡；行数与体积） | 仓库创建 2026-05-16 | https://huggingface.co/datasets/x-square-robot/XRZero-G0-3K | 759 | `3e0e7a21bf58` |
+
+共 64 篇：Figure 18、Dyna 8（首页与公司页于 2026-09-16 归档）、Sunday 4、Generalist 10、Skild 11（skild.ai 于 2026-09-14 晚间可达，全部博客归档）、自变量 13（2026-11-02 归档；x2robot.com 新闻详情页与产品页为 SPA，curl 只得空壳，新闻稿改走 PR Newswire 公司原文；arXiv 技术报告视同公司一手）。
 
 ## 图片归档（docs/assets/sources/）
 
@@ -77,6 +91,6 @@
 
 ## 归档规则
 
-1. research 文档引用四家公司的事实时，必须指向本目录的文件（`sources/<company>/<slug>.txt`），未归档的一手页面先归档再引用；第三方转述照旧标 ⚠️ 并给 URL。
+1. research 文档引用已归档公司（Figure / Dyna / Sunday / Generalist / Skild / 自变量）的事实时，必须指向本目录的文件（`sources/<company>/<slug>.txt`），未归档的一手页面先归档再引用；第三方转述照旧标 ⚠️ 并给 URL。
 2. 新增归档用同一头部格式；页面更新后重抓时不覆盖旧文件，另存 `<slug>.<YYYY-MM-DD>.txt` 并在本表加行。
 3. 数字类事实引用时给到文件内可 grep 的原文短语（英文原句片段），便于核对。

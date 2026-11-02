@@ -1,0 +1,32 @@
+SOURCE ARCHIVE (fdp docs/sources)
+URL: https://huggingface.co/api/datasets?author=x-square-robot + https://huggingface.co/api/models?author=x-square-robot
+Title: Hugging Face x-square-robot 组织数据集与模型清单（API JSON 摘要；sha256 为两个 JSON 拼接）
+Page date: 抓取当日快照
+Fetched: 2026-11-02 via curl (UA: desktop Chrome), HTML → text extraction (tags stripped, nav/footer removed)
+Raw HTML sha256: 64aabbede9968c1cc17ed7bbd8c031909e44b6e88af7dd53d6b3bbcde1042e27
+Raw HTML bytes: 12700
+Rights: © the publishing company; archived verbatim for citation/verification only, not for redistribution.
+========================================================================
+
+dataset | x-square-robot/libero_all | created 2026-01-30 | downloads 525 | tags size_categories:100K<n<1M, modality:tabular, modality:timeseries, modality:video
+dataset | x-square-robot/XRZero-G0-3K | created 2026-05-16 | downloads 10219 | tags size_categories:10K<n<100K, modality:video
+dataset | x-square-robot/ms-benchmark | created 2026-05-20 | downloads 54 | tags size_categories:1K<n<10K, modality:text
+dataset | x-square-robot/mb-benchmark | created 2026-06-08 | downloads 14 | tags
+dataset | x-square-robot/molmospaces-0615-benchmarks | created 2026-06-15 | downloads 14 | tags
+dataset | x-square-robot/xplanner-benchmark | created 2026-09-16 | downloads 1032 | tags size_categories:1K<n<10K, modality:tabular, modality:text, modality:video, arxiv:2609.25187
+dataset | x-square-robot/x2real-assets | created 2026-09-18 | downloads 1653 | tags license:apache-2.0, size_categories:10K<n<100K, modality:text, arxiv:2609.27449
+dataset | x-square-robot/X2Real-Dataset | created 2026-09-21 | downloads 2063 | tags license:apache-2.0, modality:video, arxiv:2609.27449
+dataset | x-square-robot/robodojo-memory-annotations | created 2026-11-02 | downloads 48 | tags license:apache-2.0
+model | x-square-robot/wall-oss-1.0-lite-robodojo | created 2026-10-23 | downloads 0 | tags license:apache-2.0
+model | x-square-robot/wall-oss-0.5 | created 2026-05-28 | downloads 315 | tags
+model | x-square-robot/wall-oss-fast | created 2025-09-06 | downloads 103 | tags
+model | x-square-robot/wall-oss-flow | created 2025-09-06 | downloads 3139 | tags
+model | x-square-robot/wall-oss-flow-0.1 | created 2026-01-30 | downloads 30 | tags
+model | x-square-robot/X-Tokenizer | created 2026-06-18 | downloads 0 | tags arxiv:2606.14752, license:apache-2.0
+model | x-square-robot/X2-Turn-4B-0812 | created 2026-08-18 | downloads 188 | tags arxiv:2608.10878, license:apache-2.0
+model | x-square-robot/X2-ASR-4B-0812 | created 2026-08-27 | downloads 26 | tags arxiv:2608.10878, license:apache-2.0
+model | x-square-robot/X2-NativeCursor-Qwen3TTS-12Hz | created 2026-09-10 | downloads 0 | tags arxiv:2609.09677, arxiv:2608.18661, license:apache-2.0
+model | x-square-robot/X2Streaming-TTS-1.7B | created 2026-09-10 | downloads 0 | tags arxiv:2608.18661, arxiv:2609.09677, license:apache-2.0
+model | x-square-robot/X-Planner-9B-0916 | created 2026-09-16 | downloads 50 | tags arxiv:2609.25187, license:apache-2.0
+model | x-square-robot/X2Streaming-ASR-4B-1009 | created 2026-10-09 | downloads 216 | tags arxiv:2609.08672, license:apache-2.0
+model | x-square-robot/wall-oss-1.0-lite-robodojo-base | created 2026-11-02 | downloads 0 | tags license:apache-2.0

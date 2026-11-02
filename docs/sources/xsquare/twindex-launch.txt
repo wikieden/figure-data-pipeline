@@ -1,0 +1,44 @@
+SOURCE ARCHIVE (fdp docs/sources)
+URL: https://www.prnewswire.com/news-releases/twindex-introduces-a-scalable-path-from-robot-free-data-collection-to-real-world-dexterous-manipulation-302867559.html
+Title: TwinDEX Introduces a Scalable Path from Robot-Free Data Collection to Real-World Dexterous Manipulation（公司新闻稿，PR Newswire）
+Page date: 2026-09-02
+Fetched: 2026-11-02 via curl (UA: desktop Chrome), HTML → text extraction (tags stripped, nav/footer removed)
+Raw HTML sha256: 122a2cf843a72ec177a018b85c74929844226c4eee236d666c9a7f9906f854fd
+Raw HTML bytes: 183056
+Rights: © the publishing company; archived verbatim for citation/verification only, not for redistribution.
+========================================================================
+
+News provided by
+
+ X Square Robot
+
+Sep 02, 2026, 05:20 ET
+
+Share this article
+
+Share this article
+
+SHENZHEN, China, Sept. 2, 2026 /PRNewswire/ -- Today, X Square Robot introduced TwinDEX, a pair of co-designed, three-finger, nine-DoF dexterous manipulation interface: one wearable for data collection, one for robot deployment. Together with synchronized sensing, a data processing pipeline, and a policy training workflow, the manipulation interface creates a direct and scalable path from robot-free data collection to real-world dexterous manipulation.
+The data problem behind dexterous manipulation
+
+ Continue Reading
+
+X Square Robot
+
+Robots operating in open environments must do much more than pick and place objects. They need to twist, insert, pour, open latches, use tools, handle narrow spaces, and adjust through contact. These tasks depend not only on where the hand moves, but also on how the fingers make contact, when force is applied, and how the system corrects small errors in a closed loop.
+
+Training data remains a major bottleneck. On-robot teleoperation produces demonstrations that match the target hardware, but it is expensive and difficult to scale: Teleoperation occupies the robot, requires a prepared workspace, and often depends on a skilled operator. Robot-free collection is easier to scale, but it can create an embodiment gap. If the collection device and the robot differ in kinematics, fingertip geometry, visual appearance, or timing, a demonstration may lose contact relationships that made the original action successful.
+TwinDEX is designed to narrow this gap through the co-design of its data-collection and deployment hardware. It pairs a wearable data-collection device with a closely matched robotic end effector. Both share a three-finger, nine-degree-of-freedom architecture, comprising seven active and two passive degrees of freedom.
+The design is built around three principles:
+Dexterity. The three-finger configuration supports stable power grasps, precise pinches, multi-point contact, twisting, and tool usage. The team evaluated different hardware configurations using a benchmark covering several manipulation primitives. Within the current task set, seven active degrees of freedom provided the best balance among dexterity, mechanical complexity, cost, wearability, and reliability.
+Consistency. The collection and deployment devices are aligned across the parts of the system that affect policy learning. They share corresponding kinematic chains, joint axes, link proportions, contact geometry, surface materials, visual appearance, and sensor placement. This allows measured finger states to map directly to the robot joint space without complex hand-to-robot retargeting.
+Consistency also includes data accuracy and time. TwinDEX synchronizes multi-view RGB camera inputs, six-degree-of-freedom wrist poses, finger joint states, and fingertip tactile signals. The team measures delays across sensing, inference, and execution so that the observation-action relationship seen during training better matches the one experienced during deployment.
+Scalability. An operator can wear the exoskeleton and interact directly with real objects, without using a robot during data collection. One operator, one table, and one wearable system form a complete collection unit. This makes it possible to collect in offices, kitchens, workstations, and other real environments, while multiple operators can collect in parallel at different locations.
+Direct interaction also preserves the operator's natural visual, contact, and proprioceptive feedback. This is especially useful for contact-rich tasks that are difficult to demonstrate through conventional teleoperation, where latency, limited viewpoints, and indirect force feedback can slow the operator or introduce unnatural motion.
+Demonstrating long-horizon, contact-rich behavior
+TwinDEX was evaluated on everyday manipulation tasks including cap twisting, sweeping with a broom and dustpan, sliding out and opening a book, releasing toolbox latches, and operating a syringe. These tasks test precise contact, tool control, small-target alignment, grasp transitions, and bimanual coordination. In the collection evaluation, TwinDEX delivered up to 5.3 times the effective throughput of on-robot teleoperation.
+The system was then tested on a full standardized chemistry experiment executed autonomously in a single uncut run. Across 24 sub-actions, the robot had to open and stabilize containers, handle a thin scooper, use a rubber-bulb pipette, transfer liquids and solids, hold a nearly transparent glass rod against a beaker, guide a pour, switch tools, and coordinate both hands. Each stage required precise positioning and stable control through contact.
+The chemistry demonstration shows that, when wearable collection and robotic deployment systems are closely aligned, a policy can learn fine-grained, long-horizon dexterous behavior from only a few hundred robot-free episodes, without any on-robot training data.
+When data is no longer locked behind expensive robot hardware, when every demonstration is natively aligned with the target end effector, and when hardware, data, and models evolve together around the same closed loop, dexterous manipulation data can finally scale by orders of magnitude. TwinDEX is building exactly that path: one that can be replicated, measured, and continuously improved.
+Project link: https://x2robot.com/en/pages/twindex
+For more information, visit https://x2robot.com/

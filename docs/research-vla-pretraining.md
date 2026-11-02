@@ -86,7 +86,7 @@
 
 ### 1.8 WALL-OSS / Wall-OSS-0.5（自变量机器人 X Square, 2025-09 / 2026-05）
 
-来源：[Wall-OSS-0.5 技术报告 arXiv:2605.30877](https://arxiv.org/html/2605.30877)、[wall-x 仓库](https://github.com/X-Square-Robot/wall-x)
+来源：[Wall-OSS-0.5 技术报告 arXiv:2605.30877](https://arxiv.org/html/2605.30877)（归档 [sources/xsquare/wall-oss-0.5-report.txt](sources/xsquare/wall-oss-0.5-report.txt)）、[wall-x 仓库](https://github.com/X-Square-Robot/wall-x)。采集端与质检/配比的全貌见 [research-xsquare.md](research-xsquare.md)
 
 其技术报告是目前**清洗步骤写得最具体的一手来源**，与我们管线逐项可对照：
 

@@ -1,0 +1,39 @@
+SOURCE ARCHIVE (fdp docs/sources)
+URL: http://www.prnewswire.com/news-releases/x-square-robot-shows-the-full-embodied-ai-loop-at-wrc-2026-from-foundation-model-to-real-world-deployment-302855287.html
+Title: X Square Robot Shows the Full Embodied AI Loop at WRC 2026（公司新闻稿，PR Newswire）
+Page date: 2026-08-19
+Fetched: 2026-11-02 via curl (UA: desktop Chrome), HTML → text extraction (tags stripped, nav/footer removed)
+Raw HTML sha256: b680c1354679dd14d44a37d42141c47a5f22a3136497500a6bb7f81c0b63167a
+Raw HTML bytes: 180764
+Rights: © the publishing company; archived verbatim for citation/verification only, not for redistribution.
+========================================================================
+
+X Square Robot Shows the Full Embodied AI Loop at WRC 2026: From Foundation Model to Real-World Deployment
+
+News provided by
+
+ X Square Robot
+
+Aug 19, 2026, 09:11 ET
+
+Share this article
+
+Share this article
+
+At 2026 WRC in Beijing, demonstrations show how embodied AI moves from data and skills to robots operating in logistics and real homes.
+BEIJING, Aug. 19, 2026 /PRNewswire/ -- X Square Robot, an embodied AI company building general-purpose robots and foundation models for real-world environments, opens its exhibit today at the World Robot Conference (WRC 2026), running August 19 to 23 in Beijing. At Booth C107, demonstrations present a continuous technology path from embodied data collection and foundation model development to robots operating in commercial and everyday environments.
+
+ Continue Reading
+
+X Square Robot at the World Robot Conference 2026
+
+The exhibit starts with a logistics sorting station powered by X Square Robot's self-developed embodied AI model called WALL-B and high-performance six-axis robotic arms. The robots autonomously identify, pick, reorient, move and feed parcels with different sizes, weights, materials and shapes, including soft packages requiring label flattening and boxes requiring orientation adjustments for downstream scanning. In a livestreamed demonstration on August 12, the system achieved 1,816 parcels per hour with over 98% accuracy, demonstrating its ability to handle variable parcels, continuous feeding and abnormal situations in a real logistics workflow.
+
+The company is also bringing embodied AI into the home. The X Family Member Program recreates a real home around "a day in the life," covering entertainment, family meals, leaving home and remote interaction through an app. In May, the program also placed robots into real households for extended interaction and experience, providing a more realistic environment for exploring how robots can fit into everyday family life. Separately, X Square Robot has partnered with 58.com to provide paid home-cleaning services in China.
+
+At the flower-arranging station, visitors can give the robot a natural-language instruction, such as a preference for a particular color of rose. The robot interprets the instruction, selects the appropriate flower and completes the multi-step arrangement. The task also adapts when flower order or object positions change, demonstrating the coordination of language understanding, visual perception and precise physical action over a longer sequence of tasks.
+The remaining demonstrations show how the underlying capabilities are developed. QUANXTA Zero is an integrated embodied-data production platform that enables robot training data to be collected without requiring a robot body, while supporting data processing, annotation, training and evaluation. Another demonstration focuses on dexterous-hand skills, showcasing a general-purpose skill production platform that supports fine manipulation capabilities such as grasping, twisting, opening and tool use through a fan-handling task.
+Together, the demonstrations illustrate X Square Robot's approach to embodied AI: connecting data, models, skills and robotic hardware to build robots that can perceive, reason and act across increasingly complex real-world tasks — from logistics and industrial operations to homes and everyday environments.
+About X Square Robot
+X Square Robot develops general-purpose embodied intelligence robots with high-precision manipulation capabilities. The company is building foundation models for the physical world, integrating models, robotic hardware and scalable, model-driven high-quality data pipeline system. Its robots are designed to perceive, reason and act across long-horizon tasks in home and everyday environments, research and education, logistics and warehousing, and industrial operations.
+For more information, visit https://x2robot.com/.
