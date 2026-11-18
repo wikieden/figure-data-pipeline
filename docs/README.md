@@ -25,6 +25,7 @@
 | [data-strategy-roadmap.md](data-strategy-roadmap.md) | **战略层**：2026-06..09 十维度态势判断（225 条带来源/可信度）、三条主线与北极星、方向线条 L1–L8、0–24 月实现路径与止损门、五条产品线与商业模式、CTO 拍板清单 | 2026-09-09 |
 | [data-pipeline-design.md](data-pipeline-design.md) | **数据管线全链路设计**：对照阿里 Qwen 具身数据链路，入湖 → 质检 → 打标 → 挖掘 → 合成 → 数据集构建 → 回流闭环的总图、环节对照、质检报告与标注档案、挖掘与合成（新增）、lineage 增补、平台自建 vs 阿里云、落地顺序 | 2026-11-17 |
 | [data-system-plan.md](data-system-plan.md) | **数据系统规划**：9 个子系统（新增采集任务下发、模型网关与注册、数据服务、人工作业台）、8 类数据产品与 owner、资产目录与状态事件、VLM 与向量索引容量、SLO 增补、运营角色与责任分工、按子系统的建设路线、自建与采购 | 2026-11-17 |
+| [gr00t2-trends-analysis.md](gr00t2-trends-analysis.md) | 从 GR00T 2 看后续趋势：数据需求（三层结构、对齐层稀缺、play 数据）、标注引擎化与可重算、硬件（采集器共同设计、头部+双腕、灵巧手与力、三层控制栈）及十项行动清单 | 2026-11-18 |
 | [governance.md](governance.md) | 风险登记 R-01–R-19、未决决策 U-01–U-36、自报数字登记 D-01–D-21、回灌清单 | 2026-09-08 / 2026-09-09 |
 | [program-plan.md](program-plan.md) | 里程碑验收矩阵（M/H/P 三套前缀）、人力角色、预算总盘 | 2026-09-08 |
 | [open-source-strategy.md](open-source-strategy.md) | 开源边界、license 选择、社区与商业分层 | 2026-09-08 |
