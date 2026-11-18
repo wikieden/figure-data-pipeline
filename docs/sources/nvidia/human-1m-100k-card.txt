@@ -1,0 +1,135 @@
+SOURCE ARCHIVE (fdp docs/sources)
+URL: https://huggingface.co/datasets/nvidia/PhysicalAI-Human-1M-100K/raw/main/README.md
+Title: PhysicalAI Human-1M — 100K hours dataset card (Hugging Face, license cc-by-4.0 per card metadata)
+Page date: repo created 2026-11-04, last modified 2026-11-07
+Fetched: 2026-11-18 via curl (UA: desktop Chrome), HTML/PDF → text extraction (tags stripped; PDF via pdftotext -layout)
+Raw sha256: e0353a2e172d8f9fa3904b9ff65ef105521481b46c435fa574e5348e7b4e8c91
+Raw bytes: 7432
+Rights: © NVIDIA Corporation; archived verbatim for citation/verification only, not for redistribution.
+========================================================================
+
+---
+license: cc-by-4.0
+pretty_name: PhysicalAI Human-1M — 100K hours
+language:
+  - en
+tags:
+  - robotics
+  - physical-ai
+  - egocentric-video
+  - human-demonstrations
+  - stereo
+  - hand-tracking
+  - lerobot
+configs:
+  - config_name: previews
+    default: true
+    drop_labels: true
+    data_files:
+      - split: preview
+        path: preview/**
+---
+
+<p><img src="assets/human1m_logo.png" width="340" alt="Human-1M — a hand with a globe in its palm"></p>
+
+Across AI, a common route to scale is **distilling human experience into models**: what people write, see, and create. The physical AI analogue is **sensorized human data**—egocentric video, dense language annotations, and head and hand pose that connect perception, action, and intent.
+
+# Human-1M: Scaling Physical AI through Human Experience
+
+<p><a href="https://huggingface.co/buckets/nvidia/human-1m-100k-oss/tree/release-staging"><img src="assets/access-dataset.svg" width="252" height="56" alt="Access the dataset"></a></p>
+
+[Explore the dataset →](https://huggingface.co/spaces/nvidia/PhysicalAI-Human-1M-Explorer)
+
+[![Human-1M episodes with matched ego video, stereo reconstruction and retargeting](assets/carousel-preview.webp)](https://huggingface.co/spaces/nvidia/PhysicalAI-Human-1M-Explorer)
+
+<table>
+<tbody>
+<tr>
+<td width="50%">
+<h2>1M hours</h2>
+<p>Human-1M collection</p>
+</td>
+<td width="50%">
+<h2>100,000 hours</h2>
+<p>Open-source subset</p>
+</td>
+</tr>
+</tbody>
+</table>
+
+Human-1M is the largest and most diverse high-quality egocentric dataset which contains egocentric video, dense language annotations, head and hand motion focused on real world manipulation. Human-1M spans economically valuable work in the wild and in controlled studios, and powers NVIDIA's flagship Cosmos and GR00T models.
+
+Ready for commercial and non-commercial use.
+
+## Human-1M, at a glance
+
+![Human-1M 100K-hour slice: 3,405,573 episodes, 406,815 recorded task clusters, 41,288 collector IDs, 81,557 scene IDs, nine environment categories. Charts show collection settings, camera configurations, and environment mix.](figures/card_core_stats.png?v=phase1-20261029)
+
+## Anatomy of an episode
+
+Video, motion, and language come together at the episode level. **T1 captures the overall goal; T2 breaks the task into timed actions.** Stereo and wrist views connect the scene to head and hand motion.
+
+**Bundle flower stems** connects synchronized stereo and wrist video, six timed T2 actions, stereo 3D reconstruction, head and hand tracks, and robot motion retargeting in one complete demonstration.
+
+[![Bundle flower stems: synchronized stereo and wrist views, a matching 3D reconstruction with head and hand tracks, the T1 goal, and timed T2 actions.](figures/card_episode_anatomy.png)](https://huggingface.co/spaces/nvidia/PhysicalAI-Human-1M-Explorer)
+
+**The episode is Human-1M’s atomic unit:** a proficient demonstrator performs economically useful physical work toward a discrete, measurable goal, usually achievable within 5–10 minutes. Video requirements are at least **30 FPS / 480p**, unaltered speed, visible and in-focus hands and task-relevant objects, and one or more hands in frame for **at least 95% of the episode**.
+
+**T1** is a 1–2 sentence summary of the primary goal, major actions, and key objects. **T2** specifies a contiguous sequence of **1–10-second segments** covering the episode, bounded by observable action intent. Each segment specifies hand laterality, precise verbs, and unambiguous objects, and is interpretable on its own.
+
+Motion annotations include 6-DoF head-camera pose and 21 keypoints per hand, with tracking masks and confidence. [Full episode requirements](QUALITY_STANDARDS.md).
+
+[Explore video, 3D reconstruction, retargeting, and T2 annotations in Spaces →](https://huggingface.co/spaces/nvidia/PhysicalAI-Human-1M-Explorer)
+
+## Human-1M diversity
+
+The slice spans **406,815 recorded task clusters, 81,557 scenes, 41,288 collectors, and nine environment categories**. In-the-wild collection captures variation in real homes and workplaces; studios make targeted skills repeatable, including curated tasks, assembly, and in-lab protocols.
+
+From preparing food and stocking shelves to packing orders, assembling parts, and repairing equipment, these demonstrations capture economically valuable human activity. The Space’s **Everyday index of real human work** associates tasks with broad categories from the [BLS Occupational Outlook Handbook](https://www.bls.gov/ooh/).
+
+[Explore task clusters, search, and the human-work index](https://huggingface.co/spaces/nvidia/PhysicalAI-Human-1M-Explorer)
+
+## Quality at every step
+
+Four quality gates combine human review and quantitative checks: **high quality dense annotation** with accurate language and timing; **high quality tasks** with useful, clearly visible interactions; **high quality diversity** at the task, scene and collector, and environment levels; and **high quality 3D tracking** checked for alignment, bone-length consistency, and motion smoothness.
+
+[![Production T1 audit history across 25 delivery weeks: 561K accepted hours and 461K gross rejected submission hours.](figures/quality_acceptance_history.png?v=phase1-20261029)](https://huggingface.co/spaces/nvidia/PhysicalAI-Human-1M-Explorer#quality)
+
+*Production T1 audit history · 25 delivery weeks. 561K accepted T1 hours · 461K gross rejected submission hours.*
+
+## Metadata and dataset structure
+
+The release is organized by **vendor → batch → version**. Each `v0/shard_*/` directory contains a **LeRobot v3.0** dataset. Video, language, and motion align through frame timestamps and episode metadata.
+
+```text
+release-staging/oss_100k_v1/
+└── vendors/
+    └── {vendor_id}/
+        └── {batch_id}/
+            ├── versions.json
+            └── v0/
+                └── shard_00/
+                    ├── data/
+                    │   └── chunk-000/file-000.parquet
+                    ├── meta/
+                    │   ├── info.json
+                    │   ├── episodes/chunk-000/file-000.parquet
+                    │   ├── tasks.parquet
+                    │   ├── subtasks.parquet
+                    │   ├── environments.parquet
+                    │   └── scenes.parquet
+                    └── videos/
+                        └── observation.images.{camera}/
+                            └── chunk-000/file-000.mp4
+```
+
+| Component | Contents |
+|---|---|
+| Frame data | Timestamps, head-camera and hand pose, masks, confidence, collector/scene IDs, and label indices. |
+| Episode metadata | Episode and rig IDs, anonymous `vendor_id`, camera intrinsics/extrinsics, and data/video intervals. |
+| Language and context | Task descriptions, timed subtask occurrences, environment identifiers and labels, and scene descriptions. |
+| Video | Monocular or stereo head views, with optional wrist cameras. |
+
+[Field reference](SCHEMA.md) · [Machine-readable schema](data/schema.json) · [Download complete sample episodes](https://huggingface.co/datasets/nvidia/PhysicalAI-Human-1M-100K/tree/main/samples/downloads)
+
+**Governing Terms:** This dataset is licensed under the Creative Commons Attribution 4.0 International License (CC BY 4.0) available at [https://creativecommons.org/licenses/by/4.0/legalcode](https://creativecommons.org/licenses/by/4.0/legalcode).

@@ -1,0 +1,2401 @@
+SOURCE ARCHIVE (fdp docs/sources)
+URL: https://research.nvidia.com/labs/gear/gr00t-2/assets/gr00t2_whitepaper.pdf
+Title: GR00T 2 whitepaper (NVIDIA technical report, 135 pp.; EXCERPT: §1–§5, B.1.2–B.1.3, App. C, K.6)
+Page date: 2026-11 (PDF CreationDate 2026-11-09)
+Fetched: 2026-11-18 via curl (UA: desktop Chrome), HTML/PDF → text extraction (tags stripped; PDF via pdftotext -layout)
+Raw sha256: a7316845d53aa61db023de15ca4f4fad422ed071f256d9fa7e8801aa7376dd50
+Raw bytes: 23457173
+Rights: © NVIDIA Corporation; archived verbatim for citation/verification only, not for redistribution.
+========================================================================
+
+######## EXCERPT: §1–§5 main body (pp.1–27) ########
+                                                                                                      November 2026
+
+
+
+GR00T 2: Scaling Robot Foundation Models for
+Generalization, Dexterity, and Adaptation
+NVIDIA
+https://research.nvidia.com/labs/gear/gr00t-2
+
+
+
+ Contents
+1 Introduction                                                                                                    3
+
+2 GR00T 2 Overview                                                                                                5
+
+3 GR00T 2 Capabilities                                                                                            6
+  3.1 Fast Adaptation: Zero-Shot Generalization and Few-Shot Mastery . . . . . . . . . . . . . . . .              6
+  3.2 X-Adaptability: Cross-Embodiment Skill Transfer . . . . . . . . . . . . . . . . . . . . . . . . . .         8
+  3.3 Robust Deployment through Reinforcement Learning . . . . . . . . . . . . . . . . . . . . . . .              9
+  3.4 Agentic GR00T 2 . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .      10
+  3.5 Humanoid Loco-Manipulation . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .         13
+
+4 How We Made GR00T 2                                                                                            14
+  4.1 Training: Pre-Training and RL Post-Training . . . . . . . . . . . . . . . . . . . . . . . . . . . .        14
+  4.2 Data . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .   15
+  4.3 Real-World Benchmarking: Mapping the Hill We Climb . . . . . . . . . . . . . . . . . . . . . .             16
+  4.4 Learning without Teleoperation: Devices and Pipelines . . . . . . . . . . . . . . . . . . . . . .          17
+  4.5 Simulation and Evaluation . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .      20
+  4.6 Deployment and Real-Time Inference . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .         22
+  4.7 Infrastructure . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .   24
+
+5 Conclusion and Open Problems                                                                                   26
+
+A Fast-Adapt with GR00T 2                                                                                        38
+  A.1 Benchmark Tasks . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .      38
+  A.2 Zero-Shot Generalization with GR00T 2 . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .          40
+  A.3 Dexter-50: Emergent Cross-Embodiment Zero-Shot and Few-Shot Transfer. . . . . . . . . . . .                41
+
+B X-Adapt with GR00T 2                                                                                           42
+  B.1 Human → Tianji + Sharpa . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .        42
+  B.2 UMI → YAM . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .      48
+  B.3 DexUMI for Complex, Long-Horizon, and Dynamic Post-Training . . . . . . . . . . . . . . . . .              50
+  B.4 DexUMI → Tianji + Sharpa . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .         52
+  B.5 Human → Simulation → Tianji + Sharpa . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .           53
+
+C Data for GR00T 2                                                                                               57
+  C.1 Human Data for GR00T 2 . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .         57
+  C.2 UMI-10K for GR00T 2 . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .        61
+  C.3 Teleoperation Data for GR00T 2 . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .       62
+  C.4 Data Annotations . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .     63
+
+D Real-World Benchmarking with GearArena                                                                         65
+
+
+ © 2026 NVIDIA. All rights reserved.
+                    GR00T 2: Scaling Robot Foundation Models for Generalization, Dexterity, and Adaptation
+
+
+
+    D.1   Why Aggregate Real-Robot Evaluations, and Why A/B . . . . . . . . . . . . . . . . . . . . . . .           65
+    D.2   Designing Evaluation Tasks from First Principles . . . . . . . . . . . . . . . . . . . . . . . . . .      66
+    D.3   The Arena: Stations, Operators, Campaigns, and Suites . . . . . . . . . . . . . . . . . . . . . .         67
+    D.4   Leaderboard Mathematics . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .       67
+    D.5   A/B Evaluation Infrastructure . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .     69
+    D.6   Results: What the Arena Shows about GR00T 2 . . . . . . . . . . . . . . . . . . . . . . . . . .           69
+    D.7   Limitations . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .   71
+
+E UMIverse for GR00T 2                                                                                              73
+  E.1 Gripper UMI Hardware . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .          73
+  E.2 UMI Direct . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .        74
+  E.3 UMI → YAM Transfer: Embodiment Gaps and Ablations . . . . . . . . . . . . . . . . . . . . .                   75
+  E.4 DexUMI Exoskeleton Hardware . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .             81
+  E.5 DexUMI Post-Training Recipe . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .           82
+  E.6 DexUMI WAM-Native Inpainting . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .            82
+
+F RL Post-Training                                                                                                  84
+  F.1 RL-Based Adaptation of World-Action Models . . . . . . . . . . . . . . . . . . . . . . . . . . .              84
+  F.2 Automated Discovery of RL Post-Training Algorithms . . . . . . . . . . . . . . . . . . . . . . .              87
+  F.3 Online RL Post-Training Infrastructure . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .          89
+  F.4 Precision Manipulation through RL Post-Training . . . . . . . . . . . . . . . . . . . . . . . . .             91
+  F.5 Reinforcement Learning with Neural Simulation . . . . . . . . . . . . . . . . . . . . . . . . . .             92
+
+G Agentic GR00T 2                                                                                          98
+  G.1 Agentic Skill Composition and Recovery with Code-as-Policy . . . . . . . . . . . . . . . . . . . 98
+  G.2 Agentic Steering with Visual Guidance . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 102
+  G.3 Toward Robotic Self-Improvement . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 107
+
+H Humanoid Loco-Manipulation                                                                           109
+  H.1 GR00T 2 Turbo on Whole-Body Latent Actions . . . . . . . . . . . . . . . . . . . . . . . . . . . 109
+  H.2 Real-World Whole-Body Loco-Manipulation . . . . . . . . . . . . . . . . . . . . . . . . . . . . 109
+  H.3 WAMs Consume Simulation Data Better than VLAs . . . . . . . . . . . . . . . . . . . . . . . . 111
+
+I   Accelerating GR00T 2                                                                                      113
+    I.1 Accelerating Model Inference . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 113
+    I.2 Policy Smoothness . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 115
+    I.3 Accelerating Task Throughput Beyond Demonstrations . . . . . . . . . . . . . . . . . . . . . . 116
+
+J   Simulations                                                                                             118
+    J.1 Real-to-Sim Generation of High-Fidelity Tasks . . . . . . . . . . . . . . . . . . . . . . . . . . . 118
+    J.2 Accelerating GR00T 2 Development with Simulation . . . . . . . . . . . . . . . . . . . . . . . 119
+    J.3 Simulation Benchmarking . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 123
+
+K Infrastructure                                                                                             127
+  K.1 Overall Software and Hardware Stack . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 127
+  K.2 Hardware . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 127
+  K.3 Cluster and Job Management . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 128
+  K.4 Distributed Training . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 129
+  K.5 Inference Infrastructure . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 132
+  K.6 Scalable Multi-Modal Data Processing . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 133
+
+
+
+                                                                                                                     2
+                   GR00T 2: Scaling Robot Foundation Models for Generalization, Dexterity, and Adaptation
+
+
+
+1. Introduction
+Building general-purpose robots requires models that can acquire diverse physical skills, generalize across
+tasks and embodiments, and adapt efficiently to new environments and objectives. Recent advances in
+vision-language-action (VLA) models have demonstrated the potential of large-scale pretraining for robotic
+manipulation. However, scaling robot intelligence involves challenges beyond learning from increasingly
+large demonstration datasets. A general-purpose robot foundation model must learn from heterogeneous
+sources of physical experience, acquire new capabilities with limited task-specific supervision, improve through
+interaction, and support reliable, responsive execution in complex robotic systems. Furthermore, as robots
+become increasingly autonomous, their learned physical capabilities must be accessible to higher-level reasoning
+and planning systems. Meeting these requirements calls for models that capture not only how robots act, but
+also how their actions change the physical world.
+We introduce GR00T 2, a new generation of foundation world-action models (WAMs). GR00T 2 jointly predicts
+future visual observations and embodied actions, learning how physical interactions unfold alongside the
+actions that produce them. Through large-scale pretraining on diverse human and robot experience, GR00T 2
+develops general-purpose manipulation capabilities across both parallel-gripper robots and dexterous hands.
+We demonstrate four major advances. First, GR00T 2 delivers strong out-of-the-box performance across
+diverse manipulation tasks and embodiments. Second, its pretrained capabilities enable rapid adaptation
+to challenging new tasks from remarkably few demonstrations, while reinforcement learning (RL) further
+improves manipulation reliability through real-world interaction. Third, GR00T 2 enables x-adaptation (cross
+adaptation), allowing physical knowledge acquired from one embodiment to be transferred to another through
+joint prediction of future observations and actions. Finally, GR00T 2 supports agentic control through two
+complementary capabilities: skill composition and recovery with code-as-policy (CaP), enabling higher-level
+agents to orchestrate manipulation and recover from execution failures, and steerable world-action generation
+through a WAM API, allowing agents to guide and compose robot behaviors using visual targets.
+Emergence of X-Adaptability. A central innovation of GR00T 2 is its cross-adaptation (x-adapt) capability,
+which allows the model to generalize to task-scene-embodiment combinations unseen during training. Consider
+a manipulation task observed only in human demonstrations and a robot embodiment represented by data
+from an entirely different set of tasks. Through joint world-action pretraining, GR00T 2 learns to imagine
+how the task would unfold when performed by the target robot and to generate actions corresponding to that
+imagined interaction. This creates a mechanism for transferring physical knowledge across heterogeneous
+sources of experience, including UMI demonstrations, dexterous UMI data, human hand interactions, and robot
+embodiments with substantially different kinematics. We explore this capability through cross-embodiment
+transfer experiments and a zero-teleoperation dexterous learning system, demonstrating the potential to
+acquire robot skills directly from human experience without collecting task-specific robot demonstrations. More
+broadly, cross-embodiment imagination points toward a new scaling property of robot foundation models:
+physical behaviors learned during pretraining can become executable capabilities across embodiments.
+Fast Adaptation and Agentic Control. GR00T 2 advances the capabilities of pretrained robot policies across
+generalization, dexterity, and adaptation. A diverse pretraining mixture equips the model with a broad repertoire
+of physical behaviors, enabling strong out-of-the-box performance and rapid acquisition of challenging new
+skills from few demonstrations. We further extend these capabilities through RL to improve manipulation
+reliability and efficient inference for responsive, closed-loop control. Building on these learned skills, we
+integrate GR00T 2 with higher-level reasoning agents that use CaP to compose manipulation skills, monitor
+execution, and recover from unexpected failures, bringing GR00T 2 closer to deployment-level reliability
+on challenging long-horizon manipulation tasks. Beyond skill composition and recovery, GR00T 2’s joint
+world-action representation provides a natural interface for steering robot behavior through desired visual
+outcomes and intermediate future states. We develop a WAM API that exposes this capability to higher-level
+agents, allowing them to guide and compose robot behaviors through visual targets. Together, these capabilities
+
+
+                                                                                                               3
+                              GR00T 2: Scaling Robot Foundation Models for Generalization, Dexterity, and Adaptation
+
+
+
+  Human and Robot Data
+
+
+
+
+  Inputs                                                                                                       Outputs
+                  Language Goal                                                                                            Multi-view Future Video
+                 “Flip GR00T 1 to 2”
+
+                Multi-view Video
+
+
+                                              …
+                                                                       GR00T 2                                   Egocentric     Left wrist     Right wrist
+                                                                                                                                                             …
+
+
+                                                                      World-Action Model
+   Egocentric    Left wrist     Right wrist
+
+                   Robot State                                                                                                   Robot Actions
+
+
+
+
+  X-Adapt a new robot skill without teleoperating it
+  Sensorized human demos                          Handheld and wearable devices (UMIverse)                                    Through simulation
+
+
+
+
+     Human      Dexter                 UMI    YAM            DexUMI    XHAND           DexUMI       Dexter   Human video       Dexter        G1 real   sim   real
+
+
+ RL Post-Training                                        Agentic                                             Loco-Manipulation
+ improves beyond its demonstrations                      a frontier agent runs and steers GR00T 2            humanoid whole-body control
+             Real robot                  World model              Control                    Steering                      GR00T 2 Turbo + SONIC
+
+
+
+
+Figure 1: We introduce GR00T 2, a world-action model for general-purpose robots. Top: GR00T 2 pretrains on human
+and robot data. Second row: given a language goal, multi-view video from the egocentric and both wrist cameras, and
+the robot state, GR00T 2 jointly predicts multi-view future video and robot actions. Third row: with X-Adapt, GR00T 2
+learns a new robot skill from sensorized human demonstrations (Human → Dexter, a Tianji robot with Sharpa hands),
+from handheld and wearable capture devices (UMI → YAM, DexUMI → XHAND, and DexUMI → Dexter), and through
+simulation, either from a single human video (Human video → Dexter) or by replaying teleoperated G1 motions across
+varied simulated scenes (G1 real → sim → real). Bottom: RL post-training on real robots and in a world model improves
+GR00T 2 beyond its demonstrations (left), a frontier agent runs and steers GR00T 2 (center), and GR00T 2 Turbo directs
+the SONIC whole-body controller for humanoid loco-manipulation (right).
+
+
+create a path toward agentic robotic systems in which high-level reasoning and planning can directly leverage
+the physical intelligence acquired through world-action pretraining.
+GR00T 2 Turbo: Token-Efficient World Modeling. We also introduce GR00T 2 Turbo, a lightweight variant of
+GR00T 2 designed for efficient world-action modeling. Joint video-action prediction enables actions to benefit
+from learned visual dynamics, but processing video tokens can be costly, particularly for multi-view, low-latency
+control. GR00T 2 Turbo addresses this cost with a more compact video representation while retaining the
+joint world-action modeling framework. This design enables faster training and inference, making GR00T 2
+Turbo well suited for whole-body control while remaining well above the baselines on bimanual and dexterous
+
+
+                                                                                                                                                                    4
+                   GR00T 2: Scaling Robot Foundation Models for Generalization, Dexterity, and Adaptation
+
+
+
+manipulation tasks.
+Realizing these advances requires innovations throughout the robot learning stack. We first describe the
+GR00T 2 architecture and pretraining framework, including Human-1M, our large-scale corpus of embodied
+human experience (Sec. 4.2.1), and the data processing and training infrastructure that support learning from
+heterogeneous sources. We then investigate cross-embodiment transfer and introduce a dexterous human-to-
+robot learning system that combines motion retargeting, visual alignment, and world-action modeling. Beyond
+pretraining, we develop reinforcement learning methods for improving manipulation through interaction and a
+steerable WAM API that enables agentic planning and guided execution.
+We evaluate GR00T 2 across a broad suite of simulated and real-world manipulation tasks, spanning general-
+purpose policy performance, few-shot adaptation, cross-embodiment transfer, dexterous manipulation, and
+whole-body humanoid control. Our results demonstrate the versatility of world-action pretraining as a foun-
+dation for acquiring and transferring physical skills, and highlight the complementary roles of large-scale
+pretraining, interactive post-training, and system-level integration. Together, GR00T 2 represents a step toward
+general-purpose robot foundation models whose physical knowledge can be transferred across embodiments,
+efficiently adapted to new tasks, and directly accessed and directed by intelligent agents.
+
+
+2. GR00T 2 Overview
+GR00T 2 is a world-action model (WAM): a single model that, given the robot’s visual and proprioceptive
+input and a user instruction, predicts both how the scene will unfold and the robot’s actions. One pretrained
+checkpoint covers parallel-gripper arms, dexterous hands, and a humanoid, and learns diverse source data
+sources including human egocentric videos, handheld UMI gripper data, and robot teleopration data. (Sec. 4.2).
+Inputs and outputs. At every control step, GR00T 2 receives (i) a 0.8s history of 224 × 320 images from up to
+four cameras at 5 fps, typically a head camera and one camera on each wrist, (ii) the robot’s proprioceptive
+state, and (iii) a natural-language instruction. It returns a chunk of future actions together with the predicted
+future frames of every camera. The robot executes the chunk through its own controller while the next chunk
+is computed (Sec. K.5).
+Architecture. GR00T 2 is built on Cosmos-Predict2.5-2B, a video diffusion transformer pretrained for world
+simulation (NVIDIA et al., 2025a). Video, state, and action inputs become tokens in one sequence that a single
+2B-parameter transformer processes (Fig. 1):
+   • Video. A frozen Wan 2.1 video VAE (Wan Team et al., 2025) compresses each camera stream 4× in time
+     and 8× in each spatial dimension. The latents are split into patches, giving 280 tokens per latent frame
+     and camera at 224 × 320. A learned view embedding tells the model which camera each token comes
+     from. Past frames enter as context, and future frames are generated.
+   • Language. A frozen Cosmos-Reason1 vision-language model (NVIDIA et al., 2025b) encodes the instruction,
+     and the transformer reads it through cross-attention.
+   • State and actions. Small embodiment-specific MLPs map the robot state and the noisy action chunk into
+     the transformer’s width, and an embodiment-specific decoder maps the output tokens back to actions.
+Inside the transformer, video tokens attend to one another across time and cameras, and action tokens attend
+to all video tokens, including the future frames being generated. Actions can therefore follow the future the
+model imagines. GR00T 2 is trained with flow matching (Lipman et al., 2023) on future video latents and
+actions together, with one loss for each. At inference, a few denoising steps suffice: one or two for video and
+two to four for actions in our deployments (Sec. I.1).
+GR00T 2 Turbo: Efficient World-Action Modeling. While GR00T 2 already runs in real time when served
+from a workstation GPU (a median of 153 ms to predict an action chunk for Dexter from three camera views
+on a GeForce RTX 5090, Tab. 27), humanoid whole-body loco-manipulation sets a much stricter budget. The
+policy must react quickly to keep the whole body coordinated as the robot moves, and it must run onboard on
+
+
+                                                                                                               5
+                     GR00T 2: Scaling Robot Foundation Models for Generalization, Dexterity, and Adaptation
+
+
+
+        Average over 50 tasks                     Tasks by success rate                 0%      10–50%        60–90%    100%
+
+100%                            95%
+                                         0-shot         10                     21                             15         4
+
+   75
+                    71%
+
+                                         1-shot 1            12                  18                                19
+   50     40%
+
+   25
+                                         5-shot           13                                    37
+    0
+         0-shot    1-shot       5-shot            0               10          20             30                40            50
+                                                                               Number of tasks
+
+Figure 2: Cross-embodiment transfer to Dexter with 0, 1, and 5 Dexter episodes. Results on the Dexter-50 tasks, which
+have no Dexter training data but appear in YAM teleoperation data, human video, or both. Zero-shot runs the pretrained
+model directly, while 1-shot and 5-shot fine-tune it with LoRA on 1 or 5 Dexter episodes. Left: average success rate over the
+50 tasks. Right: number of tasks in each success-rate range. The tasks are those the model learns with five episodes (at
+least 80% success). Per-task results are in Fig. 24.
+
+
+an edge GPU such as the NVIDIA Jetson AGX Thor, which has far less compute. We therefore design GR00T 2
+Turbo to make the world-modeling objective itself even cheaper. Most of the tokens GR00T 2 predicts are
+future video, and video is highly redundant. Turbo keeps the 2B transformer that models video and actions
+jointly but encodes video with a higher-compression VAE, so it still predicts future observations and actions
+together, with far fewer visual tokens. This makes both training and inference faster. Turbo predicts in 124 ms
+on the onboard Jetson Thor of the Unitree G1, where it plans whole-body motion for the SONIC controller
+(Sec. 3.5 and 4.6.1). Turbo trails GR00T 2 on dexterous tasks but remains well above the baselines on bimanual
+and dexterous manipulation, and offers a favorable tradeoff between task performance and inference latency
+(Sec. 3.1 and Fig. 23).
+Specifically, Turbo replaces the video VAE with the Wan 2.2 VAE (Wan Team et al., 2025), increasing spatial
+compression from 8× to 16× per dimension and producing a 4× smaller spatial latent grid. The latent input
+and output projections are adapted to the new VAE, while the action horizon remains unchanged.
+Using GR00T 2 on a new robot. To bring up a robot, a practitioner maps its cameras to the head and wrist
+views, expresses its actions in a supported action space (or adds a new one), and post-trains GR00T 2 on
+demonstrations of the target tasks. Sec. 3 shows how few demonstrations this takes, and how to replace
+teleoperation with human or UMI demonstrations altogether.
+
+
+3. GR00T 2 Capabilities
+We now present the capabilities of GR00T 2. Sec. 3.1 shows zero-shot deployment and few-shot adaptation on
+new tasks and post-training on long-horizon tasks that demand precision and dexterity, and Sec. 3.2 studies
+cross-embodiment transfer, in which GR00T 2 learns a skill on a robot without teleoperated demonstrations of
+that skill. Sec. 3.3 shows that reinforcement learning improves GR00T 2 beyond its demonstrations, Sec. 3.4
+pairs GR00T 2 with a frontier agent for long-horizon tasks, and Sec. 3.5 extends GR00T 2 to whole-body
+humanoid loco-manipulation. We report the main results here and defer the full evaluations to the appendix.
+
+3.1. Fast Adaptation: Zero-Shot Generalization and Few-Shot Mastery
+Zero-shot deployment on new tasks. Pretraining on teleoperation data from many robots and on Human-1M
+human video (Sec. 4.2) gives GR00T 2 an emergent ability to perform tasks it has never seen on the target
+robot. We test this on Dexter (Tianji robot + Sharpa hands), a bimanual robot with two 22-DoF dexterous
+hands, with 50 tasks that are absent from Dexter’s own data and appear only in YAM gripper data, human
+video, or both. Deployed out of the box and conditioned only on the language instruction, GR00T 2 succeeds
+in 40% of trials and completes 40 of the 50 tasks at least once (Fig. 2). Most failures come from a single step
+
+
+                                                                                                                               6
+                       GR00T 2: Scaling Robot Foundation Models for Generalization, Dexterity, and Adaptation
+
+
+Table 1: Post-training benchmarks. For each model, Prog. is the average task progress score across all trials and SR is
+the success rate, both on a scale from 0 to 100. Bold marks the best Prog. and SR in each row, and the last row of each
+table averages its tasks. Each YAM result is based on up to 20 trials. On Truck Assembly, GR00T 2 and GR00T 2 Turbo
+were evaluated on a revised, easier set of start scenes, and on the original scenes GR00T 2 succeeds in 7 of 20 trials with a
+progress score of 94.0. Baselines: 𝜋0.5 (Physical Intelligence et al., 2025), GR00T 1.7 (NVIDIA, 2026a), FastWAM (Yuan
+et al., 2026), MolmoAct2 (Fang et al., 2026), and FLUX 3 Action (Black Forest Labs, 2026).
+
+(a) YAM long-horizon post-training benchmark
+
+                                          GR00T 2
+                         GR00T 2                                𝜋0.5          GR00T 1.7            FastWAM        MolmoAct2      FLUX 3 Action
+                                           Turbo
+Task                    Prog.     SR     Prog.     SR        Prog.      SR    Prog.         SR    Prog.     SR    Prog.    SR     Prog.     SR
+
+Hot Wheels Assembly     95.4     85.0  68.6  50.0            13.1       0.0   19.5          0.0    0.8      0.0    1.5     0.0        0.5   0.0
+Toy Tractor Assembly    63.8     45.0  54.5  40.0             8.4       0.0    3.6          0.0    1.9      0.0    1.1     0.0        2.4   0.0
+Toy Plane Assembly      71.0     70.0  63.5  55.0            24.0      10.0   11.0          0.0   10.0      0.0   13.5     0.0       10.0   0.0
+iPhone into Box         89.0     65.0 91.0   55.0            67.5       5.0   49.5         15.0   17.0      0.0   38.0     0.0       19.5   0.0
+Fixed-Pipe Fittings     70.0     70.0 90.0 90.0              30.0      30.0   35.0         35.0   45.0     45.0   35.0    35.0        0.0   0.0
+Wire into Breaker       98.5     95.0 100.0 100.0            30.0      30.0   17.0          0.0   18.5      5.0   10.0    10.0        8.0   0.0
+
+Average                 81.3     71.7     77.9   65.0        28.8      12.5   22.6          8.3   15.5      8.3   16.5     7.5        6.7   0.0
+
+(b) Dexterous-hand long-horizon post-training benchmark
+
+                                                                       GR00T 2
+                                         GR00T 2                                                    GR00T 1.7                    𝜋0.5
+                                                                        Turbo
+Task                                    Prog.           SR           Prog.            SR           Prog.          SR        Prog.           SR
+
+Make Shipping Label                     78.0        60.0             73.0        60.0               41.0          5.0         16.0          0.0
+Flashlight Battery Replacement          86.0        55.0             49.0        15.0               34.0          0.0         41.0          0.0
+GB300 Memory                            96.0        85.0             81.0        50.0               43.0          0.0         55.0          0.0
+Truck Assembly                          98.0        65.0             43.0         5.0                0.0          0.0          0.0          0.0
+Crude Salt Filtering                    98.0        85.0             88.0        65.0               17.0          0.0         14.0          0.0
+Vitamin C Test                          86.0        75.0             67.0        25.0                9.0          0.0         14.0          0.0
+Microscope                              64.0        55.0             33.0        20.0               10.0          0.0          9.0          0.0
+
+Average                                 86.6        68.6             62.0         34.3              22.0          0.7         21.3          0.0
+
+
+
+
+Figure 3: Representative tasks from the two post-training benchmarks. Hot Wheels Assembly on YAM (top) and Make
+Shipping Label on Dexter (bottom).
+
+
+that falls short on precision within an otherwise correct execution. The ability grows with data, and zero-shot
+success on new Dexter tasks more than doubles as the amount of human video in pretraining increases (Fig. 10).
+On broader zero-shot suites for YAM and Dexter, GR00T 2 also leads the VLA baselines in success rate (Tabs. 2
+and 3).
+Few-shot mastery with minutes of robot data. Because the pretrained model already knows how to approach
+
+
+
+                                                                                                                                             7
+                                            GR00T 2: Scaling Robot Foundation Models for Generalization, Dexterity, and Adaptation
+
+
+
+                        Human → dexterous hand                  DexUMI → dexterous hand                       UMI → YAM                          Human → sim → real
+                          Mocap glove · Sharpa hands              Exoskeleton · XHAND hands           Handheld gripper · YAM arms         One video per task · Sharpa hands
+
+
+
+
+Demonstration
+                                                                                                                                                         →
+
+                                                                                                                                         Human video        Simulation
+
+
+
+
+GR00T 2 on robot
+
+
+
+              100                                                                                                                          90
+                                                                                                                           86
+
+
+
+
+Success rate (%)
+                                                                           80         75                                                                           80
+                        65                                       60                                  60
+                                                    50                                                          50
+                   50
+                                 30                                                                                             28
+                                                                                                                                                       20
+                                           10            5
+                             0        0         0                      0        0          0              0          0                            0          0           0
+                   0
+                        Filter   Dropper    Slide Package        Banana    Scoop        Fire           Truck     NIST     Conveyor         Hammer      Handover   Brushing
+                        Paper              Dabbing Toss          Yogurt    Granola   Chemistry       Assembly    Board    Sorting*           Nail        Flask     Trash
+
+                                                             GR00T 2            Best baseline    No teleoperated demonstrations of these tasks
+
+
+Figure 4: Learning new tasks without teleoperation. Each column is one way to demonstrate a task without the target
+robot. It shows a demonstration, a GR00T 2 rollout on the robot, and the real-robot success rate per task. Best baseline is
+the highest success among the other models evaluated on that task (GR00T 1.7 (NVIDIA, 2026a), 𝜋0.5 (Physical Intelligence
+et al., 2025), LingBot-VA (Li et al., 2026)). *For Conveyor Sorting, the bars show the share of the 50 conveyor items sorted,
+not the share of successful trials. Full results are in Fig. 27 and Tabs. 4, 5 and 7.
+
+
+these tasks, very little robot data closes the gap. One teleoperated episode per task lifts success to 71%, and
+five episodes, under three minutes of robot data, lift it to 95%, with 37 of the 50 tasks succeeding in every
+trial. The 50 tasks were chosen among those the model learns with five episodes (at least 80% success), so the
+five-episode rate is high partly by construction. Each adaptation is a LoRA fine-tune of about 30 minutes on a
+single RTX 5090, and merging the adapter into the weights means the adapted model is served exactly like the
+pretrained one (Sec. A.3).
+Long-horizon tasks that demand precision and dexterity. The same pretraining pays off when GR00T 2 is
+post-trained on long-horizon tasks that chain many precise steps. On six YAM tasks, from assembling a toy car
+end to end in 24 stages to inserting a wire into a breaker, GR00T 2 reaches 71.7% average success, compared
+with at most 12.5% for the VLA and WAM baselines (Tab. 1a and Fig. 3). On seven dexterous-hand tasks, such
+as filtering crude salt, testing for vitamin C, and swapping a GB300 memory module, GR00T 2 reaches 68.6%
+average success, compared with at most 0.7% for GR00T 1.7 and 𝜋0.5 (Tab. 1b). Completing such tasks end to
+end, with dexterous hands and tight tolerances at every step, is a new capability for a generalist robot model.
+All tasks of both benchmarks are shown in Sec. A.1.
+GR00T 2 Turbo. Although Turbo is designed primarily for onboard deployment on edge devices (Sec. 2), it
+still retains much of GR00T 2 capability. In zero-shot evaluation, it stays close to GR00T 2 on YAM and ranks
+second among the evaluated models on Dexter (Tabs. 2 and 3). After post-training it gives up some success,
+reaching 65.0% on the YAM tasks and 34.3% on the dexterous-hand tasks, still well above the baselines. Fig. 23
+shows the resulting trade-off between task progress and inference latency.
+
+3.2. X-Adaptability: Cross-Embodiment Skill Transfer
+GR00T 2 can learn a new task on a robot without any task-specific teleoperated demonstration. Fig. 4
+summarizes four ways to teach it such a task, from demonstrations recorded with a motion-capture glove, the
+DexUMI exoskeleton, or the handheld Gripper UMI, and from a single human video expanded in simulation.
+
+
+                                                                                                                                                                              8
+                   GR00T 2: Scaling Robot Foundation Models for Generalization, Dexterity, and Adaptation
+
+
+
+For the glove and Gripper UMI demonstrations, which come from a different embodiment than the robot, one
+recipe bridges the gap. Demonstrations recorded without the robot specify the task, task-agnostic play data
+from the target robot specify the embodiment, and cross-embodiment pretraining connects the two. Without
+this pretraining, the same post-training data yield substantially lower performance (Sec. B.1.5). For the glove,
+DexUMI, and Gripper UMI demonstrations, the baselines are post-trained on the same data as GR00T 2 (Fig. 27
+and Tabs. 4 and 5). When teleoperated demonstrations are available, they complement rather than replace the
+human data (App. B).
+Transfer to dexterous hands. Two devices record dexterous demonstrations without the robot: a motion-
+capture glove worn on the bare hand, and the DexUMI exoskeleton, which replicates the robot hand’s joints and
+contact surfaces and records fingertip forces in the hand’s tactile format. With the glove, human demonstrations
+are recorded with head and wrist cameras, retargeted offline to the robot hand, and co-trained with play
+data of the target robot (Sec. B.1.3). On a bimanual robot with Sharpa hands, this recipe teaches precise
+chemistry-lab tasks and a fast conveyor toss that cannot be demonstrated through teleoperation. On one task,
+GR00T 2 trained without any teleoperated demonstration outperforms a baseline without cross-embodiment
+pretraining that receives ten (Fig. 27). DexUMI extends robot-free collection to tasks that depend on force and
+compliance: from its force recordings, GR00T 2 learns to predict the force to apply along with the motion, and
+the hand’s stiffness adapts to that force. Trained on DexUMI demonstrations alone, GR00T 2 slices a banana
+and unscrews a jar in a long-horizon breakfast task and lights a lamp with a struck match, with 60 to 80%
+success per task, whereas GR00T 1.7 and 𝜋0.5 complete none (Fig. 15 and Tab. 5). DexUMI demonstrations
+also transfer to a hand that the exoskeleton does not replicate. After retargeting to the 22-DoF Sharpa hand,
+GR00T 2 succeeds in 60% of trials on microscope slide dabbing and 65% on conveyor package selection and
+tossing, and the same two baselines succeed in none (Tab. 6).
+Transfer to parallel-gripper robots. Demonstrations are recorded with the handheld Gripper UMI, in robot
+format through robot-style wrist cameras and a width encoder, and deployed on YAM, a robot that shares
+neither its cameras, nor its gripper, nor its workspace. GR00T 2 co-trains them with task-agnostic YAM play
+data that supply the embodiment and aligns them to YAM’s camera geometry and action space (Sec. 4.4.2).
+With 41 to 75 demonstrations per task and no teleoperation, GR00T 2 completes a long-horizon toy assembly
+and a board disassembly in 60% and 50% of trials and sorts 86% of the items off a moving conveyor, whereas
+the baselines complete neither long-horizon task (Tab. 4). As few as 10 to 20 demonstrations yield end-to-end
+success. Collection is thus decoupled from the robot, and human-speed motion makes dynamic skills learnable.
+Transfer from a single human video through simulation. From one human video, we reconstruct the objects
+and the hand-object motion, train an RL expert in simulation, and fine-tune GR00T 2 on visually randomized
+rollouts of that expert. The resulting policy transfers zero-shot to the real robot and drives a nail in 9 of 10
+trials, whereas GR00T 1.7 and 𝜋0.5 complete none of the real-world tasks (Sec. B.5).
+
+3.3. Robust Deployment through Reinforcement Learning
+Supervised fine-tuning (SFT) equips GR00T 2 with manipulation skills, but contact-rich tasks remain sensitive
+to small errors in alignment and physical interaction. We apply real-world RL on top of SFT policy to further
+improve the reliability of GR00T 2 through real-world interaction and task-level success feedback.
+We evaluate four precision manipulation tasks: fixed-pipe fittings (the task of Tab. 1a, started from harder
+fitting poses), finger placement, cable insertion, and charger insertion (Fig. 5). We directly optimize GR00T 2
+using Group Relative Policy Optimization (GRPO) (Shao et al., 2024) and further train on successful GRPO
+rollouts through GRPO-induced self-imitation. We also compare against residual RL, which learns corrections
+on top of a frozen GR00T 2 policy (Sec. 4.1).
+GRPO-induced self-imitation achieves 88%, 98%, 94%, and 96% success on the four tasks, respectively,
+compared with 40 to 76% after SFT. Residual RL also improves performance, but without updating the
+underlying GR00T 2 model (Fig. 5). These results show that real-world RL improves the reliability of GR00T 2
+
+
+                                                                                                              9
+                                                         GR00T 2: Scaling Robot Foundation Models for Generalization, Dexterity, and Adaptation
+
+
+
+                                    SFT             Residual RL              GRPO            GRPO-induced self-imitation
+                                                                                                           98                                        92    94                                   94     96
+                   100                                       86         88                      84                                      82
+                                                   76                                                72                       76
+                                     66                                                                                                                                                    70
+                    80
+
+
+
+
+Success rate (%)
+                                                                                       58
+
+                    60                                                                                                                                                        40
+
+                    40
+
+
+                    20
+
+
+                       0
+                                     Fixed-Pipe Fittings*                               Finger Placement*                           Cable Insertion                             Charger Insertion
+
+Figure 5: Real-robot post-training on four contact-rich manipulation tasks. Labels report success rates, and whiskers
+are 95% Wilson intervals over 50 trials per bar. Bold marks each task’s best method. GRPO and GRPO-induced self-imitation
+update GR00T 2 directly, whereas residual RL learns a correction policy on top of a frozen GR00T 2. GRPO-induced
+self-imitation trains on successful GRPO rollouts. * Evaluated with CPS sampling noise.
+
+                                                                                                                                                           streamed · 30 Hz
+
+
+                   1   Agent                                                 2   MCP Server                     3    Execution                                   4   Environment                Real   Sim
+                                                                                                                                               ···
+
+                           “Assemble the toy tractor.”
+                                                                                 WAM
+                                                                                 wam_act
+                                                                                                                              π WAM
+                                                                                 stop_wam
+                                      Observe
+                                                                                 OBSERVE                        BACKEND
+                                                                                 get_image
+                           Verify                       Reason                   get_robot_state                        WAM Server           GR00T 2
+                                                                                 localize_object
+
+                                                                                 CaP                                CaP Providers    SAM3    cuRobo
+                                          Act                                    move_to_pose
+                                                                                 move_to_joints                                                                         Controller
+                                                                                 set_gripper                                                                            joint PD control
+                                                                                                                CaP program                          </>
+                   AGENTS.md         SKILL.md             task.md
+                                                                                 drop_any_object
+                                                                                                                p = localize_object("wheel")
+                                                                                 flip_tractor
+                                                                                                                move_to_pose(p.grasp)                                   Robot Service
+                                                                                 pull_battatplane_tail
+                                                                                                                set_gripper(0.0)                                        cameras · arms
+                                                                                 ···
+               system prompt              skills         task context
+
+
+
+                                                                                                                           on demand · per tool call
+
+
+
+Figure 6: Agentic runtime architecture. System 2 monitors execution and invokes GR00T 2 and CaP tools through an
+observe-reason-act-verify loop. GR00T 2 or ASPIRE-generated program serves as execution backends with shared execution
+environment interface.
+
+
+on contact-rich manipulation. The resulting skills can be integrated into agentic execution for more complex,
+long-horizon tasks (Sec. 3.4), as we will introduce next.
+
+3.4. Agentic GR00T 2
+A frontier multimodal agent and GR00T 2 address complementary parts of a task. The agent determines what to
+do: it decomposes long tasks, monitors progress, and writes code. GR00T 2 determines how to do it, performing
+the contact-rich manipulation that is difficult to script. The agent serves as System 2 and calls GR00T 2 as a tool
+alongside camera, state, and CaP tools (Fig. 6). It supports GR00T 2 in four ways. Augment: for tasks that need
+memory or explicit reasoning, the agent runs a task-level program that calls GR00T 2 for each manipulation
+step. Together with RL post-training, this puts GR00T 2 first on both the RoboCasa365 (Nasiriany et al., 2026)
+and RoboDojo (Chen et al., 2026a) leaderboards (Tab. 19). Assist: on real robots, the agent watches GR00T 2
+and, when it sees a dropped part or stalled progress, repairs the state with a CaP skill and hands control back,
+lifting a post-trained GR00T 2 to near-perfect success on three cluttered assembly tasks (Fig. 7). Guide: beyond
+language, the agent can steer GR00T 2 with visual targets through the WAM API, described below. Improve:
+an autonomous research agent discovered the basis of the RL recipe we use to post-train GR00T 2 (Sec. 4.1
+
+
+
+                                                                                                                                                                                                             10
+                                         GR00T 2: Scaling Robot Foundation Models for Generalization, Dexterity, and Adaptation
+
+
+                         (a) Long-horizon assembly (100 trials)                                           (b) Repeated insertion (20 trials)
+                             SFT         SFT + DAgger          SFT + DAgger + Agent                           SFT + Agent         SFT + RL + Agent
+
+                                           98                        97                       97                                       100
+                   100                                                                                               95
+                                    84
+                    80                                                                   78
+
+
+
+
+Success rate (%)
+                              69                                71
+                                                                                                                60
+                    60
+                                                          51
+
+                    40
+                                                                                   23
+                    20
+                                                                                                                                  10
+
+                     0
+                                Toy Plane                 Toy Tractor               Hot Wheels              Multi-Cable      Multi-Charger
+
+Figure 7: Agentic assistance on real robots. (a) Successful trials out of 100 per method on three long-horizon assembly
+tasks on YAM. Before every trial a person randomly dumps all parts onto the table, a cluttered starting configuration never
+seen in post-training and much harder than the arranged layouts of Tab. 1a. A trial that needed human help counts as
+a failure. The agent lifts GR00T 2 after SFT + DAgger to at least 97% on all three tasks. (b) Full-task success over 20
+repeated-insertion episodes with SFT and RL-post-trained GR00T 2 in the same agentic framework. RL post-training raises
+success from 60% to 95% on multi-cable and from 10% to 100% on multi-charger insertion.
+
+
+and F.2). We therefore recommend assigning manipulation to GR00T 2 and providing the agent with the task
+structure, success checks, and a small library of recovery skills (Sec. G.1).
+Agentic Skill Composition and Recovery with Code-as-Policy. In simulation, we use ASPIRE (Lu et al., 2026)
+to discover task-level programs that compose GR00T 2 calls with perception, reasoning, and CaP primitives.
+These programs use GR00T 2 as a manipulation tool within more complex task sequences, while System 2
+monitors execution and invokes online CaP recovery when unexpected failures occur. Combined with RL
+post-training, this approach achieves 88.0% success on RoboCasa365 and 75.8% on RoboDojo, evaluated on
+one of its three official layout banks, the highest reported success rates on both leaderboards as of November 6,
+2026 (Tab. 19).
+On physical robots, GR00T 2 remains the primary executor, while the agent monitors progress and invokes CaP
+skills for targeted recovery. We stress-test this approach on three long-horizon assembly tasks on YAM, a Toy
+Plane, a Toy Tractor, and a Hot Wheels car (Fig. 55), under conditions much harder than the post-training
+benchmark in Tab. 1a. There, every trial starts from an arranged layout of the parts. Here, a person randomly
+dumps all parts onto the table before each trial, so every trial starts from a new cluttered configuration, with
+overlapping parts and arbitrary poses never seen in post-training, and each method runs 100 trials. The robot
+must find the parts, assemble them in order, fasten them with a toy drill, and recover from its own errors, all
+within a single trial that typically lasts 5 to 14 minutes. These numbers therefore measure robustness and are
+not directly comparable with Tab. 1a. For Hot Wheels Assembly, the benchmark reports 85% success from its
+fixed layout, while the SFT policy completes 23 of 100 trials once the parts are dumped. DAgger (Ross et al.,
+2011) raises the three tasks to 84, 71, and 78 successes out of 100, and with the agent repairing dropped
+parts and stalls before handing control back to GR00T 2, hybrid execution reaches 98, 97, and 97 successes
+out of 100 trials (Fig. 7). These results bring GR00T 2 closer to deployment-level reliability, with robust
+long-horizon manipulation from highly variable, unseen initial configurations.
+Building on the RL-trained precision skills from Sec. 3.3, agentic execution composes these skills into longer
+tasks. In repeated cable and charger insertion, the robot must consecutively insert five Ethernet cables into a
+network switch or five chargers into selected outlets (Fig. 55). CaP handles object localization, grasping, and
+positioning, while RL-trained GR00T 2 performs the precision-critical insertions. The agent coordinates the
+sequence, verifies each insertion, and invokes CaP recovery when needed. Within the same agentic framework,
+replacing SFT policies with RL-post-trained GR00T 2 improves full-task success from 12/20 to 19/20 for cable
+
+
+                                                                                                                                                 11
+                            GR00T 2: Scaling Robot Foundation Models for Generalization, Dexterity, and Adaptation
+
+
+
+insertion and from 2/20 to 20/20 for charger insertion (Fig. 7).
+Agentic Steering. With the agent acting as System 2 and GR00T 2 as System 1, a central design question is
+what the interface between them should be, that is, what the agent sends to GR00T 2 for each step; we refer to
+this interface as the WAM API. Language is the natural choice, but grounding it in the scene is hard: GR00T 2
+must itself find the objects and locations that an instruction refers to. We therefore explore guiding GR00T 2
+with image-space grasp and release points in addition to language: the points specify directly which object
+to manipulate, where to place it, and which arm acts. We mid-train GR00T 2 to condition on these points,
+rendered as arm-colored markers on its camera image alongside the language instruction. Point supervision
+is generated automatically from the gripper and hand states in existing demonstrations, requiring neither
+additional manual annotation nor new robot demonstrations. Once mid-trained, GR00T 2 can be steered by
+agent-generated points without task-specific policy fine-tuning. During execution, GR00T 2 generates the
+robot’s actions, while the agent monitors progress and revises its guidance to advance, retry, or finish. In these
+experiments, the agent is used zero-shot, with one conversation per episode (Sec. G.2).
+
+      (a) Visual steering                              (b) Short horizon (2 benchmarks)                                  (c) Long horizon (3 benchmarks)
+      YAM
+                                                                               100
+
+
+
+
+                                                                               80                         76.8
+
+
+
+
+                                                       Mean success rate (%)
+                                                                               60
+                                                                                                                                                  53.3
+      Dexter
+                                                                                                  44.2
+                                                                               40         35.7
+
+
+
+
+                                                                               20
+
+
+
+
+                                                                                                                                 0.0     1.7
+                                                                                 0
+        Grasp      Release      Arm:   Left    Right                            GR00T 2     GR00T 2 + Agent (language)     GR00T 2 + Agent (language + visual)
+
+
+Figure 8: Higher average success with visual steering on both evaluation tiers. (a) Left- and right-hand steering
+examples. Circles mark grasp targets and crosses mark release targets, and colors identify the acting arm. (b, c) Equal-
+weight means of benchmark success rates, not pooled trial rates. Short horizon averages two benchmarks (144 and 64 trials
+per configuration; the Dexter benchmark was obtained with an earlier implementation of the model), and long horizon
+averages three robot-task combinations: trash sorting on both robots (20 episodes each) and a YAM-only board-disassembly
+stress test (10 episodes). Robot-specific protocols and results are given in Sec. G.2.
+
+We evaluate this approach on two embodiments, YAM and Dexter, in two tiers: short-horizon benchmarks test
+only a few steps instruction following, while long-horizon benchmarks require completing an entire trash-sorting
+task on both robots, plus board disassembly on YAM as a stress test. Short-horizon instructions are organized
+by reference type to assess distinct grounding requirements (nominal, spatial, ordinal, cardinal, arm, and
+object-exclusion references) and execution requirements (action and grasp references). Sec. G.2 details this
+taxonomy together with the evaluation protocols, individual benchmarks, and instruction-category breakdowns.
+We compare three settings: GR00T 2 given the original task instruction, GR00T 2 given the agent’s language
+guidance, and the point-conditioned GR00T 2 given the agent’s language guidance and visual markers. Visual
+steering achieves the highest average success in both tiers: benchmark-mean success of 76.8% on short-horizon
+tasks and mean full-task success of 53.3% on long-horizon tasks, compared with 44.2% and 1.7% using the
+agent’s language guidance alone (Fig. 8).
+Despite these gains, grasp and release points cannot convey every task requirement. The markers specify spatial
+
+
+                                                                                                                                                                 12
+                                  GR00T 2: Scaling Robot Foundation Models for Generalization, Dexterity, and Adaptation
+
+
+                                                                                        runs onboard · NVIDIA Jetson AGX Thor
+                                      optional
+
+
+        1    Reasoning model                 S2            2     GR00T 2 Turbo                         S1               3    SONIC                          S0                4   Humanoid
+
+                                                                                                             latent                                                   joint
+                                                   WAM                                                      tokens                                                   angles
+              “Clear the table into the bins.”     API           World-action model                           1 Hz             Whole-body controller                 50 Hz
+                                                                                                                               motion tracking · 50 Hz ·
+                                                             edge-deployable · replans at 1 Hz
+                                                                                                                               balance and contact
+
+
+               Task + target                                                             ···
+                                                                                                                       INTERFACE
+               picks the task; marks the                 1.6 s action chunk · 80 latent whole-body
+                                                                                                                                                                              Unitree G1
+               object or drop location                   tokens + gripper widths
+                                                           INPUTS                                                           in: latent token +
+               Monitor                                                            head + two wrist
+                                                                                                                            proprioception                                         Controller
+                                                             RGB
+                                                                                         cameras
+               watches execution; re-plans                                                                                                                                         joint PD control, 1000 Hz
+               on failure                                                           joint positions,
+                                                                                                                            out: joint angles
+                                                             Proprioception
+                                                                                             50 Hz
+                                                                                                                                                                                   Sensors
+       any S2: VLM agent, scripted task plan, or             Language prompt
+                                                                                           from S2                          50 Hz                                                  head + wrist cameras · joint
+                     operator                                                                                                                                                      encoders
+
+                                                                                                                                                     proprioception · 50 Hz
+
+                                                                                               RGB images + proprioception · streamed
+
+
+
+
+Figure 9: Three-level stack for whole-body loco-manipulation. An optional reasoning model (S2) picks the task and the
+prompt. GR00T 2 Turbo (S1) reads RGB images and proprioception and predicts 1.6 s chunks of SONIC whole-body motion
+tokens at about 1 Hz. SONIC (S0) decodes the tokens into joint position targets at 50 Hz, which the robot’s PD controller
+tracks at 1000 Hz. S1 runs onboard on an NVIDIA Jetson AGX Thor, and S0 runs onboard on an NVIDIA Jetson Orin NX.
+
+
+targets, not a complete manipulation strategy: requirements such as placing an object on its side, pouring, or
+scooping still depend on language and GR00T 2’s learned skills. Richer guidance, including target 6D object
+poses, goal images, or affordance-based marking, could extend this interface.
+
+3.5. Humanoid Loco-Manipulation
+Bipedal humanoid loco-manipulation poses additional challenges to robotic foundation models: the robot
+must stay balanced through every motion, which requires high-frequency whole-body control at 50 Hz. We
+bring GR00T 2 to this setting by pairing GR00T 2 Turbo with SONIC (Luo et al., 2026), a learned whole-body
+controller (Fig. 9). Turbo uses camera observations and proprioception to choose what motion to take next, and
+SONIC turns that desired motion into joint commands for execution. Both models run onboard the humanoid
+using a multi-layer stack (Sec. H.1).
+Whole-body Loco-manipulation. Using SONIC’s whole-body motion latent interface as its action space,
+GR00T 2 Turbo coordinates the humanoid’s entire body for locomotion and manipulation. We evaluate the
+resulting policies on four real-world long horizon whole-body tasks. In popcorn serving, the robot holds a cup
+while scooping and pouring with the other hand. In table clean-up, it repeatedly grasps diverse objects, walks
+to the trash bins, and places them inside. In ground pick-up, it bends down to pick up diverse objects. In
+whole-body cleaning, it picks up a cup from the floor, wipes a spill with a towel under its foot, then kneels to
+retrieve and discard the towel. On popcorn serving, Turbo completes all 48 trials, compared with 83.3% for
+GR00T 1.7 using the same demonstrations and controller. Each trial requires two filled cups. Detailed results
+for all four real-world tasks are reported in Sec. H.2 and Tab. 25.
+Sim-and-real for Loco-manipulation. Whole-body teleoperation data is costly to collect, so we design a
+motion-centric real-to-sim pipeline that turns each recorded motion into demonstrations across varied scenes.
+We replay the motion through SONIC in simulation, keeping it fixed while fitting table and object placements
+so that the robot completes the pick, then render successful rollouts in diverse rooms. These demonstrations
+expand visual diversity while preserving the real robot’s controller and action representation (Sec. H.3). The
+WAM makes better use of this simulated data than the VLA baseline on out-of-distribution table pick-and-place:
+starting from the same 6.7% success with real data alone, co-training raises GR00T 2 Turbo to 63.3%, compared
+with 40.0% for GR00T 1.7, over 30 trials each (Tab. 26). Reusing real motions in simulation therefore provides a
+practical way to improve the WAM’s generalization without collecting additional teleoperated demonstrations.
+
+
+                                                                                                                                                                                                                  13
+                   GR00T 2: Scaling Robot Foundation Models for Generalization, Dexterity, and Adaptation
+
+
+
+4. How We Made GR00T 2
+This section describes the methods behind GR00T 2, focusing on the key design decisions, while the appendix
+provides the full details. Sec. 4.1 presents the training recipe, from pretraining to RL post-training, and Sec. 4.2
+the training data. Sec. 4.3 describes how we benchmark checkpoints against each other on real robots. Sec. 4.4
+describes the capture devices and pipelines for learning without teleoperation, Sec. 4.5 the simulation and
+evaluation framework, Sec. 4.6 real-time deployment, and Sec. 4.7 the training and data infrastructure.
+
+4.1. Training: Pre-Training and RL Post-Training
+Pre-training. We initialize GR00T 2 from the pretrained Cosmos-Predict2.5-2B video diffusion transformer.
+To turn this video model into a general-purpose robot policy, we need it both to understand how physical
+interactions unfold and to connect those dynamics to actions across embodiments. We therefore train on a
+diverse mixture of human and robot experience in three stages: we first adapt the video model to embodied
+interactions, then learn video and actions jointly, and finally place greater emphasis on robot data. This
+progression lets us draw on the breadth of human experience while focusing the resulting model on robot
+execution.
+Stage 1: Single-view video pre-training. We first adapt the pretrained video model to embodied visual
+experience from egocentric human video, supplemented by robot data. Human demonstrations provide diverse
+examples of hands interacting with objects across tasks and environments, while robot observations introduce
+the visual conditions of robot manipulation. Each training example uses a single camera view, and the model is
+trained to predict future video from the observation history. The goal is to establish a visual dynamics prior for
+embodied interaction before training the model to generate actions.
+Stage 2: Multi-view video-action training. We next connect the learned visual dynamics to actions by
+extending the model with embodiment-specific state and action modules. We jointly train video and action
+prediction on human and robot data, using multi-view observations where available to capture interactions
+from complementary viewpoints. Robot trajectories provide embodiment-specific actions, while human demon-
+strations provide tracked hand-pose trajectories as action supervision. Video and action are trained with
+flow-matching objectives, and the action loss is applied when valid action supervision is available. The mixture
+increases the contribution of YAM and dexterous-hand sources while retaining substantial egocentric human
+data. Joint training is intended to bring experience from these different embodiments into a shared model that
+can predict both the evolution of a scene and actions for the target robot.
+Stage 3: Robot-upweighted video-action training. A broad mixture of human and robot data provides
+diverse physical experience, but the final policy must generate actions in the robot’s own action space. We
+therefore continue joint video-action training with a stronger emphasis on robot demonstrations, particularly
+YAM, while retaining dexterous-hand, egocentric human, and other data sources. This reweighting focuses
+training on the observations and control required for robot execution while continuing to draw on the broader
+experience acquired in the earlier stages.
+The resulting model serves as the starting point for the task-specific adaptation and RL post-training described
+below. Details of the data sources are provided in Sec. 4.2.
+RL post-training. To explore, we replace GR00T 2’s deterministic action denoising with Coefficients-Preserving
+Sampling (CPS) (Wang and Yu, 2025) during rollouts, injecting noise only into the action denoising process
+while video denoising stays deterministic. Policy updates use a group-relative objective in the style of GRPO
+whose baseline also remembers each context’s past returns, so that groups in which every attempt succeeds, or
+every attempt fails, still carry a learning signal. The basis of this recipe was found by AutoRL, a research agent
+that iterated on the algorithm in simulation for about 35 days (Sec. F.2). Two complementary approaches
+are GRPO-induced self-imitation, which fine-tunes GR00T 2 on successful GRPO rollouts, and residual RL,
+which learns a small corrective policy on top of a frozen GR00T 2 (Sec. F.1.2). For RL without the real robot,
+we adapt the DreamDojo world model to the target tasks from rollouts of the initial policy and use a learned
+
+
+                                                                                                                 14
+                            GR00T 2: Scaling Robot Foundation Models for Generalization, Dexterity, and Adaptation
+
+
+
+        Real robot                                                                           Video rollout
+
+        Success rate (%)                     Task progress (%)                               Success rate (%)                     Task progress (%)
+                                        80                                              60                                   90
+                                  41                                                                                   51
+                                                                           70
+   40                                   70                                                                                                                   77
+                                                                                        50                                   80
+                                                                  61                                                                                  72
+                           28                          58
+                  27                                                                                            38
+   30                                   60                                              40                                   70             66
+                                                                                                          33                        64
+                                               50                                              30
+          18
+   20                                   50                                              30                                   60
+
+
+   10
+          0      1%        10%   100%          0      1%         10%      100%                 0          1%    10%   100%          0      1%         10%   100%
+                                                                 Human video in pretraining (log scale)
+
+
+
+Figure 10: Scaling human video in pretraining. Human-1M data pre-training (0%, 1%, 10%, or 100%) post-trained
+with Dexter teleoperation data and evaluated on 72 tasks. Real Robot: 3 rollout episodes per task. An operator grades
+binary success and a vision-language model scores task progress. Video rollout: autoregressive video generation from 3
+recorded initial configurations per task and 10 generation seeds per configuration. A vision-language model judges success
+and scores task progress. We report % progress and success rate with ±1 SEM bars.
+
+
+completion detector as the reward (Sec. F.5). An online infrastructure coordinates robot interaction, training,
+and evaluation, and retains experience across interruptions (Sec. F.3).
+
+4.2. Data
+GR00T 2 pretrains on human demonstrations, UMI demonstrations, and robot teleoperation, which play
+complementary roles. Egocentric human video from Human-1M provides broad coverage of physical interactions
+and environments, and robot performance grows with the amount of it (Sec. 4.2.1). UMI provides scalable,
+task-focused demonstrations with robot-compatible action representations (Sec. 4.2.2), and teleoperation
+grounds the model in embodiment-specific behaviors and executable actions (Sec. 4.2.3). Finally, Flora, our
+data engine, labels the subtask annotation of human and robot episodes at this scale (Sec. 4.2.4). App. C details
+the collection, processing, and curation of each source, and Sec. 4.7.3 describes the pipeline that converts raw
+data into training-ready format.
+
+4.2.1. Human Data
+For a world action model, egocentric human experience captures the motion and visual diversity needed to
+achieve strong coverage across objects, affordances, tasks, scenes and environments. GR00T 2 leverages 402,730
+hours across approximately 13.75 million episodes, spanning over 51,500 unique collectors and 123,000 scenes
+of high quality egocentric data filtered from Human-1M. The dataset is a 1 million hour egocentric human
+experience dataset of proficient human labor sensorized with egocentric cameras, dense language annotations,
+SLAM and 3D hand pose keypoints curated by NVIDIA, spanning demonstrations in both natural “in-the-wild”
+and controlled studio environments. Additional details on filters and dataset composition in Sec. C.1.
+In-lab human data. To enable direct transfer to the target robot embodiment, GR00T 2 contains 3,000 hours
+of robot-aligned studio data, collected under a stricter protocol. The visual gap is mitigated by matching the
+egocentric and wrist camera viewpoints, while the motion gap is mitigated by matching demonstration speed
+with the robot. This data is demonstration-style where each task is demonstrated hundreds of times with a
+repeatable strategy (Sec. C.1.3).
+Human Data Scaling. Under the same GR00T 2 architecture, training recipe and post-training teleoperation
+data, we ablate four Human-1M data pre-training scales (0%, 1%, 10%, or 100%). We control training length
+in epochs. The 1%, 10%, and 100% models start from a shared human-video pretraining checkpoint and
+are each pretrained for about 0.5 epoch of their share, while the 0% model skips human-video pretraining
+
+
+                                                                                                                                                                   15
+                   GR00T 2: Scaling Robot Foundation Models for Generalization, Dexterity, and Adaptation
+
+
+
+entirely. The step from 0% to 1% therefore also includes this shared stage, and the 1%, 10%, and 100% models
+differ only in their share of human data and the matching training length. Here one epoch means the model
+passes once over every step of every 30 Hz trajectory. Every model is then trained on the same target Dexter
+teleoperation data, co-trained with its human share, for the same 3 epochs of that robot data. We measure real
+robot and video rollout success rate (%) and task progress (%) on 72 Dexter tasks, 22 out-of-distribution tasks
+with new kinds of instructions and 50 tasks absent from Dexter’s training data. Across all four settings, we
+see positive scaling in performance as human data is scaled (Fig. 10). Real robot success rates increase from
+18% to 41% from 0% human data pre-training to 100%. Video rollout success rates similarly increase from
+30% to 51%. Together, these results show that what GR00T 2 learns from human video transfers to the robot.
+With the robot data held fixed, pretraining on all of the multi-view human video more than doubles real-robot
+success on new tasks, and none of the metrics levels off at 100%, which suggests that more human video will
+keep improving robot performance (Sec. C.1.5).
+
+4.2.2. UMI Data
+UMI-10K, recorded with the handheld UMI device (App. E), contributes 942k quality-controlled episodes and
+10,184 hours of bimanual parallel-gripper demonstrations across 2,897 tasks. The dataset is extremely diverse
+with no single task contributing more than 1.2% of hours. The instructions span 356 object categories and 49
+dextrous skills. The corpus covers 2,798 distinct skill-object combinations, including dynamic, articulated, and
+deformable manipulation that teleoperation rarely captures. Many tasks contain counterfactual pairs, which is
+aimed to improve policy instruction following (Sec. C.2).
+
+4.2.3. Teleoperation Data
+Cross-embodiment teleoperated demonstrations provide robot action supervision for GR00T 2. The pre-training
+mixture contains a total of 23.5k hours and 1.16M episodes of teleoperation data including:
+   • Bimanual YAM arms with parallel grippers (18.7k hours, including ABC-130k (XDOF, 2026)),
+   • Bimanual arms with Sharpa hands (2.9k hours),
+   • Bimanual arms with Wuji hands (1.3k hours),
+   • The Unitree G1 humanoid (275 hours),
+   • The single-arm Franka Panda from DROID (Khazatsky et al., 2024).
+Additional details are provided in Sec. C.3.
+
+4.2.4. Data Annotation with Flora
+GR00T 2 pretraining uses dense timestamped language annotations for language conditioning, filtering and
+rebalancing. GR00T 2 RL post-training additionally requires process rewards, while policy evaluation requires
+outcome labelling. At the scale of Human-1M and our robot corpora, human labeling is too slow and frontier API
+models are too expensive. To provide these dense labels, we leverage Flora (Leng et al., 2026), the data engine
+that annotates training and evaluation data for GR00T 2. Flora consists of three models that identify action
+boundaries, annotate each action with a self-contained imperative instruction, and generate outcome, dense,
+and rubric-based rewards. On WGO-Bench (Macrodata Labs, 2026), Flora achieves a temporal segmentation
+F1 of 50.3, compared to 46.0 for the next-best model, GPT-6 Astra (OpenAI, 2026). Additional details are
+provided in Sec. C.4.
+
+4.3. Real-World Benchmarking: Mapping the Hill We Climb
+Every GR00T 2 candidate earned its place in blinded head-to-head matches on real robots, accumulated
+into a single leaderboard that tells us which checkpoint is better, by how much, and how sure we can be.
+Why head-to-head. Real-robot evaluation is expensive, but its results accumulate, and months of evaluations
+are only worth keeping if they stay comparable. Absolute success rates do not: they drift with the station, the
+operator, the hardware, and the day, so a score from one session cannot be compared with a score from another.
+
+
+                                                                                                             16
+                                           GR00T 2: Scaling Robot Foundation Models for Generalization, Dexterity, and Adaptation
+
+
+
+                              Climbing the hill: YAM V2 suite
+
+                                 GR00T 2      GR00T 1.7
+                          0
+                                 Turbo        other
+                                 π0.5         best so far                       Figure 11: Mapping the hill we climb. Every checkpoint on
+                        −50
+
+
+
+
+ Elo vs. reference ★
+                                              90% CI (new bests)
+                                                                                the current YAM suite, rated relative to the A/B reference (⋆, the
+                       −100                                                     board’s top-rated checkpoint, here a GR00T 2 Turbo checkpoint)
+                                                                                and placed at the date it was saved. The line tracks the best
+                       −150
+                                                                                checkpoint so far, and bars are paired 90% bootstrap intervals for
+                       −200                                                     the checkpoints that set a new best. Evidence: the 6,035 blinded
+                                                                                A/B comparisons of this suite, from 122 campaigns.
+                       −250
+
+                       −300
+                                  Jul        Aug      Sep          Oct   Nov
+                                        checkpoint date (2026)
+
+
+
+
+A blinded A/B trial runs two to four checkpoints in randomized order on the same scene, by the same operator,
+within minutes, so the drift is shared and cancels in the comparison. GearArena, our real-robot leaderboard,
+pools every such trial. By the snapshot used here it held 195 A/B campaigns with 16,044 graded robot episodes
+and 11,767 pairwise comparisons, collected on 10 YAM stations by more than 20 operators between July and
+November 2026, rating 71 checkpoints.
+Tasks from first principles. We design evaluation tasks by asking what the robot should be able to do, then
+choosing tasks that expose those capabilities, and finally gauging them on real checkpoints: a task every
+checkpoint completes is archived, and one no checkpoint completes is shelved until models catch up, since
+neither separates anything. Two suites resulted: a first suite of general and dexterous manipulation tasks and
+the current suite of 38 language-following and motion-primitive tasks, each run with partial-credit rubrics.
+From matches to a map. Every pair of checkpoints in a trial forms one comparison, decided by the operator’s
+explicit ranking (equal grades count as ties). A Bradley-Terry model (Bradley and Terry, 1952), fit jointly to all
+comparisons, gives each checkpoint an Elo rating. Within each head-to-head, every task carries equal weight,
+and confidence intervals come from a bootstrap that resamples tasks rather than trials. Every new checkpoint
+is first matched against the A/B reference, the best-rated checkpoint on the board, which keeps all ratings on
+one connected scale (App. D).
+What it bought us. Arena turned close calls into decisions. GR00T 2 outrates 𝜋0.5 by 236 Elo (95% CI 171
+to 325), an expected 80% head-to-head win rate, and GR00T 1.7 by 95 Elo (CI 50 to 148), both in all 500
+bootstrap resamples (Tab. 13). On our YAM V2 task suite, which focuses on foundational skills such as language
+following and motion primitives (Tab. 2), GR00T 2 Turbo is statistically indistinguishable from GR00T 2 in skill
+while running each inference about three times faster (52 vs. 171 ms per served call on a GeForce RTX 5090
+workstation, Fig. 23). Over four months, the best checkpoint on the current suite climbed 206 Elo, from a June
+model that today’s top checkpoint would beat 77% of the time (Fig. 11). Simulated evaluations reproduce Elo
+ratings fit to blinded A/B trials of this kind with Pearson 𝑟 = 0.93 (Sec. 4.5.2). App. D details the task design,
+the rating model, the A/B infrastructure, and the full results.
+
+4.4. Learning without Teleoperation: Devices and Pipelines
+GR00T 2 learns a skill on a robot from demonstrations recorded without that robot (Sec. 3.2). In all four sources
+below, the demonstrations specify the task. For human motion capture and the Gripper UMI, whose devices
+differ from the robot, task-agnostic data from the target robot specify the embodiment, and cross-embodiment
+pretraining connects the two. The DexUMI exoskeleton replicates the robot hand it is built for, so on that
+hand its demonstrations need no robot play data (Sec. 4.4.3). Capture and conversion remove what can be
+removed before training, namely differences in camera geometry (Sec. C.1.3), kinematics, and action semantics
+
+
+
+                                                                                                                                               17
+                                           GR00T 2: Scaling Robot Foundation Models for Generalization, Dexterity, and Adaptation
+
+
+
+
+Figure 12: GR00T 2 learns new robot tasks from human demonstrations. (1) A person performs the task wearing
+GMSL head and wrist cameras at robot-matched poses, PICO controllers that track 6-DoF wrist poses, and Manus gloves
+that track finger joints. (2) Retargeting maps each wrist pose to the 7-DoF arm and each hand pose to the 22-DoF hand,
+and the video stays unmodified. (3) GR00T 2 co-trains on the retargeted human demonstrations and on robot data of other
+tasks: videos supervise video prediction, and human and robot actions train one shared action head. (4) On the robot,
+GR00T 2 takes the observation and the instruction, predicts a sequence of future frames, and outputs the actions the robot
+executes. No teleoperated demonstration of the new task enters training.
+
+
+(Sec. B.1.2), and GR00T 2 bridges the rest. Because it predicts future video jointly with actions, GR00T 2
+trained on such demonstrations together with robot data predicts the robot’s own hands and arms performing
+the demonstrated task (Figs. 13 and 14).
+
+4.4.1. Human Demonstrations with Motion Capture
+A person performs the task wearing head and wrist cameras at robot-matched poses, a motion-capture glove,
+and a 6-DoF tracker on each wrist (Fig. 12). With the head camera at the robot’s head-camera pose, the wrists
+are anchored in the robot base frame, and a closed-form inverse-kinematics solver (Chen et al., 2026b; Kong
+et al., 2026) retargets them offline to the 7-DoF arms and 22-DoF Sharpa hands, placing the robot fingertips at
+the human fingertips to preserve the pinch geometry. The video stays unmodified. At about 118,000 bimanual
+solves per second, the same solver also drives teleoperation, which collects task-agnostic play data on the target
+robot. One play pool, sampled 1:1 with the human demonstrations, serves every task (Sec. B.1.1 to B.1.3
+and C.3.1). For tasks that only humans demonstrated, GR00T 2 then predicts the robot’s own hands completing
+each step (Fig. 13).
+
+
+                        Filter Paper Setup                                                                             Dropper-to-Beaker Dispensing
+                                           1 Place filter    2 Secure it      3 Wet it                                                    1 Grasp pipette 2 Draw liquid    3 Dispense
+
+
+
+
+Human demo
+        training data                                                                          Human demo
+                                                                                                       training data
+
+
+
+                         real input                                                                                     real input
+
+GR00T 2 prediction                                                                             GR00T 2 prediction
+                                      0s            +9.2 s          +11.6 s          +19.8 s                                         0s          +11.8 s         +13.6 s         +17.6 s
+
+
+                        Microscope Slide Dabbing                                                                       Conveyor Package Tossing
+Figure 13: Human demonstrations         and GR00T
+                     1 Pick up swab 2 Dip in water
+                                                       2 predictions. Two tasks that only
+                                                   3 Dab slide
+                                                                                          humans demonstrated.
+                                                                                      1 Grasp parcel 2 Swing back
+                                                                                                                    Given one
+                                                                                                                  3 Toss into bin
+robot start frame and the instruction, GR00T 2 predicts the robot’s ego view. Times are measured from the start frame.
+
+Human demo
+        training data                                                                          Human demo
+                                                                                                       training data
+Human demonstrations (top rows) appear only in training. All four tasks are shown in Fig. 28.
+
+
+                         real input                                                                                     real input
+
+GR00T 2 prediction                                                                             GR00T 2 prediction
+                                      0s            +9.6 s          +10.8 s          +14.4 s                                         0s           +7.8 s          +8.2 s          +8.8 18
+                                                                                                                                                                                       s
+                    GR00T 2: Scaling Robot Foundation Models for Generalization, Dexterity, and Adaptation
+
+
+
+
+Figure 14: GR00T 2-generated future frames on YAM, without and with YAM co-training. Both models observe the
+same YAM top-camera frame (left) and predict eight future steps of Toy Dumptruck Assembly, a task demonstrated only
+with Gripper UMI. Trained on UMI data alone (top), GR00T 2 renders human arms and the blue UMI fingers entering
+the scene. Co-trained with task-agnostic YAM data (bottom), it renders YAM’s own arms. The co-training data supply the
+robot’s appearance as well as its action statistics.
+
+
+
+
+Figure 15: DexUMI demonstration and GR00T 2 rollout. Prepare Banana Yogurt, with keyframes numbered by subtask:
+a person demonstrating the task with the DexUMI exoskeletons (top) and a GR00T 2 rollout on a Tianji robot with XHAND1
+Pro-U hands (bottom). The task is demonstrated only with DexUMI. All three DexUMI tasks are shown in Fig. 30.
+
+
+4.4.2. Gripper UMI
+Gripper UMI is a handheld parallel gripper in the lineage of UMI (Chi et al., 2024). We use our open-source
+GEAR UMI (NVIDIA GEAR Team, 2026): its robot-style wrist cameras and width encoder record human
+demonstrations in robot coordinates without a robot (Sec. E.1), and it also yields the UMI-10K pretraining
+corpus (Sec. 4.2.2). A robot end-effector that reproduces the handheld’s cameras and fingers removes the
+sensing and gripper gaps by construction (Sec. E.2). For an off-the-shelf robot such as YAM, which shares
+none of them, three findings make the transfer work. (1) Co-training with task-agnostic YAM data closes the
+appearance and scene gap: GR00T 2 then predicts YAM’s arms performing the handheld-demonstrated task
+(Fig. 14). (2) The model absorbs appearance but not geometry, so the fisheye wrist view is re-rendered to
+imitate YAM’s wrist camera, and a rough match of field of view and viewing direction suffices. (3) Handheld
+actions are re-expressed in YAM’s action space and decoded by its own action head. With cross-embodiment
+pretraining, 41 to 75 handheld episodes per task reach high success rates, and 10 to 20 already yield end-to-end
+success. The rarest subskill, not the task length, sets this number (Sec. B.2 and E.3).
+
+4.4.3. DexUMI
+DexUMI (Xu et al., 2025) extends robot-free collection from parallel grippers to five-fingered hands. We
+use our open-source GEAR DexUMI (NVIDIA GEAR Team, 2026): the wearable exoskeleton replicates the
+kinematics of the target XHAND1 Pro-U hand, with its 16 degrees of freedom mapped one-to-one onto the
+
+
+
+                                                                                                                   19
+                                GR00T 2: Scaling Robot Foundation Models for Generalization, Dexterity, and Adaptation
+
+
+
+  1    Human-to-Sim                              2    RL in Simulation            3    Data Generation                      4     GR00T 2 SFT
+
+                                                                                                                                          Simulation data
+                                                                                                                                        (No real-world demos)
+
+
+                                                                                                                                     Fine-Tuning GR00T 2
+  Human video               Simulation           State-based RL                  perturbed data collection for robustness
+
+
+  RECONSTRUCT HUMAN VIDEO TO 4D SIMULATION       REWARD TERMS                    PERTURBATIONS
+
+      Reconstruct 3D objects                         Task success                     Randomize visuals
+
+      Extract human and object motions               Contact guidance                 Randomize physics
+
+      Align human-object frames                      Regularizations                  Perturb executions
+                                                                                                                            zero-shot real-world deployment
+
+
+
+
+Figure 16: Human-to-sim-to-real transfer for GR00T 2. (1) Human-to-sim reconstructs assets and motions from one
+human demonstration. (2) RL trains a state-based manipulation policy in simulation. (3) Data collection under perturbations
+expands state coverage and captures recovery behavior. (4) GR00T 2 is fine-tuned exclusively on simulation data and
+deployed zero-shot in the real world.
+
+
+robot joints, and matches the hand’s contact surfaces, wrist-camera mount, and tactile format (Sec. E.4). Two
+choices adapt GR00T 2 to these data. First, the exoskeleton is handled in training rather than by editing video:
+its green parts are segmented by color, and their appearance is randomized consistently in the conditioning
+and predicted frames, which removes the earlier step of replaying each demonstration on a robot hand for
+inpainting (Sec. E.6). Second, following the Adaptive Compliance Policy (Hou et al., 2025), fingertip forces are
+projected onto the hand joints as torques and added to the action. At execution, the predicted torque lowers
+each joint’s stiffness and offsets its position target, so that the hand applies the predicted force and remains
+robust to positional uncertainty (Sec. B.3). Because the exoskeleton replicates the hand, no robot play data are
+needed: post-trained on DexUMI demonstrations alone, GR00T 2 performs long-horizon tool use with both
+hands (Fig. 15).
+DexUMI demonstrations can also be converted for a hand that the exoskeleton does not replicate. For the
+22-DoF Sharpa hand, we compute the XHAND fingertip positions from the recorded joint angles and retarget
+them with the closed-form solver used for glove teleoperation (Sec. B.1.2). As with Gripper UMI, we warp each
+DexUMI wrist frame to match the Sharpa wrist camera, which sits at a different pose. The demonstrations are
+co-trained with Sharpa play data in the robot’s action space and with its normalization statistics (Sec. B.4).
+
+4.4.4. Human-to-Sim-to-Real
+Contact-rich skills such as in-hand reorientation and forceful tool use remain difficult for WAMs to learn, and
+recovery behaviors are difficult to demonstrate. Reinforcement learning in simulation supplies them from a
+single human video (Fig. 16). The NVIDIA Video to Data pipeline (NVIDIA, 2026b) reconstructs the object
+assets and the hand and object motion. A state-based RL expert, trained with CHORD (Zhu et al., 2026) under
+identified robot dynamics and randomized physics, learns to track the object motion and complete the task.
+Its rollouts become image-based training data, perturbed by random action bursts and teleports so that they
+contain corrections, and rendered in Isaac Lab with randomized appearance, lighting, and camera calibration.
+GR00T 2 is fine-tuned on 1.5k such episodes per task with training-time real-time chunking (Sec. 4.6.2) and
+deployed on the real robot without any real-world robot data (Sec. B.5).
+
+4.5. Simulation and Evaluation
+Simulation serves GR00T 2 in two roles. Physics simulation of digital twins of our real-world tasks provides
+a fast, repeatable, and calibrated proxy for real-robot evaluation, which we use throughout development
+(Sec. 4.5.1 and 4.5.2). Neural simulation with a learned world model, adapted from recorded rollouts, provides
+an environment for reinforcement learning (Sec. 4.5.3). We also evaluate GR00T 2 on five public simulation
+benchmarks (Sec. 4.5.4).
+
+
+
+                                                                                                                                                                20
+                                      GR00T 2: Scaling Robot Foundation Models for Generalization, Dexterity, and Adaptation
+
+
+Real                                  Sim                   Real                               Sim                             Real                      Sim
+
+
+
+
+                          Plate to mat center                                     Toss block into basket                                        Slide plate right
+Real                                  Sim                   Real                               Sim                             Real                      Sim
+
+
+
+
+                      Scoop beans into cup                                            Open bottom drawer                                       Airplane assembly
+
+Figure 17: Real-world tasks and their simulated counterparts. Each pair shows the real workcell’s top camera (Real)
+and the same moment when the recorded robot commands are replayed in simulation (Sim), for five general manipulation
+tasks and one stage of the multi-stage airplane assembly. More tasks are shown in Fig. 61.
+
+
+                      (a) Task progress                                           (b) Success rate                                           (c) Bradley–Terry Elo
+                    r = 0.93                                                    r = 0.92                                              100 r = 0.93
+                                                                             40 ρ = 0.89
+                 50 ρ = 0.84                                                                                                              ρ = 0.90
+
+
+
+
+                                                                                                                Simulated (centred)
+                    MMRV = 0.059                                                MMRV = 0.055                                           50
+
+
+
+
+ Simulated (%)                                               Simulated (%)
+                 40                                                          30
+                                                                                                                                        0
+                 30
+                                                                             20
+                                                                                                                                      −50
+                 20
+                                                                             10                                                       −100
+                 10
+
+                 0                                                           0                                                        −150
+                      0          20         40                                    0            20          40                                  −100            0     100
+                                   Real (%)                                                   Real (%)                                              Real (centred)
+
+
+Figure 18: Simulated vs. real-world performance per policy. (a) Task progress (mean rubric score) and (b) success rate,
+averaged over 25 tasks (dashed: y = x). (c) Bradley-Terry Elo ratings fitted separately to pairwise outcomes in simulation
+and in real-world A/B evaluations (dashed: least-squares fit, since the two Elo scales differ). r: Pearson, 𝜌: Spearman,
+MMRV: mean maximum rank violation. Each point is a generalist checkpoint of GR00T 2 trained for the YAM embodiment.
+
+
+4.5.1. Real-to-Sim Task Construction
+We recreate in simulation the real-world tasks used to develop GR00T 2, from general manipulation tasks
+evaluated zero-shot to multi-stage assembly, with rigid and articulated objects, deformable materials, and
+particles (Fig. 17). The aim is to reproduce both the visual setup and the physical interactions that determine
+whether a task succeeds. Agent-assisted workflows build the environments: agents use inputs such as real
+robot videos, 3D scans, and photographs, along with tools from SimFoundry (Ranawaka et al., 2026), to
+handle scene and asset reconstruction, including geometry, appearance, and collision modeling. Human experts
+review the resulting content and provide feedback to guide refinement. The simulation environments run in
+Isaac Lab Arena (NVIDIA Isaac Lab-Arena Contributors, 2025) on Newton (The Newton Contributors, 2025)
+with the MuJoCo Warp solver (Google DeepMind and NVIDIA, 2025). Environments are validated through
+several means including grasp and drop tests (for assets), replaying real robot demonstrations, and for assembly
+environments, testing assembly without a robot (Sec. J.1). For the humanoid, a separate motion-centric pipeline
+turns teleoperated whole-body motions into simulated demonstrations (Sec. 3.5).
+
+4.5.2. Simulation as a Proxy for Real-World Evaluation
+Policies trained on real data are evaluated in these environments directly, without fine-tuning or co-training on
+simulation data. On 25 YAM tasks, 14 GR00T 2 checkpoints evaluated in both settings, with 5 blinded A/B
+
+
+                                                                                                                                                                       21
+                   GR00T 2: Scaling Robot Foundation Models for Generalization, Dexterity, and Adaptation
+
+
+
+trials on the real robot and 10 simulated trials per task, give Pearson correlations of 0.93 for task progress,
+0.92 for success rate, and 0.93 for Bradley-Terry Elo ratings. These values are 95 to 99% of the correlation that
+a perfect simulator would reach with the same number of trials (Figs. 18 and 65). Environments reconstructed
+from DROID setups reach 0.98, 0.95, and 0.97 for five generalist checkpoints. This calibration makes simulation
+a development tool: during pretraining, simulated evaluations tracked intermediate checkpoints and narrowed
+the final model candidates to three, which we then compared on real robots. We tested changes to the data
+pipeline, such as sequence packing and mixed-shard sampling, with small-scale training and closed-loop
+simulation before adopting them in pretraining. Inference settings were screened in simulation before robot
+tests. Beyond success rate, simulation testing revealed how inference settings affect motion smoothness, and we
+confirmed this finding in physical trials. Simulation also served to develop the agent’s recovery skills on the toy
+plane assembly task (Sec. 3.4). While physical-robot evaluation remains the final validation for every design
+choice (Sec. J.2), simulation evaluation significantly increased development speed and iteration frequency.
+
+4.5.3. Neural Simulation
+Physics simulation requires reconstructing each task, whereas a learned world model can be built from recorded
+robot interaction. We turn DreamDojo (Gao et al., 2026), a world model initialized from pretrained video
+priors, into an environment in which GR00T 2 collects RL experience (Sec. 4.1). DreamDojo is first mid-trained
+on multi-view robot episodes, 8,310 from YAM (about 227 hours, including failed attempts and recoveries)
+and 57,773 from DROID (about 273 hours), with the camera views tiled into one video canvas so that they
+are predicted jointly. It is then adapted to the target tasks from a few hundred successful and failed rollouts
+of the initial policy per task. In closed loop, GR00T 2 predicts an action chunk, the world model predicts the
+multi-view frames that result from executing it, and these frames become GR00T 2’s next observation. The
+world model carries its history in latent space, and the last commanded action stands in for the robot state.
+Because each episode chains many short predictions, the world model conditions on its own imperfect outputs.
+For the model used in RoboLab, perturbing the conditioning latents with noise during training exposes it to
+such histories. Rewards come from compact video classifiers that detect task success, trained offline on labels
+that a vision-language model proposes and humans review. A sparse success reward is used because dense
+progress scores are expensive to annotate and can be exploited by the policy. RL in this environment raises the
+success of GR00T 2 from 43% to 72% on average over four real-world tasks (peg insertion, rack-hole insertion,
+and bun placement on two cups; Fig. 52) and from 51% to 71% on ten RoboLab tasks, both measured outside
+the learned environment (Sec. F.5).
+
+4.5.4. Simulation Benchmarks
+We evaluate GR00T 2 on five public benchmarks with their official task sets, episode budgets, and success
+criteria, using for each a single checkpoint post-trained from the same pretrained model (Sec. J.3). Baseline
+results are taken from the official leaderboards as of November 6, 2026, except GR00T 1.7, which we retrain
+and evaluate ourselves. Among VLA and WAM policies on the public leaderboards, GR00T 2 achieves the
+highest success rate on RoboCasa365 (Nasiriany et al., 2026), a single-arm mobile manipulation benchmark
+(67.2%, 2.8 points above the best prior entry), and on RoboDojo (Chen et al., 2026a), a bimanual benchmark
+(35.5%). On RoboLab (Yang et al., 2026) and MolmoSpaces (Kim et al., 2026), it places third (47.4%) and
+second (45.1%) after post-training only on real DROID data, so both evaluations are zero-shot real-to-sim
+transfer. On the G1 Factory humanoid benchmark (NVIDIA, 2026c), it reaches 84.7% success against 69.4%
+for GR00T 1.7. With RL post-training and agentic execution, GR00T 2 ranks first on the RoboCasa365 and
+RoboDojo leaderboards, the latter evaluated on one of its three official layout banks (Sec. 3.4 and Tab. 19).
+
+4.6. Deployment and Real-Time Inference
+Deployment requires timely predictions, continuous motion, and efficient task completion, both on workstation
+GPUs and on edge hardware with limited compute, memory, and power. Compared with VLA policies, these
+requirements are more difficult to meet for a world-action model: GR00T 2 encodes multi-camera video and
+
+
+                                                                                                                22
+                   GR00T 2: Scaling Robot Foundation Models for Generalization, Dexterity, and Adaptation
+
+
+                           (a) GeForce RTX 5090                                (b) Jetson Thor (120 W)
+                Baseline                                        224.73                                         720.41
++ Runtime optimizations                                  183.66                                             614.53
+ + TensorRT base recipe                    95.05                                            256.12
+    + CUDA graph replay                   90.01                                             254.00
+  + FP8 mixed precision              54.79                                              182.22
++ Denoising-step tuning           38.40                                              123.97
+
+                           0           100            200                     0       200     400      600     800
+                                  Model prediction latency (ms)                      Model prediction latency (ms)
+
+Figure 19: Model-prediction latency for GR00T 2 Turbo on G1 using (a) a GeForce RTX 5090 and (b) Jetson Thor in
+120 W mode. Bars show medians of 500 predictions after 20 warmup requests, using the same checkpoint weights and
+input observations. The panels use independent horizontal scales. Denoising-step tuning changes 2v4a to 1v2a.
+
+
+iteratively denoises video and action latents, and in our setting it incurs higher inference latency. We address
+them with accelerated inference (Sec. 4.6.1), training-time real-time chunking for smooth execution under
+the remaining delay (Sec. 4.6.2), and phase-conditioned action chunk transforms that enables faster than
+demonstration task completion throughput (Sec. 4.6.3).
+
+4.6.1. Policy Serving and Accelerated Inference
+GR00T 2 is served through a client-server interface: a robot client sends the camera history, robot state, and
+instruction, and the server returns an action chunk, which the client buffers and executes at the controller’s
+rate while it requests the next one (Sec. K.5). The server first removes repeated computation. It reuses the
+text features while the instruction is unchanged, precomputes the timestep conditioning, and lets action-only
+denoising steps reuse the attention keys and values of the latest video step. It then compiles the video encoder
+and the transformer into TensorRT engines replayed with CUDA graphs, for supported checkpoints applies
+FP8 to selected projection and feed-forward layers after calibration on robot observations, and reduces the
+number of denoising steps where task success and smoothness allow. On the serving path, streaming and
+prefetching move video encoding ahead of the prediction request. For GR00T 2 Turbo on the G1, TensorRT
+compilation gives the largest single reduction on both GPUs (Fig. 19). Together, these optimizations reduce
+median prediction latency by 2.9× to 7.2× relative to eager BF16 execution of the same checkpoint (Tab. 27).
+On a DGX Station GB300, GR00T 2 predicts in 48 ms on Dexter and 54 ms on YAM, with video encoding
+prefetched. For the Unitree G1, GR00T 2 Turbo predicts in 38 ms on a GeForce RTX 5090 and in 124 ms
+on the robot’s onboard Jetson Thor, where it plans 1.6 s chunks of whole-body motion tokens about once
+per second for the SONIC controller to execute at 50 Hz (Fig. 9). Numerical comparisons with eager BF16
+execution help identify changes in predicted actions, but prediction error alone does not establish task success
+in closed-loop control. We make deployment decisions to screen inference changes and make deployment
+decisions through evaluation on the physical robot, considering task success, completion time, and motion
+quality together (Sec. I.1).
+
+4.6.2. Smooth Execution with Real-Time Chunking
+Some delay remains after acceleration, and the robot must keep moving while the next chunk is computed.
+Waiting for each prediction interrupts the motion, and executing predictions asynchronously without accounting
+for the delay creates discontinuities between successive chunks. Training-time real-time chunking (RTC) (Black
+et al., 2025) conditions each prediction on the prefix of actions already committed for execution. In our setting,
+conditioning on a clean prefix improves continuity but lowers task success at the shorter delay. We therefore
+use noisy-prefix RTC: during fine-tuning, the conditioning prefix is perturbed with Gaussian noise, which is
+intended to reduce reliance on the previous plan while retaining the context needed for a smooth continuation,
+
+
+
+                                                                                                                        23
+                     GR00T 2: Scaling Robot Foundation Models for Generalization, Dexterity, and Adaptation
+
+
+
+                                                                                 Speed schedule
+                                      Predicted actions
+                                                                                1.5×   3×    1.5×
+
+                     GR00T 2
+                                      t                                                               Accelerated actions
+
+                                                                                 Acceleration
+  Observations                        Predicted subtasks
+                      Subtask
+                                           Unscrew         Transport   Insert
+                      predictor
+
+
+
+
+Figure 20: Phase-conditioned task-completion throughput acceleration of GR00T 2. GR00T 2 predicts a future action
+chunk, while a subtask predictor identifies its task phases. Using a phase-specific speed schedule, we transform the original
+action chunk to accelerate execution and boost task-completion throughput while preserving success rates.
+
+
+and at inference the policy conditions on the clean committed actions. A short fine-tuning stage of 5k steps on
+a post-trained policy captures most of the continuity benefit, so RTC does not require repeating the full training
+pipeline. On eight RoboDojo precision tasks with simulated inference delays, noisy-prefix RTC raises success
+over asynchronous execution of the same weights from 32.8% to 34.8% at a 160 ms delay and from 15.0% to
+21.4% at 320 ms. It reduces peak commanded jerk by 69% at 160 ms and the 95th-percentile cross-chunk jerk
+by 87% at 320 ms, whereas clean-prefix RTC lowers success at 160 ms to 30.7% (Sec. I.2).
+
+4.6.3. Accelerating Task Throughput Beyond Demonstrations
+Continuous execution and low latency do not by themselves boost task completion throughput, which remains
+bound to the pace of the demonstrations. We therefore retime GR00T 2’s action chunks by task phase. A task
+is decomposed into semantically meaningful phases, such as reaching, grasping, transporting, and screwing,
+which tolerate different degrees of acceleration. An agent searches for a per-phase speed schedule by evaluating
+accelerated rollouts and refining the schedule after observed failures. At deployment, a lightweight subtask
+predictor, trained on phase annotations generated by an agent, predicts from the current observation the phases
+spanned by each action chunk, and the chunk is retimed according to the schedule (Fig. 20). Because retiming
+changes the timing between successive chunks, temporal chunk alignment and cross-chunk jerk smoothing
+keep the execution continuous (Sec. I.3).
+
+4.7. Infrastructure
+Training GR00T 2 runs a joint video-action model over multi-camera video from human, UMI, and robot
+sources. Its infrastructure must provide the memory and compute for this model at scale, deliver decoded video
+windows to every GPU without stalling synchronous training, and turn raw recordings into training-ready data
+at the scale of the pretraining corpus. We describe the pretraining compute and distributed training runtime
+(Sec. 4.7.1), the training data loader (Sec. 4.7.2), and the multimodal data processing pipeline (Sec. 4.7.3).
+Policy serving is described with deployment (Sec. 4.6.1), and the online RL infrastructure with RL post-training
+(Sec. 4.1).
+
+4.7.1. Pretraining Compute and Distributed Training
+GR00T 2 is pretrained on NVIDIA GB300 NVL72 systems, chosen for GPU memory capacity, Tensor Core
+throughput, and acceleration of collective communication. Each Blackwell Ultra GPU provides up to 288 GB of
+HBM3e with 8 TB/s of bandwidth and about 2.5 PFLOPS of dense BF16/FP16 Tensor Core compute. A rack
+connects 72 GPUs into one NVLink domain with 1.8 TB/s of bidirectional bandwidth per GPU, in which NVLink
+SHARP offloads reductions to the switches, and racks communicate over a RoCE fabric with one 800 Gb/s
+ConnectX-8 SuperNIC per GPU. The cluster has 2,016 GPUs in 28 racks, and the main pretraining run used
+1,024 of them, while the rest ran other training experiments concurrently (Sec. K.2.1).
+
+
+                                                                                                                            24
+                   GR00T 2: Scaling Robot Foundation Models for Generalization, Dexterity, and Adaptation
+
+
+
+Training uses synchronous data parallelism with DeepSpeed ZeRO-2: every GPU holds the full weights, gradients
+and optimizer state are partitioned across ranks, and BF16 gradient synchronization overlaps with computation.
+Because the model fits without pipeline parallelism, the GPU memory keeps the parameters, each rank’s
+optimizer partition, and the activations of a per-device batch of 16 resident, and the large per-device batch
+gives the Tensor Cores more matrix-multiplication work and amortizes kernel-launch overhead. Part of each
+step runs in frozen feature encoders rather than the trainable model. Depending on the recipe, the runtime
+uses TensorRT for video encoding, fused text-encoder operations, efficient attention kernels that keep the
+model’s masking rules, PyTorch compilation, and activation recomputation, and it can encode the next batch’s
+features while the current batch synchronizes gradients and updates the optimizer. We judge efficiency across
+the whole step, from input retrieval and feature encoding to gradient synchronization and the optimizer update.
+A hardware-counter-based utilization metric, Overall FLOP Utilization (Pedersen et al., 2026), is monitored
+alongside step time, but elapsed time and model quality decide whether a change is kept, since an optimization
+can shorten the step without moving the utilization signal (Sec. K.4).
+
+4.7.2. Training Data Loading
+Training data are stored in LanceDS, built on the Lance columnar format (Pace et al., 2025; Lance Contributors,
+2026). Each dataset holds a step table with state, actions, annotations, and quality-control (QC) signals, an
+episode table, and a media table with the original videos. Lance versioning preserves earlier snapshots when
+episodes are added or annotations and QC signals change, and new QC columns are added without rewriting
+existing ones. A training run pins one snapshot per dataset, so its data, normalization statistics, and metadata
+are reproduced together. All datasets share one schema, and the recipe’s embodiment tag selects at read time
+the state and action groups, cameras, annotations, and normalization statistics of that embodiment, as well
+as the model’s embodiment-specific projection layers. QC rules are not applied in the loading path: they are
+evaluated offline over the temporal window that each training sample reads, its observations and its action
+targets, and stored as views of the eligible sample starts. The views are rebuilt with every new snapshot and
+carry normalization statistics computed over the samples they keep. Sampling is drawn on demand from
+deterministic per-rank seeds and mixes shards so that each global step follows the recipe’s dataset proportions.
+Batch preparation runs in three asynchronous stages: video shards are prefetched from shared storage to
+node-local NVMe, frames are decoded (about 90% of preparation time in a three-view shard benchmark), and
+samples are augmented, collated, and copied to the GPU from pinned memory. Variable-length token packing
+reduces padding. Over 100 steady-state pretraining steps on 1,024 GB300 GPUs, reading 25 dataset stores with
+15.6 million episode records and 46.2 billion time steps, the loader delivered about 12,000 sample windows
+per second, and the mean exposed wait for input was 0.37 ms (0.61 ms at the 99th percentile), or 0.049% of
+the measured step time (Tab. 35). These numbers characterize input delivery, not the model’s FLOP utilization.
+In the measured run, packing filled 94.5% of the positions in 32,768-token rows. Loader changes are validated
+in closed-loop simulation before adoption (Sec. 4.5.2), and Sec. K.4.3 details the loader.
+
+4.7.3. Multi-Modal Data Processing
+Before they can be loaded, raw human demonstration recordings are converted into training-ready data.
+Multi-camera video is retrieved, decoded, and resized. Motion records are transformed and, where needed,
+retargeted to the training hand representation. Observations, actions, and annotations are then aligned in
+time and packaged as indexed episodes in training-ready shards. The pipeline processes petabyte-scale input
+each month, with individual production jobs using nearly 10,000 vCPUs. The central difficulty is that these
+conversions share inputs and compete for limited working storage. A long video can contain many episodes,
+and one episode can depend on several camera files and separately stored motion records, so a shared input
+can be reclaimed only after its slowest consumer finishes, and a slow conversion or upload can block the
+retrieval of unrelated inputs and leave workers idle. The pipeline therefore ties the lifetime of each input to
+execution progress. Files stream from object storage directly to the processing nodes, without staging on a
+shared filesystem, so conversion starts before a collection has been fully retrieved. New inputs are admitted
+
+
+                                                                                                             25
+                   GR00T 2: Scaling Robot Foundation Models for Generalization, Dexterity, and Adaptation
+
+
+
+against each node’s storage budget, counting resident files, pending transfers, and output headroom, and
+work is dispatched to the node that holds its inputs. An episode releases its claim on an input only after its
+outputs are uploaded, so the completion of consumers, rather than prefetching, governs when new inputs enter.
+After an interruption, lost inputs are rebuilt through the same admission path, and durable checkpoints let the
+resumed job reuse completed conversions and published shards. In three production jobs on 100 nodes with 96
+vCPUs each, the pipeline processed 722 to 780 demonstration-hours of recordings per hour, published the first
+training-ready shard within 28 minutes, and averaged 97.8% CPU utilization during conversion. Across five
+interrupted jobs, 92.4% of the completed conversion time went to work that did not have to be repeated, and
+publication resumed 2.4 to 5.3 minutes after a restart (Sec. K.6 and Tab. 36).
+
+5. Conclusion and Open Problems
+GR00T 2 is a world-action model: a single 2B-parameter transformer that predicts future observations and
+robot actions together, pretrained on egocentric human video, handheld UMI demonstrations, and teleoperation
+of gripper arms, dexterous hands, and a humanoid. Predicting the future gives all of these sources a common
+objective, including human video that carries no robot actions. On 50 dexterous tasks new to the robot, the
+resulting model succeeds zero-shot in 40% of trials and reaches 95% with five demonstrations (Sec. 3.1). It
+learns robot tasks without teleoperated demonstrations of those tasks (Sec. 3.2). Real-world RL raises its
+success on contact-rich skills to 88 to 98% (Sec. 3.3). With corrective data and a frontier agent, it completes
+cluttered long-horizon assemblies in at least 97% of trials (Sec. 3.4). GR00T 2 Turbo runs onboard a humanoid
+and directs a learned whole-body controller (Sec. 3.5).
+Three observations from building GR00T 2 shape the problems that follow.
+   • Much of what the robot learns need not come from robot data. Robot success on new tasks more than
+     doubles with human video in pretraining and does not level off at the largest scale we tested (Fig. 10). For
+     glove and Gripper UMI demonstrations, task-agnostic data from the target robot specify the embodiment,
+     while the demonstrations specify the task (Sec. 3.2).
+   • Reliability comes from complementary mechanisms, not from pretraining alone. Pretraining provides
+     breadth. Corrective demonstrations and RL close gaps in precision and contact. The agent supplies
+     memory, verification, and recovery over long horizons.
+   • Progress depended on measurement. Blinded head-to-head evaluation and calibrated simulation (Sec. 4.3
+     and 4.5.2) turned close comparisons into decisions.
+Each observation also points to problems that remain open. We group them by part of the robot learning
+system, and start each group from the basic constraint that makes it hard.
+Model. A robot policy learns from data dominated by observation rather than action, and it must act at the
+rate of the physical world. Joint video-action prediction turns every video into supervision, but most of the
+tokens it predicts encode future video, much of which does not bear on the next action. GR00T 2 Turbo predicts
+a spatial latent grid four times smaller than that of GR00T 2. After post-training, it loses 6.7 points of success
+on YAM but half of its success on dexterous tasks, falling from 68.6% to 34.3% (Tab. 1). The comparison does
+not isolate the cause, but it suggests that the visual detail a policy must predict depends on the task and the
+embodiment. Four questions follow.
+   • What to predict. It is unknown which aspects of the future a policy should predict, and at what resolution
+     and horizon. It is also unclear whether prediction helps mainly as a training signal or also as imagination
+     at inference time.
+   • Memory. GR00T 2 observes 0.8 s of history, and tasks that require memory are delegated to the agent
+     (Sec. 3.4). In imitation learning, longer raw context can invite shortcuts such as copying past ac-
+     tions (de Haan et al., 2019; Wen et al., 2020), which suggests that memory should be structured rather
+     than simply longer.
+   • Force and touch. GR00T 2 handles force only as an output: from DexUMI demonstrations, it predicts
+
+
+                                                                                                               26
+                     GR00T 2: Scaling Robot Foundation Models for Generalization, Dexterity, and Adaptation
+
+
+
+     joint torques that set the hand’s compliance (Sec. 4.4.3). It does not take touch as input, and tactile
+     recordings are scarce compared with video. How to add force and touch as inputs without eroding visual
+     priors, and at which control rate, is open.
+   • Interfaces in the control hierarchy. Image-space points tell GR00T 2 where to act but not how, so
+     requirements such as pouring or scooping still rest on language and learned skills (Sec. 3.4). Below
+     GR00T 2 Turbo, the interface to SONIC is a motion latent decoded into joint position targets (Sec. 3.5),
+     so contact force is not represented explicitly. Which representation should pass between reasoning, policy,
+     and controller, and how it transfers to new embodiments, is unsettled.
+Data. Every hour of robot data requires a robot and an operator, whereas human experience is abundant but
+recorded in a different body. GR00T 2 pretrains on about 400,000 hours of human video, 10,000 hours of
+UMI demonstrations, and 23,500 hours of teleoperation (Sec. 4.2). Human video brings coverage, UMI brings
+task-focused demonstrations in a robot-compatible format, and teleoperation grounds the embodiment.
+What is missing is an exchange rate between these sources. It is not known how much robot performance an
+hour of each source yields, or how that yield changes with the data already present. It is also not known how
+little target-robot data suffices to specify a new embodiment. Simulation raises the same question. Compute
+widens coverage, but agreement with the real world still requires measurement and robot time. The scaling
+with human video shows only that one of these rates is positive (Fig. 10). Until they are measured, collection
+budgets cannot be allocated on principle.
+A second question is what makes data useful beyond its quantity. Demonstrations show mostly successful
+behavior, whereas RL, world models, and verifiers also need failures and recoveries; the world model we use
+for RL is trained on robot episodes that include both (Sec. 4.5.3). Labels of how well each demonstration was
+executed could serve as a further training signal.
+Evaluation. A success rate measured on real robots is a binomial estimate, and its uncertainty shrinks only
+with the square root of the number of trials. Our post-training benchmarks use up to 20 trials per task (Tab. 1).
+That is enough to resolve the large gaps between GR00T 2 and its baselines, but not the differences that matter
+in deployment. Distinguishing 95% from 99% success takes about 285 trials per policy, and 99% from 99.9%
+more than 1,000.1 Absolute rates also drift with station, operator, and day, which is why we rank checkpoints
+by blinded head-to-head comparisons (Sec. 4.3). Even then, the independent units are tasks rather than trials,
+and 30 to 35% of comparisons are ties (Sec. D.7). Three directions follow.
+   • Proxy evaluation at deployment scale. Across 25 YAM tasks, simulation predicts the real-robot task progress
+     of 14 generalist checkpoints with a Pearson correlation of 0.93 (Sec. 4.5.2). It remains to be shown
+     whether simulation is as predictive for contact-rich assembly, for RL-trained policies that exploit simulator
+     errors, and for comparisons between training recipes rather than checkpoints.
+   • Automated verification. In our long-horizon assemblies, three of the eight failures were screws left partly
+     driven that both GR00T 2 and the agent judged complete (Sec. G.1). Verifying subtle physical state is a
+     prerequisite for autonomous evaluation, for RL rewards, and for deciding when to ask a person for help.
+   • Cost to reliability. Robot learning rarely reports the quantity that determines deployment: the robot time
+     and human time needed to bring a new task to a target reliability. The same accounting, under matched
+     budgets, would settle when RL is worth more than additional demonstrations or corrections.
+Hardware. A model can learn only what the hardware allows people to demonstrate, sensors to record, and
+robots to repeat. Our teleoperation cannot demonstrate fast, targeted motions such as the conveyor toss, which
+GR00T 2 learned from human demonstrations instead (Sec. 3.2). Capture devices that match the robot shrink
+the gap the model must bridge. DexUMI replicates the joints and contact surfaces of the robot hand, so on
+that hand its demonstrations need no robot play data (Sec. 4.4). This argues for designing robots and capture
+devices together, with shared kinematics, camera placement, and tactile formats.
+  1 Two-sided two-proportion 𝑧-test at significance level 0.05 with 80% power.
+
+######## EXCERPT: App. B.1.2–B.1.3 human→robot conversion (excerpt) ########
+GR00T 2 succeeds in 65%, 30%, 10%, and 50% of 20 trials on the four tasks, whereas GR00T 1.7 and GR00T 2
+without cross-embodiment pretraining fail every chemistry-lab trial and reach only 5% and 20% on tossing
+
+
+                                                                                                                                                                     43
+                   GR00T 2: Scaling Robot Foundation Models for Generalization, Dexterity, and Adaptation
+
+
+
+(Fig. 27). Adding 10 teleoperated demonstrations raises GR00T 2 to 95%, 70%, and 50% on the chemistry-lab
+tasks, against 45%, 40%, and 30% without cross-embodiment pretraining and 0% for GR00T 1.7. One hundred
+human demonstrations per task therefore suffice to deploy precise and dynamic dexterous tasks on a robot that
+has never been teleoperated for them. Sec. B.1.4 details the protocol, and Sec. B.1.5 analyzes why the transfer
+works.
+
+B.1.1. Human Data Capture and Conversion
+Human data capture. Each demonstration is recorded with a lightweight egocentric rig: a head-mounted
+camera provides the ego view, wrist-mounted cameras provide close-up views of hand-object contact, and the
+hands are tracked by a motion-capture glove (Manus) paired with a 6-DoF tracker (PICO) rigidly attached
+to each wrist. The glove provides per-finger joint angles, while the tracker provides the global wrist pose.
+Together they yield a full 3D hand pose at every timestep without any robot in the loop. Because the tracker’s
+IMU does not coincide with the anatomical wrist, we calibrate the tracker-to-wrist rigid transform per session:
+an annotator clicks fingertip locations in a handful of frames spanning diverse hand poses, and we solve
+for the transform that minimizes the reprojection error of the glove-predicted fingertips. Camera intrinsics
+and extrinsics are verified in the same tool by overlaying the tracked controller pose onto the video, so that
+calibration errors are caught before any data is converted. The raw stream (ego and wrist video, wrist poses,
+finger joints, and language annotations) is captured at 60 Hz, stored in a time-synchronized format and
+quality-checked by visualizing the reconstructed hand trajectory against the video.
+From human data to robot data. The captured human trajectories are converted into robot-space supervision
+in a single offline pass, with no task-specific robot teleoperation. First, each wrist pose is anchored globally
+in the gravity-aligned robot base frame: the human’s head camera is placed at the robot’s head camera,
+and a per-task offset shifts the hands into the robot workspace. The converted trajectories therefore carry
+absolute wrist poses in the robot frame, not wrist displacements alone. Second, the human finger configuration
+is retargeted to the robot hand via inverse kinematics on fingertip targets, producing joint commands that
+respect the robot’s kinematic limits while preserving the task-relevant contact geometry rather than the literal
+human pose. Third, the ego and wrist camera streams are kept as the policy’s visual inputs, so that the
+resulting episodes, downsampled to 30 Hz, have the same observation and action schema as native robot data.
+During post-training, we sample converted human episodes and generic, non-task-specific robot play data with
+equal probability. This co-training grounds the model in the robot’s appearance and dynamics, while human
+demonstrations provide all task-specific supervision.
+
+B.1.2. Geometric Retargeting
+The role of our retargeting solver is to bring sub-millimeter accuracy to robot finger tips with kHz computation
+speed. Given that the conversion is solely offline without human supervision, we ask for automated singularity
+handling near workspace boundary and robust redundancy DoF management. To achieve this we make use of
+a closed-form geometric inverse kinematic solving technique introduced in Chen et al. (2026b) and Kong et al.
+(2026) to handle both the 7-DoF arms and 22 DoF robot hands. Given 6D pose data of ego camera and left /
+right wrist mount, we first find the ideal placement of human data in robot frame for each task. The solver
+then retargets the hands before the arm, and both stages track fingertip targets. A unified “palm-box” hand
+frame introduced in Kong et al. (2026), anchored at the index fingertip, aligns human and robot hands. The
+22-DoF hand solver places the robot thumb tip relative to the solved index fingertip, which preserves the pinch
+geometry, while the other fingers follow the human bone directions. The arm’s geometric inverse-kinematics
+solver then tracks the palm-box origin, so the robot index fingertip lands on the human index fingertip.
+Our combined arm-hand solver achieves approximately 118,000 bimanual solves per second on a single core of
+an Intel Core Ultra 9 285K CPU, with a mean native computation time of 8.48 𝜇s, excluding Python interface
+overhead. Across 1,024 synthetic in-range wrist targets, maximum forward-kinematics-verified pose errors
+remain below 10−15 m and 10−15 rad. This throughput supports real-time teleoperation (Sec. C.3.1) and offline
+human-data conversion.
+
+
+                                                                                                             44
+                  GR00T 2: Scaling Robot Foundation Models for Generalization, Dexterity, and Adaptation
+
+
+
+
+Figure 26: Sensorized human transfer benchmark tasks. Each row shows the ordered stages of one task, with the
+language instruction that GR00T 2 receives.
+
+
+B.1.3. Co-Training with Robot Play Data
+GR00T 2 turns retargeted human demonstrations into a robot policy by co-training them with robot play data.
+Starting from its cross-embodiment pretrained checkpoint, GR00T 2 fine-tunes on two complementary sources:
+retargeted human demonstrations of the target task, which contain the task but not the robot, and task-agnostic
+play data from the target robot, collected with the teleoperation system of Sec. C.3.1, which contain the robot
+but not the task. Human data teach GR00T 2 what to do: the task intent, the object interactions, and the
+motion strategy, such as which hand leads, which fingers make contact, and how fast the wrist moves. Play
+data teach GR00T 2 how this robot looks and moves: its appearance, kinematics, and dynamics, which stay the
+same across tasks, so one play pool serves every task. Without teleoperation, the play data are the only robot
+data in post-training. Each new task therefore adds only cheap human demonstrations.
+Human and robot episodes share one data format, so the two sources mix freely within a training batch. Both
+provide three camera views (ego and two wrists) at 30 Hz, a 62-D state of absolute wrist poses in the robot
+base frame and hand-joint positions, and a 62-D action chunk of wrist poses relative to the current state and
+absolute hand-joint positions.
+
+B.1.4. Learning New Tasks without Teleoperation
+GR00T 2 learns new robot tasks from human demonstrations alone. Four tasks on the Tianji, a bimanual robot
+with two 7-DoF arms and two 22-DoF Sharpa hands, test this claim and stress two parts of the embodiment
+gap. Three chemistry-lab tasks handle small, often transparent labware and test precision under the kinematic
+gap, where retargeting error and the larger robot hand both consume the tolerance. The dynamic task tests the
+kinodynamic gap on a fast, targeted throw that teleoperation cannot demonstrate (Fig. 26).
+
+######## EXCERPT: App. C Data for GR00T 2 (pp.57–64) ########
+C. Data for GR00T 2
+This appendix details the sources and roles of data for GR00T 2 summarized in Sec. 4.2.
+
+C.1. Human Data for GR00T 2
+Prior work in scaling data for robot learning has showcased emergent transfer and generalization through
+scaling egocentric data (Kareer et al., 2025; Punamiya et al., 2026; Zheng et al., 2026).
+Human-1M is a large and diverse egocentric dataset curated by NVIDIA, which supplies the large scale human
+experience data in GR00T 2’s cross embodiment training mixture. Human-1M contains approximately 1
+million hours of proficient human labor sensorized with egocentric cameras, dense language annotation, SLAM
+and hand pose estimation which are filtered down. The collection spans different environments and sensing
+configurations, including monocular and stereo head cameras and additional wrist views. We additionally
+incorporate capture setups that bring human observations closer to those of dexterous robots to examine the
+transfer of human data at various hierarchies.
+
+C.1.1. Dataset Composition
+The Human-1M inventory used within GR00T 2 contains 402,730 hours across approximately 13.75 million
+episodes, spanning over 51,500 unique collectors and 123,000 scenes.
+Collection Settings. We collect demonstrations in both natural “in-the-wild” and controlled studio environ-
+ments. In-the-wild collection captures proficient laborers in economically valuable scenarios across households,
+industry workplaces, agriculture, commercial kitchens, service, retail, and logistics. Studio collection con-
+centrates on tabletop manipulation under standardized protocols, resembling demonstration style robotics
+datasets. Studio data comprises of assembly tasks that involve assembling various kits, curated tasks selected
+to cover target robot skills and task distributions. Within studio data, “in-lab” collection follows a stricter
+protocol where demonstrators keep both hands in view, avoid idle periods, and perform motions at speeds
+chosen to match the robot. Approximately 80,000 hours of the total mixture is studio data. These settings serve
+complementary purposes. Natural environments broaden the range of interactions observed during pretraining
+for the world-action model, while controlled collection makes it possible to target particular skills and capture
+them under more consistent conditions for better transfer to the downstream robot embodiments.
+Egocentric Cameras. The dataset includes monocular and stereo egocentric recordings. Monocular setups use
+a single head-mounted RGB camera. Stereo setups provide synchronized two camera RGB head views with
+optional additional multi-view cameras for better hand pose estimation.
+Wrist Cameras. Approximately 90,000 hours of the collection also includes wrist cameras, which provide
+close-up views of manipulation and hand-object interactions to reduce partial observability during fine-grained
+manipulation. Additionally, a portion of the studio data contains robot-aligned wrist viewpoints to address the
+visual alignment gap.
+Even when humans and robots perform the same grasp, wrist-camera placement can change the apparent size
+and orientation of the hand and object, as well as the visibility of their interaction. We studied this alignment
+process with the Sharpa platform. We screened 13 initial mount designs and conducted a controlled comparison
+of four mounts across four operators. The human and robot perform the same four thumb-finger grasps and
+their viewpoints are compared in a 640x480 image frame. The evaluation measured hand-object overlap, object
+scale, camera-to-object distance, and camera orientation. We further optimized image rotation and scaling
+for visual alignment, and used ChArUco (Garrido-Jurado et al., 2014) calibration together with directional
+motions to optimize angular alignment.
+Annotations. Each egocentric episode contains language annotations along with frame-aligned estimations
+of hand and head motion following prior work on learning from egocentric human experience (Kareer et al.,
+2025; Punamiya et al., 2026).
+
+
+                                                                                                              57
+                    GR00T 2: Scaling Robot Foundation Models for Generalization, Dexterity, and Adaptation
+
+
+
+Hand and Camera Pose. Hand motion is represented by 21 three-dimensional keypoints per hand: the wrist
+and four landmarks along each finger, including the fingertips. Keypoint positions are expressed in meters in
+the reference head-camera coordinate frame and aligned with the corresponding video frames. Head motion
+is represented by the six-degree-of-freedom pose of the head-mounted reference camera, estimated using
+simultaneous localization and mapping (SLAM) in a canonical per episode world frame.
+Language Annotation. Language describes demonstrations at two levels. Tier 1 (T1) annotations provide
+a one- to two-sentence episode summary identifying the primary goal, major actions, and key objects. Tier
+2 (T2) annotations describe individual actions in contiguous, timestamped segments of 1-10 seconds. Each
+description is self-contained and specifies the relevant hand, action, and objects. These annotations support
+language-conditioned learning and task-based data curation. The language annotations are validated by human
+quality control checks. The highest quality annotations are used for the training mixture of Flora pipeline
+described in Sec. C.4. The Flora pipeline is then used to further enrich or provide T2 language annotations
+across the dataset.
+
+C.1.2. Data Filtering and Quality Control
+The usefulness of a human demonstration for tabletop manipulation settings depends on both the interaction it
+contains and the reliability of its recorded motion. We therefore apply quality control at two levels. Batch-level
+review checks the content and annotations of a delivery, while quantitative filtering selects timesteps with
+sufficiently stable observations and hand trajectories. Additional details about the quality control are in the
+accompanying Human-1M dataset release.
+Human review. Human auditors check language-annotation validity, task quality and idle time as per our
+collection specs at a 95% per episode pass rate. These criteria screen deliveries before individual training
+timesteps are selected by the quantitative filters.
+Quantitative Filtering. At each candidate training timestep, we evaluate a window extending 24 frames into
+the past and 48 frames into the future. We retain the timestep only if all quality criteria pass over this window.
+The checks constrain head rotation and translation, hand visibility, consistency of reconstructed bone lengths,
+and wrist speed (Tab. 8). The bone-length error of a hand in a frame is the median absolute deviation of its 20
+finger-bone lengths from their per-episode medians, divided by the mean of those medians, so the threshold of
+0.05 corresponds to 5% of the mean bone length.
+
+Table 8: Quantitative criteria for selecting training timesteps.
+
+                      Signal                           Window statistic       Acceptance criterion
+                      Head angular speed               Mean                   ≤ 20∘ /s
+                      Head translational speed         Mean                   ≤ 0.2 m/s
+                      Hand bone-length error           Maximum                ≤ 0.05 (relative)
+                      Hand visibility                  Minimum                Both hands in frame
+                      Wrist speed                      Maximum                ≤ 1.0 m/s
+
+
+C.1.3. In-Lab Human Data
+In-lab data is the part of human data that transfers most directly to a robot policy. Two gaps separate a human
+demonstration from a robot rollout, and both can be narrowed at collection time rather than left to the model.
+The observation gap: in-the-wild wrist cameras are not placed with reference to any robot, so the hand appears
+at a different angle, scale, and position than in the robot’s wrist view, and the model must imagine across this
+viewpoint change before it can imagine across embodiments (Sec. B.1.5). The motion gap: natural human
+execution is faster than teleoperated robot execution, interleaves pauses and task-irrelevant gestures, and uses
+motions the robot hand cannot reproduce. In-lab collection follows our studio collection guidelines, which fix
+camera placement, motion, and task protocol with the target robot in mind.
+
+
+                                                                                                               58
+                      GR00T 2: Scaling Robot Foundation Models for Generalization, Dexterity, and Adaptation
+
+
+
+Collection protocol. Demonstrators keep the head still, keep both hands and the manipulated objects visible
+in every frame, avoid idle time, rehearse each task before recording, and follow a reference video where one
+exists. Pace is controlled through bounds on wrist speed, which exclude motion too fast for the robot on one
+side and near-stationary hands on the other. Each task is recorded by several operators in several environments,
+and episodes that a robot could not reproduce are rejected before delivery. The complete criteria, including the
+acceptance thresholds for the wrist camera and for hand-pose quality, are listed in Sec. C.1.4.
+Alignment to the target embodiment. The target is Tianji with Sharpa hands, the platform of the human-to-
+robot transfer (Sec. B.1), whose teleoperation system is described in Sec. C.3.1. On the observation side, the
+human wrist camera is mounted to reproduce the view of the robot’s wrist camera. It is accepted only when
+the hand and the object appear at the same scale and position as in the robot view. The head camera stands in
+for the robot’s head camera and is held still, and demonstrators whose hands are close to the robot hand in size
+are preferred. On the motion side, tasks mirror the robot’s teleoperation tasks with the same objects and step
+order, robot-paired tasks come with reference videos recorded on the robot, and the speed bounds keep the
+pace within what the robot can execute. In-lab episodes pass through the same filtering and annotation as the
+rest of Human-1M (Tab. 8, Sec. C.4), and their hand keypoints can be retargeted with the solver of Sec. B.1.2
+into the observation and action schema of a teleoperated Tianji episode (Sec. B.1.3).
+Scale and diversity. In-lab collection has delivered about 3,000 hours and 700k episodes. The tasks are drawn
+from more than 2,000 task specifications, which span short single-goal tabletop tasks that each isolate a grasp
+or a skill, robot-paired tasks with fixed objects and reference videos that stress dexterity and dynamics, longer
+multi-step chores, and tasks paired with UMI reference demonstrations (Sec. C.2), so that the same task exists
+as human, UMI, and robot data. Episodes are short and dense, and each task is demonstrated hundreds of
+times by different operators, which gives the model many views of the same manipulation rather than many
+unrelated clips.
+
+C.1.4. In-Lab Human Data Collection Criteria
+This section lists the acceptance criteria of our studio collection guidelines (v1.3.2) for the in-lab human data
+of Sec. C.1.3. The wrist-camera criterion is checked once per mount design: the demonstrator repeats, with the
+same 4.4 cm calibration block, the calibration motions recorded from the robot’s wrist camera (a thumb pinch
+with each finger and a whole-hand grasp), and the human video is overlaid on the robot video. The remaining
+criteria are checked per delivery. Tab. 9 summarizes them.
+
+Table 9: In-lab collection criteria.
+
+          Criterion                 Requirement
+          Head motion               Stable head pose, no rotation
+          Hand visibility           Both hands in 100% of frames
+          Idle motion               None, brief task-relevant inspection allowed
+          Wrist speed               < 5% of samples at ≥ 0.40 m/s, ≤ 60% below 0.03 m/s, follow the
+                                    reference video pace
+          Wrist camera              Calibration block at 0.8–1.2× its size in the robot view, human-robot
+                                    hand IoU > 0.5 with arms extended
+          Hand-pose quality         Speed-conditioned jitter ≤ 4× the robot reference per speed band, per-
+                                    frame confidence, audited reprojections
+          Operators                 One per environment, hand size close to the robot hand preferred
+          Demonstrations            400 per task: 8 environments, 50 each
+          Objects                   Robot-paired tasks: specified SKU, or 3 variants of similar shape and
+                                    size
+          Deliverables              Head and wrist intrinsics, stereo extrinsics, per-delivery wrist-speed
+                                    statistics
+
+
+
+
+                                                                                                               59
+                   GR00T 2: Scaling Robot Foundation Models for Generalization, Dexterity, and Adaptation
+
+
+
+C.1.5. Scaling Human Video
+GR00T 2 pretrains on egocentric human video from Human-1M as well as on robot data. To measure how
+much the human video contributes to robot performance, we train four models that differ in how much human
+video they see. We test each one on new tasks on Dexter, a bimanual robot with two 7-DoF arms and two
+22-DoF Sharpa hands, and on the video rollouts each model generates for the same tasks.
+Setup. The four models share the GR00T 2 architecture and train on the same Dexter teleoperation data with
+the same recipe. They differ only in the human video they see. The 0% model sees none. The other three
+start from a common human-video pretraining checkpoint, then continue on 1%, 10%, or 100% of the tasks in
+the multi-view human video of Human-1M (0.87k, 8.1k, and 84.4k hours after the timestep filters of Tab. 8)
+and co-train on it with the Dexter data. The 0% model does not have this shared stage, so comparisons with
+it measure the shared stage and the human share together, whereas the 1%, 10%, and 100% models differ
+only in the share and the matching training length. Training length is matched in epochs. Each human share
+is pretrained for about 0.5 epoch of that share, so the larger shares also take more steps, and every model,
+including the 0% model, is then trained for 3 epochs of the Dexter data, where one epoch passes once over
+every step of every 30 Hz trajectory. During this stage, the 1%, 10%, and 100% models draw 45% of their
+training samples from Dexter and 55% from human video, while the 0% model trains on the Dexter data alone.
+Multi-view human video is recorded with wrist cameras as well as a head camera, like the robot. GR00T 2
+itself pretrains on 403k hours of Human-1M. We pick each model’s checkpoint offline with the same rule for all
+four, without robot evaluation.
+We test on 72 Dexter tasks, giving each model only the task instruction. 22 of them are out-of-distribution (OOD)
+tasks. They use objects and pick-and-place skills from Dexter’s training data, with new kinds of instructions
+such as color, negation, size, order, count, and spatial relations. The other 50 never appear in Dexter’s training
+data, and 47 of them are in Dexter-50. Each model runs 3 episodes per task, for 864 episodes in total. On each
+task, the four models run back to back on the same station and scene, in the order 0%, 1%, 10%, 100%. One
+operator grades all of them on whether the task’s end state is reached. We also score task progress, the fraction
+of the task completed, with a vision-language model on the real robot rollout video from the head and both
+wrist cameras.
+GR00T 2 also predicts video, so we evaluate the same 72 tasks without a robot as well. From 3 recorded start
+scenes per task, each model generates video rollouts for the task instruction with 10 generation seeds, for 2,160
+videos per model. The same vision-language model judges whether a rollout performs the commanded action
+on the target object (video success) and scores its task progress with the same prompt as the real episodes.
+Results. All four metrics rise with the amount of human video (Fig. 10). On the robot, success goes from 18%
+without human video to 27%, 28%, and 41% with 1%, 10%, and 100%, and task progress from 50% to 58%,
+61%, and 70%. In video rollouts, success goes from 30% to 33%, 38%, and 51%, and task progress from 64%
+to 66%, 72%, and 77%. Using all of the multi-view human video instead of none raises success on the robot by
+23.1 points (95% confidence interval 13.4 to 33.3, paired over tasks) and task progress by 20.1 points (12.3 to
+27.9). In video rollouts it raises success by 21.3 points (14.3 to 28.2) and task progress by 12.4 points (7.8 to
+17.1).
+From 1% to 100%, task progress on the robot gains about 6 points for each tenfold increase in human video
+(2.5 to 9.6), and video success about 9 points (5.9 to 12.0). The step from 10% to 100% is clear on every
+metric. On the robot, success gains 12.5 points (4.2 to 21.3). The step from 1% to 10% is within noise on the
+robot (success +0.9 and progress +3.2 points), but shows in video rollouts (success +4.7 points, 0.1 to 9.4,
+and progress +6.2 points, 2.6 to 9.9), which average 30 rollouts per task instead of 3. None of the metrics
+levels off at 100%, which suggests that more human video would help further. Each data share is a single
+training run, so the error bars show how much the results vary across repeated rollouts, not across training
+runs.
+
+
+
+                                                                                                               60
+                              GR00T 2: Scaling Robot Foundation Models for Generalization, Dexterity, and Adaptation
+
+
+Table 10: UMI-10K for GR00T 2. Gripper UMI episodes in the pretraining corpus.
+
+                                           Hours                                              10,184
+                                           Episodes                                             942k
+                                           Tasks                                               2,897
+                                           Skills                                                 49
+                                           Object categories                                     356
+                                           Episodes with a non-pick-and-place skill             88%
+                                           Episodes with a dynamic skill                        29%
+
+
+                 Prehensile        Articulated       Non-prehensile       Deformable       Other
+
+            1M   601,057
+
+
+     100k
+
+ sedosipE
+       10k
+
+
+            1k                                                                                                         562
+                                  lp-k d
+                            eca porer
+                               tneruop
+                               c      iro
+                                 nu-esni cip
+                                        pac
+                             a
+                           p tr ts  akcalof
+                                      e
+                                  d piwds
+                                        rp
+                                      e rp
+                 rewar d- e         ssehs
+                                    ekapo
+                                    -ne
+                            solccatsniuz
+                               k     u-p
+                             piznodnah
+                    spa  fl- re -nepo
+                             x   v
+                              ob gard
+                              o lc         s
+                                      ediol t
+                                        p
+                                   elpepo
+                                    -n to
+                   roo d-es renhah
+                       gna          -g
+                             hnu llupt
+                                    worcs
+                                   poows  h
+                          r c     peerits
+                                      ess
+                             elbmvomecr
+                              n e nar
+                                u-ktsiwt   a
+                      knabonk-p-pifl
+                                  a p
+                            seg ekou     n
+                                   dlosfup
+                                     h os
+                                       tr r
+                         u  qs     e e
+                              ez rofed
+                               -m s-pifl
+                      hsi hctiwllornur  llo
+                                        uqs
+                                  pu-ulp
+                               nu aet
+                        gulp ritnu
+                                e  s -g llo
+                                     e id
+                                     sasuc
+                    wer elbm ercs
+                         csn   u  -w    t
+
+
+Figure 32: Skill distribution of the Gripper UMI corpus. Episodes per skill on a logarithmic scale, colored by skill group.
+An episode counts toward every skill its instruction exercises. Pick-and-place is the most common skill, but 88% of episodes
+also exercise at least one other skill.
+
+
+C.2. UMI-10K for GR00T 2
+Scale. The Gripper UMI corpus (App. E) contributes 942k quality-controlled episodes and 10,184 hours of
+bimanual parallel-gripper demonstrations across 2,897 tasks to GR00T 2 pretraining (Tab. 10). The corpus is
+built for breadth, focusing on short to mid-horizon tasks with wide behavior coverage, rather than depth on a
+few specialized tasks: no task accounts for more than 1.2% of the hours, and the instructions span 356 object
+categories and 49 skills in our manipulation vocabulary.
+Task distribution. We characterize the corpus by tagging every task instruction with a 49-skill vocabulary
+organized in four groups by manipulation and object type: prehensile, non-prehensile, articulated, and
+deformable, the same vocabulary that drives task generation (below). The skill distribution is shown in
+(Fig. 32): pick-and-place appears in 64% of episodes, while 88% of episodes also exercise at least one other
+skill to ensure diversity and complexity of actions captured. 29% of episodes involve a dynamic skill such
+as throwing, toppling, shaking, or sweeping, and 17% involve a precision skill such as insertion or capping.
+Articulated-object skills, drawers, lids, zippers, box flaps, doors, knobs, and cranks, appear in 29% of episodes,
+and deformable-object skills, folding, spreading, rolling, tearing, and tying, in 15%. Tasks are graded into
+three difficulty tiers along two axes, the number of sequential subgoals and the share of more complex motion
+beyond pick-and-place, which both increase with difficulty tier. By hours, 41% of the corpus is simple (two or
+more subgoals, any motion), 38% moderate (three or more state-dependent subgoals with at least one non-pick-
+and-place skill), and 21% complex (four or more state-dependent subgoals dominated by non-pick-and-place
+skills).
+Task design. Tasks are generated using a language-model based agent which pairs skills from the vocabulary
+
+
+                                                                                                                             61
+                   GR00T 2: Scaling Robot Foundation Models for Generalization, Dexterity, and Adaptation
+
+
+Table 11: Robot teleoperation data in the GR00T 2 pretraining mixture. Share is the fraction of robot-data samples
+drawn from each source.
+
+  Source                                Platform (end effector)                            Episodes         Hours    Share
+  Bimanual, parallel gripper
+  YAM                                   YAM (gripper)                                        610.7k         15,146   51.2%
+  ABC-130k (XDOF, 2026)                 YAM (gripper)                                        130.7k          3,591   10.4%
+  Bimanual, dexterous hands
+  Sharpa                                Bimanual arms (22-DoF Sharpa hands)                  202.6k          2,890   20.6%
+  Wuji                                  Tianji 7-DoF arms (20-DoF Wuji hands)                 80.9k          1,256   14.0%
+  Humanoid
+  G1                                    Unitree G1 (gripper)                                   57.7k          275    1.3%
+  Single arm
+  DROID (Khazatsky et al., 2024)        Franka Panda (gripper)                                   76k          350    2.5%
+  Total                                                                                       1.16M          23.5k   100%
+
+
+with objects from an object inventory into task templates, which are linted, deduplicated against every existing
+task. A human then inspects each task and manually accepts or rejects it. Each template is instantiated into
+concrete tasks by sampling different object, count, color, and position, which yields counterfactual pairs that
+share a scene but differ in one attribute of the instruction, and each generation round under-samples skills that
+are already common. The result is broad compositional coverage: 2,798 distinct skill-object pairs, with 70% of
+the top-24-skill by top-30-object grid populated.
+Quality control. Every episode passes a three-stage quality pipeline before it enters the corpus. First, an
+autonomous station-side check rejects recordings with uneven frame timing, dropped frames, or tracking and
+gripper faults at the point of capture. Second, an agentic QC pipeline reviews each remaining episode from
+its videos and instruction and scores four aspects: task completion (every step of the instruction is carried
+out on the objects, counts, and targets the instruction names, and the result is left in the specified state),
+motion quality (no micro-adjustments, jerky or abrupt movements, or idle hesitation), scene validity (a clean
+workspace without distracting or occluding objects or people), and view quality (both grippers and the task
+area visible in every camera); an episode is rejected on any critical failure or on a low aspect score. Third,
+human reviewers audit the agent’s verdicts on sampled and disputed episodes against a golden set, and their
+corrections feed back into the judge. Together these stages filter out roughly a quarter of recorded episodes
+(about 11% at the station and 16% at the agentic gate), so the corpus contains only clean, instruction-faithful
+demonstrations whose motion reflects natural human manipulation: the 95th-percentile gripper speed within
+an episode is 0.28 m/s on each arm, and peak speeds exceed 0.68 m/s in a tenth of the episodes.
+
+C.3. Teleoperation Data for GR00T 2
+GR00T 2 pretrains on about 23.5k hours and 1.16M episodes of teleoperation from six sources. They span bi-
+manual parallel-gripper arms, bimanual arms with dexterous hands, a humanoid, and a single-arm manipulator
+(Tab. 11).
+Embodiments and sources. Bimanual parallel-gripper data come from YAM arms and make up the largest
+block: 18.7k hours covering a broad range of household and tabletop tasks, including 3.6k hours from ABC-
+130k (XDOF, 2026). Dexterous data come from bimanual arms with multi-fingered hands. The Sharpa data
+(22-DoF Sharpa hands) cover 2.9k hours, and Wuji (20-DoF Wuji hands on 7-DoF Tianji arms) adds 1.3k
+hours. Humanoid data come from the Unitree G1 (App. H), and DROID (Khazatsky et al., 2024) contributes
+single-arm Franka data from 564 scenes. Every bimanual platform records a head or top-down view and two
+wrist views.
+
+
+
+                                                                                                                         62
+                          GR00T 2: Scaling Robot Foundation Models for Generalization, Dexterity, and Adaptation
+
+
+A Teleoperation pipeline                       B Robot platform                                    C Key upgrades
+
+                                                                                                   HARDWARE
+  Operator devices
+  track head, wrists, and fingers                                                                        SHW5G stereo head cameras
+                                                                                                     1
+  PICO, Manus, Sharpa exo, Quest Pro                                            1                        2560×1984 per eye, 30 → 60 fps
+
+                                                                            2
+                                                                                                         GEAR Neck: open-source 3-DoF head
+  Teleop server (Isaac Teleop)                                                                       2
+                                                                                                         yaw ±90∘ , roll ±30∘ , pitch ±45∘
+  one pose stream for every device,
+  streams robot video to the headset
+                                                                                                         809 arm: longer reach, faster joints
+                                                                                                     3
+                                                                                    3                    reach 690 → 809 mm, speed 180 → 220∘ /s
+  Retargeter                                                                                       SOFTWARE
+  wrist, finger, head poses →
+  arm, hand, and neck joint targets                                                                 World-aligned geometric retargeting
+                                                                                                    one world frame, not start-pose deltas,
+                                                                                                    ∼ 8.48 𝜇s computation time, singularity-safe
+  Robot server
+  runs arm, hand, and neck control                                                                  3-DoF reprojection (Televiz)
+  with joint limits and safety stops                                                                head turns answered at headset rate,
+                                               2× 7-DoF arm · 2× 22-DoF Sharpa hand · 3-DoF neck    decoupled from video and neck lag
+
+
+
+
+Figure 33: Teleoperation system for Tianji + Sharpa. (A) Teleoperation pipeline from operator devices to the robot. The
+retargeter is the solver used for human-data conversion. (B) Robot platform: Tianji arms, Sharpa hands, and the GEAR
+Neck. (C) Key upgrades: hardware, numbered at their location in (B), and software.
+
+
+Mixture. Sampling shares are set per source rather than in proportion to hours (Tab. 11). YAM holds 64% of
+robot hours but receives 51% of samples. The dexterous Sharpa and Wuji data together hold 18% of hours and
+receive 35% of samples.
+
+C.3.1. In-Lab Teleoperation System for Tianji + Sharpa
+The sources in Tab. 11 form the pretraining mixture. In addition, we collect robot data in our lab, mainly for
+post-training, with the Tianji + Sharpa teleoperation system in Fig. 33. It shares its devices and retargeting
+with the human-data pipeline (Sec. B.1.1 and B.1.2) and collects, for example, the task-agnostic play data
+used to learn new tasks without teleoperation (Sec. B.1.3) and the 1 or 10 target-task demonstrations added
+for comparison (Sec. B.1.4).
+Platform and pipeline. Tianji + Sharpa pairs two 7-DoF Tianji arms with two 22-DoF Sharpa Wave hands. A
+longer upper arm (288 to 400 mm) recovers the workspace in front of the chest, and a 220 ∘ /s joint limit keeps
+up with human wrist motion. A teleoperation server ingests all devices through Isaac Teleop, a retargeter maps
+them to arm and hand commands, and a robot server executes them.
+Active head without motion sickness. The cameras ride on the GEAR Neck, our open-source 3-DoF neck
+that follows the headset, and stream at 60 fps for lower latency and less blur. A moving head camera normally
+causes motion sickness, because the image lags the operator’s head turn by the capture, transport, and neck
+delay. Our 3-DoF reprojection in Televiz renders each frame at its capture-time orientation and lets the headset
+re-render it against the current head pose at its own rate, so head rotation is answered locally and end-to-end
+latency no longer drives operator comfort.
+
+C.4. Data Annotations
+We built Flora (Leng et al., 2026), the data engine that annotates training data for GR00T 2 models. Flora
+consists of three models: Flora-TempSeg localizes actions in time, Flora-Captioner describes each localized
+action, and Flora-Rewarder produces outcome, dense, and rubric-based rewards. They are trained on open-
+source, licensed, and in-house data, where human annotators provide dense timestamped captions and
+action-quality labels under detailed labeling guidelines. The same models label human egocentric video and
+robot recordings from parallel-gripper and dexterous-hand embodiments, with one or more synchronized
+camera views.
+
+
+                                                                                                                                                   63
+                   GR00T 2: Scaling Robot Foundation Models for Generalization, Dexterity, and Adaptation
+
+
+
+Timestamped captions. Given an episode video, Flora outputs a set of time intervals, each paired with a
+caption of the action performed in it. Flora-TempSeg runs on overlapping windows and predicts the start
+and end time of each action in a window, together with flags that mark actions continuing past the window
+edges. These predictions are mapped to episode time and stitched into episode-level intervals, while concurrent
+actions, such as two hands doing different things, remain separate intervals. Flora-Captioner then captions
+each interval independently. In addition to the frames of the interval, it sees frames from the neighboring
+actions before and after it, which help resolve object identity and intent, while the caption describes only
+the target interval. Synchronized camera views are tiled into one image per time step. Each caption is a
+self-contained imperative instruction that names the intended action, the objects, the role of each hand or arm,
+and relevant spatial relations, for example “hold tea leaves with right hand, pass tea leaves to left hand”. Failed
+attempts are captioned with their intended goal, without implying success. Both models are first fine-tuned on
+human-annotated captions and then trained with GRPO (Shao et al., 2024) on verifiable rewards: temporal F1
+and boundary accuracy for Flora-TempSeg, and reference-grounded coverage of caption requirements with a
+penalty for factual errors for Flora-Captioner.
+Quality and cost. On WGO-Bench (Macrodata Labs, 2026), Flora achieves the best temporal segmentation
+F1 of all evaluated models, 50.3 versus 46.0 for the next-best model, GPT-6 Astra (OpenAI, 2026). On our
+300-episode in-house captioning benchmark, it leads all models on human episodes and ranks second to Astra
+on robot episodes.
+Annotating GR00T 2 data. For GR00T 2, Flora turns raw episodes into training-ready supervision. These
+instructions provide fine-grained language conditioning for pretraining. At the production rate above, relabeling
+the roughly 400k hours of Human-1M data used by GR00T 2 takes about two days.
+
+
+
+
+                                                                                                                64
+                    GR00T 2: Scaling Robot Foundation Models for Generalization, Dexterity, and Adaptation
+
+
+
+
+######## EXCERPT: App. K.6 Scalable Multi-Modal Data Processing (pp.133–135) ########
+K.6. Scalable Multi-Modal Data Processing
+Scaling GR00T 2 across tasks and environments requires turning increasingly large and diverse collections of
+human demonstrations into training-ready data. Our infrastructure processes petabyte-scale monthly input
+volumes, with individual production jobs using nearly 10,000 vCPUs. At this scale, preparation must sustain both
+massive data movement and heterogeneous computation: multi-camera video must be retrieved, decoded, and
+resized. Motion records must be transformed and, where needed, retargeted to the training hand representation,
+and observations, actions, and annotations must be aligned in time. Recording duration, resolution, encoding,
+and retargeting requirements vary across sources, so equal numbers of episodes can impose very different
+I/O and compute demands. The output is a consistent set of indexed multimodal episodes, packaged into
+training-ready shards (Fig. 69).
+The central challenge is that these conversions share data and compete for limited working storage. A long
+video can contain many episodes, while one episode can depend on several camera files and separately stored
+motion records. Staging a shared file once avoids repeated downloads, but its slowest consumer determines
+when that storage can be reclaimed. A slow conversion or output upload can therefore retain local files, block
+retrieval of unrelated inputs, and leave compute workers idle. Interruptions compound the problem by adding
+repeated transfers and expensive recomputation. Sustained throughput requires coordinating data lifetime
+with execution progress across the entire pipeline.
+The ingestion pipeline coordinates execution with the lifetime of its shared inputs: new work is admitted
+according to committed storage, dispatched where its inputs reside, and releases capacity only after its outputs
+are safely uploaded. Active files move directly from object storage to processing nodes, allowing conversion to
+begin before the entire selected collection has been retrieved. This removes intermediate staging on a shared
+filesystem while making input placement, retention, and reconstruction explicit responsibilities. Fig. 70 shows
+the mechanisms supporting this lifecycle.
+
+
+
+                                                                                                               133
+                   GR00T 2: Scaling Robot Foundation Models for Generalization, Dexterity, and Adaptation
+
+
+
+
+Figure 69: Transformation of human demonstration recordings into aligned multimodal episodes and training-ready
+dataset shards.
+
+
+Admit and place work (Fig. 70, panels B and C). Equal episode counts can imply very different file footprints
+and sharing patterns, so task limits alone cannot control storage demand. Before downloading an input group,
+admission accounts for resident files, pending transfers, and output headroom against the node’s budget.
+Required inputs must be ready before episode dispatch, and consumers execute on the node holding those
+inputs. Separate Ray worker pools (Moritz et al., 2018) give loading, conversion, and publication independent
+concurrency. Bounded queues limit outstanding work while storage admission limits the capacity committed to
+it.
+Retain inputs through completion, then release capacity (Fig. 70, panels A to C). A downloaded video
+may serve several episodes, including consumers still waiting for execution. The loader establishes their claims
+before handing off work, protecting shared inputs across queueing, conversion, and upload. An episode releases
+its claims only after its intermediate results have been uploaded and temporary outputs cleaned up, while other
+consumers continue to protect the same files. Once the last claim is released, cleanup can reclaim those files and
+make room for the next input group. Consumer completion thus governs admission of subsequent inputs.
+Retrieval, conversion, and shard publication advance asynchronously around this dependency: they overlap
+across workers without allowing prefetch to grow independently of the storage that unfinished consumers still
+hold.
+Recover within the same capacity budget (Fig. 70, panel D). Recovery preserves this connection between
+execution and storage. Stopped attempts release obsolete claims, while lost inputs are reconstructed on an
+available node through the same admission path before affected episodes retry. Durable conversion-group and
+publication checkpoints separately identify completed results that job resumption can reuse. Input release
+after upload and cleanup, and checkpoint-based reuse after restart, are distinct boundaries: an uploaded
+artifact without recorded completion may still require repeated processing. These rules keep retries within the
+working-storage budget while preserving reusable progress.
+This coordination of shared-input lifetime, admission, and recovery complements prior work on video analysis,
+multimodal processing, and prefetching (Poms et al., 2018; Chen et al., 2025; Luan et al., 2026; Dryden et al.,
+2021).
+Production evaluation. Tab. 36 summarizes throughput and resource use across three production jobs and
+recovery across five interrupted jobs. Each job uses 100 nodes with 96 vCPUs and 768 GiB of memory per
+node. The throughput workload covers 1.30 million episodes and about 18,700 demonstration-hours, with
+three camera views per episode.
+Completed-conversion time efficiency is the share of completed conversion time spent on work that did not
+need to be repeated after interruption.
+
+
+
+
+                                                                                                              134
+                     GR00T 2: Scaling Robot Foundation Models for Generalization, Dexterity, and Adaptation
+
+
+
+
+Figure 70: Multimodal data ingestion: (A) asynchronous overlap, (B) processing stages and the feedback from input release
+to admission, (C) storage tiers, and (D) recovery. Numbers identify shards, and timings are illustrative. Compute/upload
+overlap occurs across workers.
+
+
+
+
+Table 36: Production evaluation of the data ingestion system. Ranges span jobs. Memory and disk use are per-node
+means.
+
+Category                    Measurement                                                   Result
+Throughput and              Published demonstration duration per job                      ∼6,240 h
+publication (three          Execution time per job                                        8.0–8.6 h
+jobs)                       End-to-end throughput                                         722–780 demonstration-hours/h
+                            Time to first training-ready shard                            ≤28 min
+                            Mean worker assignment at 10–80% conversion                   >99.9%
+                            completion
+Resource use during         Mean CPU utilization                                          97.8%
+active conversion           Mean memory use / node capacity                               335–384 / 768 GiB
+                            Mean filesystem use / node capacity                           80–94 / ∼291 GiB
+Recovery (five              Completed-conversion time efficiency                          89.8–95.6%, pooled 92.4%
+interrupted jobs)           Restart-to-first-publication latency                          2.4–5.3 min
+
+
+
+
+                                                                                                                     135
+

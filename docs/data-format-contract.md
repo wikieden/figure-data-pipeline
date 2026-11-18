@@ -39,6 +39,27 @@
 
 缺失的可选流在 EpisodeMeta 中不出现即可；训练侧用掩码表达（决策 2 可空模态）。
 
+### 1.4 TIS2 两节同构末端档案扩展（设计，待实现）
+
+当前自研方向采用用户认可的 [T/I/S 两节构型](inhouse-isomorphic-end-effector.md)：独立拇指、独立食指、后三指合组，带掌面和拇食之间朝指尖捏取区看的相机。采集器归 `device`，执行手归 `robot`，继续使用 MCAP → 策展 → LeRobot v3，不增加新 track。
+
+本节是 **profile 扩展要求，尚未实现**；§1.3 的通用 device 最小流是旧 UMI 档案要求。新档案校验落地前不能仅凭本节声明采集器已支持入湖。
+
+| 项 | 新版约定 |
+|---|---|
+| 身份 | 单独版本化的末端/设备档案；区分穿戴采集与执行手、左右侧、两节与历史三节/二指版本 |
+| 实测状态 | 每个启用侧 `/signal/hand_joint_left/right`，记录机械关节 rad；六个屈伸量 `[T_root,T_mid,I_root,I_mid,S_root,S_mid]` 仅为候选，主动/从动轴及对掌轴冻结后确定顺序 |
+| 命令 | `/signal/hand_command_left/right` 仅写实际发送的命令；人体测量、映射目标、执行命令和反馈分别声明来源，穿戴机械读数不是机器人已执行动作 |
+| 位姿与定位 | 每个启用侧 `/signal/ee_pose_left/right`，声明坐标系、TCP、定位来源和质量；原生 ≥50 Hz 为设计目标，如实记录实际频率，定位所用 IMU 保留 |
+| 视频 | `/video/palm_left/right` → `observation.images.palm_left/right`；启用侧必有对应流，不为未安装侧伪造数据 |
+| 标定 | `/meta/calibration` 与 `calibration_ref` 关联相机内参、`T_palm_camera`、`T_palm_tcp`、关节零点与时钟偏移；左右独立标定 |
+| 可选接触 | `/signal/contact_force_left/right` 按 T/I/S/掌面区域声明 N、坐标系与 measured/estimated 来源；不能把电流直接称为实测接触力 |
+| 训练映射 | 手状态进入 `hand_left/right`，旧 gripper 槽位无效；剩余维度掩码为 false；按 profile 分开统计和切分，冻结前不复用旧顺序 |
+
+不更改现行 96 维槽位布局；手部绝对关节目标与腕部增量动作的组合必须在新版控制/导出档案显式声明，不能自动沿用 §2.3 的泛化增量描述。无法确定命令来源的 device 演示只能按明确标注的示教目标消费，不能冒充 robot 执行命令。
+
+启用前需实现 profile 感知的最小流校验、关节顺序/掩码检查、时间对齐、标定加载与双向导出样本，并验证旧二指数据兼容。新增 `end_effector_profile`、控制模式、关节来源等结构字段如超出现行 schema 0.2，须先扩展 schema 和迁移；禁止直接写入未知字段。
+
 ## 2. LeRobotDataset v3 训练态映射
 
 ### 2.1 表结构
@@ -65,6 +86,8 @@ episode 级元数据（`EpisodeMeta` 全量 JSON）写入 `meta/episodes/*.parqu
 ### 2.2 相机语义名归一化
 
 设备上任意命名，export 时映射到固定词表：`head`、`head_left`、`head_right`、`wrist_left`、`wrist_right`、`palm_left`、`palm_right`、`ego`（头戴第一视角）、`ego_wrist`（UMI 腕装）、`third_person`、`slam_left`、`slam_right`。映射表随设备档案走（`device_id` → camera map）。SmolVLA 的教训（research-vla-pretraining §1.6）：相机命名不一致会静默毁掉跨数据集训练。
+
+TIS2 的 `palm_left/right` 表示面向掌心抓取区的观测，物理安装点可在拇食指根背侧；朝外用于定位的相机另声明为环境定位视图，不与该语义混用。
 
 ### 2.3 统一槽位向量
 
@@ -136,6 +159,8 @@ episode 级元数据（`EpisodeMeta` 全量 JSON）写入 `meta/episodes/*.parqu
 未在表中的键：读侧忽略（前向兼容），写侧禁止（`extra="forbid"` 只对写路径开启）。
 
 ### 3.1 契约 0.3 待入项（2026-09-14 增补）
+
+- **TIS2 档案扩展**（2026-10-26）：§1.4 的末端档案引用、控制模式、逐流测量/估计/命令来源与关节映射版本；字段形状待定义，现行 schema 0.2 尚不支持，不能据此视为已实现。
 
 - **`grasp_aperture`**（human 轨伪动作，浮点 0–1 或 mm，可空）：拇指-食指开合度作为与 device 轨 `gripper_width` 同义的连续抓取信号（Dyna-2 伪动作口径；U-23 裁决的"手部状态"显式化）。D2+D1 同戴配对（capture-devices-design §7 ①）用它做伪标签校准。
 - **连续帧对导出**：视频流的训练态抽帧不得只保留关键帧；`export` 需支持按 `frame_pair_stride` 输出 (t, t+Δ) 帧对索引，供 WAM 目标（training-pipeline §1.3，U-37）消费。MCAP 采集态不变。

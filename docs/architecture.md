@@ -76,6 +76,10 @@ UMI 式手持夹爪靠腕装鱼眼保证"本体不入观测"，无需转换；�
 
 ---
 
+### 2.4 自研 T/I/S 两节末端的接入方向（2026-10-26）
+
+用户认可的[构型参考与设计](inhouse-isomorphic-end-effector.md)同时用于穿戴采集器和机器人执行手。分别进入 device/robot 轨，共用现有 MCAP、QC、LeRobot 与训练回流架构；新增内容是版本化末端档案、机械关节/控制命令的来源区分、向掌心看的 `palm_left/right` 视图及对应标定。旧二指与早期三节数据保留独立身份。此为设计输入，profile 校验与 schema 扩展尚待实现，详见[数据契约 §1.4](data-format-contract.md#14-tis2-两节同构末端档案扩展设计待实现)。
+
 ### 2.5 全链路总图与补齐的三环（2026-11-17）
 
 对照阿里 Qwen 具身数据链路（入湖 → 质检 → 打标 → 挖掘 → 合成 → 训练评估 → 回流），本仓库原设计缺**挖掘、人类视频 → 机器人演示合成、回流闭环**三环。全链路总图、各环节对照、新增设计与落地顺序见 [data-pipeline-design.md](data-pipeline-design.md)。补齐方式不新增管线层与持久化格式：挖掘与合成作为 curation 层新阶段（模块与 CLI 待 governance U-48 / U-47），回流闭环是跨层流程，用 lineage 串起。系统层面的子系统划分、数据产品、容量、运营与建设路线见 [data-system-plan.md](data-system-plan.md)。
