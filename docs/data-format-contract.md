@@ -167,6 +167,8 @@ TIS2 的 `palm_left/right` 表示面向掌心抓取区的观测，物理安装�
 - **子任务槽位化字段**（2026-11-02，依据 [research-vendor-robotics.md](research-vendor-robotics.md) §7.4 与 curation-pipeline §3.2/§4.1）：`Subtask` 增加可选字段 `hand`（`left`/`right`/`both`/None）、`outcome`（`success`/`failure`/None）、`contact`（bool \| None）、`keyframe_ns`（int \| None），以及结构化描述槽位（动作、操作对象、目标位置、结果状态）与 `boundary_basis`（边界判据：硬件事件 / 接触 / 速度极小值 / VLM / 人工）。全部可空，属 minor 升级；现在采集时几乎不费事，以后补标代价很高。现行 schema 0.2 尚不支持。
 - **采集端事件下传**：`/event/task` 中的失败、重拍、换道具、中止事件在 export 时写入 `meta/fdp_subtasks.parquet` 的事件列，供标注端读取（curation-pipeline §4.1）。MCAP 采集态不变。
 - **human 轨估计内参**：GeoCalib/DroidCalib 从视频估出的内参（cleaning-algo-selection §1.7）写入 episode 元数据并注明来源为估计值，另导出可选列 `fdp.camera_fov.<camera>` float32[2]（参照某大模型厂商导出的 `camera_fov[2]`）。`action_mask` 已在 §2.1，无需新增。
+- **奖励列**（2026-11-18，依据 [gr00t2-trends-analysis.md](gr00t2-trends-analysis.md) §2.4）：步级表增加可空列 `reward.outcome`（episode/子任务结果，0/1 或 None）、`reward.progress`（稠密进度 0–1）、`reward.rubric.<name>`（rubric 分项），每列在新增的列元数据文件 `meta/fdp_columns.json` 记来源（`model` / `predicate` / `human`）、模型或规则版本与规范版本。来源是模型的列可随模型升级整列重算，旧版本保留（与 curation §5 QC 视图同一机制：新增列不重写旧列）。sim 轨谓词真值写 `predicate`。对齐 LeRobot v0.6 的进度 / 奖励列（data-strategy-roadmap §1.3）；GR00T 2 的 Flora-Rewarder 产出结果 / 稠密 / rubric 三类奖励供 RL 与评测（research-gr00t2 §4.5）。
+- **力类动作槽位**（2026-11-18，补充 U-25）：U-25 已定触觉 / 力 / effort 作为可空**观测**模态；本条补动作侧：§2.3 槽位布局预留可空动作段 `ee_wrench_target_left/right`（6，力 / 力矩目标，必带 `frame_id`）与 `stiffness_left/right`（6，笛卡尔刚度或其对角），默认掩码无效，`slot_layout_version` 随之升级。依据：GR00T 2 把 DexUMI 指尖力投影为关节力矩并入动作、执行时调刚度（research-gr00t2 §4.4）。维度与表示（关节空间 vs 笛卡尔）待 U-04 末端冻结后定，现行 schema 0.2 不支持。
 - 其余 0.3 项（逐帧 subtask/plan/progress/reward 列、tactile (N,6)、wrench frame_id、effort measured/estimated、段级表、同意/来源图）见 data-strategy-roadmap §7.2。
 
 ## 4. 版本迁移政策
