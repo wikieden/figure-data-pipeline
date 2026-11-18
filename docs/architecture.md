@@ -76,6 +76,10 @@ UMI 式手持夹爪靠腕装鱼眼保证"本体不入观测"，无需转换；�
 
 ---
 
+### 2.5 全链路总图与补齐的三环（2026-11-17）
+
+对照某大模型厂商 具身数据链路（入湖 → 质检 → 打标 → 挖掘 → 合成 → 训练评估 → 回流），本仓库原设计缺**挖掘、人类视频 → 机器人演示合成、回流闭环**三环。全链路总图、各环节对照、新增设计与落地顺序见 [data-pipeline-design.md](data-pipeline-design.md)。补齐方式不新增管线层与持久化格式：挖掘与合成作为 curation 层新阶段（模块与 CLI 待 governance U-48 / U-47），回流闭环是跨层流程，用 lineage 串起。
+
 ## 3. 模型训练（对标 Helix 02 三层）
 
 ### 3.1 S2 骨架（大脑）预训练
@@ -203,6 +207,9 @@ Index 复刻的硬件/平台时间线用另一套前缀 **H0/H1/H2**（[index-re
 | rerun 检视 | `viz` | `fdp viz` | M1 | — |
 | 五阶段策展、QC 三级、分割/标注/演示库 | `curation` | `fdp curate` | M2 | [curation-pipeline.md](curation-pipeline.md)、[cleaning-algo-selection.md](cleaning-algo-selection.md) |
 | 具身转换（可选阶段） | `curation.embodiment` | `fdp curate --stage embodiment` | M2 | §2.3 |
+| 挖掘：结构化过滤 + embedding 召回 + rerank、查询即配置（提议，U-48） | `curation.mining` | `fdp curate --stage mine` / `--query <name>` | 检索底座 M2，闭环 M3 | [data-pipeline-design.md](data-pipeline-design.md) §6 |
+| 人类视频 → 机器人演示合成（提议，U-47）；与具身转换共用合成代码 | `curation.synthesis` | `fdp curate --stage synthesis` | M3 | [data-pipeline-design.md](data-pipeline-design.md) §7 |
+| 回流闭环（失败归类 → 查询 → 配额/合成/重标 → 新数据集版本 → 再评测） | 跨层流程 + lineage `loops` 表 | — | M3 | [data-pipeline-design.md](data-pipeline-design.md) §9 |
 | 缩放消融切分器 | `curation.splits` | `fdp curate --split` | M2 | [eval-protocol.md](eval-protocol.md) |
 | 训练配方/消融/评测 CI | 独立仓库 fdp-policy | — | M3 | [training-pipeline.md](training-pipeline.md) |
 | 运行时回流 | `ingest`（robot 轨来源之一） | `fdp ingest --source fleet` | M3 | [runtime-and-deployment.md](runtime-and-deployment.md) |

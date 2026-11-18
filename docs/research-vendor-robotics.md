@@ -193,3 +193,5 @@ S2（2026-11-02）新增，已于同日回灌（阈值仍是临时值，格式�
 11. **演示库检索的 embedding 候选**加入 Qwen3-VL-Embedding + Rerank（需要区分动作方向和左右手，SigLIP 不够）。license 待核查，核查前只能进研究分支。→ cleaning-algo-selection §1.9 ✅ 已更新（⚠️ license 仍待核查）
 12. **采集端事件下传到标注端**（失败、重拍、换道具），并加"规范未覆盖 → 待裁决队列"这条 HITL 通道。→ curation-pipeline §9，robot-track-teleop / device-track-umi 的元数据 ✅ curation §4.1/§9 已更新；事件下传进契约 §3.1 的 0.3 待入项
 13. LeRobot 导出参照 `action_mask` + `camera_fov` 两列（§1 S2 补充）。→ data-format-contract（先改契约）✅ 进契约 §3.1 的 0.3 待入项
+
+全链路设计（挖掘、人类视频合成、回流闭环三环的补齐）见 [data-pipeline-design.md](data-pipeline-design.md)（2026-11-17）。
