@@ -1,6 +1,6 @@
 # 治理登记：风险 · 未决决策 · 自报数字
 
-> 2026-09-08 建立，2026-09-09 增补（战略路线图引出的 U-23–U-33 / R-14–R-19 / D-13–D-21；2026-09-14 增补 U-37 / R-20 / D-22–D-24，U-11 表 23–30 行；2026-09-19 增补 U-39 / R-21，U-11 表 31–32 行；2026-09-20 增补 U-40；同日方案评审增补 R-22–R-25、U-41、U-42）；同日逐项裁决 data-strategy-roadmap §6 的 10 项决策（U-03/U-23/U-24/U-25/U-27/U-28/U-30/U-32 closed，U-26 部分裁决，U-29 拆表后逐项待 LEGAL）；同日追加裁决 U-09/U-22/U-31/U-33；2026-09-12 增 U-34–U-36（采集设备五件套）；2026-09-14 增 U-38 / D-25–D-27（四家路线精读 research-four-routes.md），同日 D-23 由第三方改一手（research-skild.md）；2026-11-02 增 D-31 / D-32（自变量数据管线 research-xsquare.md），D-04 来源与 R-08 补注。2026-11-17 增 U-47–U-49 / R-27 / D-33（全链路设计 data-pipeline-design.md）。来源为全局 review 三路审计（一致性 / 覆盖缺口 / 风险与未决项）的合并结果。三张表是活文档：每条有 owner（按角色，非人名）与复检时点；状态字段只有 `open / mitigating / closed / accepted`。新增风险、新增依赖他家数字的设计决策、新增待裁决项都必须先在这里登记再写进设计文档（CLAUDE.md 约定）。
+> 2026-09-08 建立，2026-09-09 增补（战略路线图引出的 U-23–U-33 / R-14–R-19 / D-13–D-21；2026-09-14 增补 U-37 / R-20 / D-22–D-24，U-11 表 23–30 行；2026-09-19 增补 U-39 / R-21，U-11 表 31–32 行；2026-09-20 增补 U-40；同日方案评审增补 R-22–R-25、U-41、U-42）；同日逐项裁决 data-strategy-roadmap §6 的 10 项决策（U-03/U-23/U-24/U-25/U-27/U-28/U-30/U-32 closed，U-26 部分裁决，U-29 拆表后逐项待 LEGAL）；同日追加裁决 U-09/U-22/U-31/U-33；2026-09-12 增 U-34–U-36（采集设备五件套）；2026-09-14 增 U-38 / D-25–D-27（四家路线精读 research-four-routes.md），同日 D-23 由第三方改一手（research-skild.md）；2026-11-02 增 D-31 / D-32（自变量数据管线 research-xsquare.md），D-04 来源与 R-08 补注。2026-11-17 增 U-47–U-49 / R-27 / D-33（全链路设计 data-pipeline-design.md）。同日增 U-50 / U-51 / R-28 / R-29（数据系统规划 data-system-plan.md）。来源为全局 review 三路审计（一致性 / 覆盖缺口 / 风险与未决项）的合并结果。三张表是活文档：每条有 owner（按角色，非人名）与复检时点；状态字段只有 `open / mitigating / closed / accepted`。新增风险、新增依赖他家数字的设计决策、新增待裁决项都必须先在这里登记再写进设计文档（CLAUDE.md 约定）。
 
 角色缩写：**DATA** 数据层（recorder/ingest/export/schema）、**CUR** 策展层、**TRAIN** 训练层、**HW** 采集硬件、**PLAT** 数据平台/运维、**LEGAL** 法务合规、**PM** 项目管理。
 
@@ -36,6 +36,8 @@
 | R-24 | 硬件/安全 | 位控手臂做刚性接触（开关门、台面捏布、筒内）产生大内力，损坏本体或机器；力控未就绪（X-2） | 高 | 采集或评测中出现过流保护 / 机械损伤 | **2026-09-20 新增**。关节电流软件柔顺与碰撞保护；门与面板走解析原语；门磁吸、软垫台面、柔性指尖；遥操作端电流提示 | HW + TRAIN | A0 结束时 | open |
 | R-25 | 数据 | 洗衣视频手部遮挡导致伪动作通过率低，每可用小时成本高于一般场景口径；人手策略不适用于二指夹爪（P-1、P-2） | 中 | 50 h 试购通过率 <30% | **2026-09-20 新增**。签大单前先试购实测；洗衣场景以 D1-H 真值为主 | CUR + TRAIN | 签约前 | open |
 | R-27 | 合规 | 闭源合成模型（Wan-robot / QwenRobot-World 等）以"闭源权重 + 受保护联合训练"交付：数据只读授权、不可导出，产物限定在对方云上部署——合成数据与模型权重归属不清，lineage 记不到权重哈希，删除请求传导不到对方副本 | 中 | 合作方案出现"数据不出平台""权重不可导出"条款 | 采用前回答三问：产物与权重能否导出、lineage 能否记录不可变版本标识与调用记录、删除能否传导；任一不满足只进研究分支（[data-pipeline-design.md](data-pipeline-design.md) §7.4） | LEGAL + CUR | 签约前 | open |
+| R-28 | 成本 | VLM 调用量随视频量线性增长：语义质检与打标规模化后可能超出平台预算（阿里单次验证口径折合每小时四路视频约 1.4 并发槽·小时 ⚠️，打标与合成尚无可信口径） | 中 | 模型网关记账的 VLM 每可用小时成本超过平台成本的 50%，或日预算连续触顶 | 模型网关按阶段设日预算与降级；粗筛漏斗；规则段先拦；本地优先、API 只仲裁；M2 前半 50 小时样本实测后定上限（[data-system-plan.md](data-system-plan.md) §4.2/§6.1） | CUR + PLAT | M2 中 | open |
+| R-29 | 组织 | 子系统数量（9 个）超出 12–20 人团队的建设与运维能力，平台工作挤占策展与评测 | 中 | 平台类工单占数据团队工时 >40%，或 SLO 连续两周不达标 | 采购优先（存储/编排/向量库/界面）；工作台合一；按里程碑只建最小闭环（M1 只做接入 + 存储 + 规则质检 + 报告 + 导出）（[data-system-plan.md](data-system-plan.md) §10–§11） | PM | 每里程碑 | open |
 
 ---
 
@@ -88,6 +90,8 @@
 | U-47 | 人类视频 → 机器人演示的合成产物归属与启动时点；采集规则（collection_rule / quality_rule）哈希是否进契约 0.3 | 倾向归 sim 轨 `source=human2robot_composite`、`parent_episode_id` 指回 human 轨原始（观测部分生成 + 伪动作，与 sim-track §6 判据一致，不新增 track）；M3 启动，首批只做自有本体与二指兼容视图；规则哈希进 0.3 待入项（[data-pipeline-design.md](data-pipeline-design.md) §3/§7.2） | human 轨伪标签质量分分布；合成专属 QC 通过率；合成组 vs 无合成组的消融 | M3 前 | 合成产物无处落地，或混进 human 轨污染伪标签统计 | CUR + DATA | open |
 | U-48 | 挖掘（检索）模块归属与 CLI | 倾向归 curation 层：`curation.mining`，`fdp curate --stage mine`（建索引）/ `--query <name>`（执行查询、产出快照）；查询为 `configs/queries/` 版本化文件，快照哈希入 manifest（[data-pipeline-design.md](data-pipeline-design.md) §6） | 演示库与难例挖掘的实际查询形态；检索基准（成对难查询）基线 | M2 后半 | 演示库与回流闭环无检索底座，训练集挑选不可复现 | CUR | open |
 | U-49 | 数据平台底座自建 vs 托管阿里云（OSS/DLF、DataWorks、MaxCompute、PAI、DashScope） | 不预设：管线逻辑（状态机、规则、规范、查询、配方、lineage 语义）一律留在本仓库；底座按业务方所在云与数据驻留要求采购，托管前须回答 R-27 三问（[data-pipeline-design.md](data-pipeline-design.md) §11） | 数据驻留要求、成本对比、导出与 lineage 能力实测 | M2 前 | 底座与逻辑耦合，换云即重写 | PLAT + PM | open |
+| U-50 | 数据服务新增 CLI 子命令 `fdp catalog`（目录查询）与 `fdp report`（质检报告、数据集说明卡） | 倾向新增：二者是数据集层的读服务，不新增管线层；CLI 为 API 薄封装，默认排除 held-out 与 `reject_*`（[data-system-plan.md](data-system-plan.md) §4.4） | M1 报告骨架与 M2 目录 API 的实际调用形态 | M1 末 | 报告与目录查询散落在脚本里，对外交付无统一出口 | DATA | open |
+| U-51 | 人工作业台选型：自建界面 vs Label Studio / Encord / Foxglove 等 | 队列与规则自建，界面倾向采购；硬约束两条：直接读 MCAP / LeRobot v3、数据不出自有存储（[data-system-plan.md](data-system-plan.md) §4.5；[research-rd-tooling.md](research-rd-tooling.md) §8） | 2–3 个候选按硬约束试用一周的记录；license 与驻留条款 | M2 前 | 五个人工触点各用一套工具，审核记录进不了 lineage | CUR + PLAT | open |
 
 ### U-11 license 核查追踪表
 

@@ -357,4 +357,6 @@ loops(loop_id PK, trigger, failure_stats JSONB, snapshot_ids[], actions JSONB,
 
 ## 14. 关联文档
 
+系统层面（子系统、数据产品、容量、运营、建设路线、自建与采购）见 [data-system-plan.md](data-system-plan.md)。
+
 [architecture.md](architecture.md) · [curation-pipeline.md](curation-pipeline.md) · [cleaning-algo-selection.md](cleaning-algo-selection.md) · [data-format-contract.md](data-format-contract.md) · [ingest-spec.md](ingest-spec.md) · [sim-track.md](sim-track.md) · [data-platform.md](data-platform.md) · [eval-protocol.md](eval-protocol.md) · [training-pipeline.md](training-pipeline.md) · [compliance-and-security.md](compliance-and-security.md) · [data-strategy-roadmap.md](data-strategy-roadmap.md) · [research-qwen-robotics.md](research-qwen-robotics.md) · [research-xsquare.md](research-xsquare.md)
