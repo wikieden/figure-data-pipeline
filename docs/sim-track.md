@@ -15,7 +15,8 @@
 
 ## 2. 资产管线
 
-- 具身资产：与 robot 轨共用 `configs/embodiments/<robot_model>.yaml` + URDF/USD；仿真本体版本哈希进 EpisodeMeta（`robot_model` 含版本后缀）。
+- 具身资产：与 robot 轨共用 `configs/embodiments/<robot_model>.yaml`；仿真本体版本哈希进 EpisodeMeta（`robot_model` 含版本后缀）。
+- **描述文件以 MJCF 为唯一手写源（2026-11-05）**：MuJoCo / MuJoCo Warp / Newton / mjlab 原生读 MJCF，Isaac Lab 自 Isaac Sim 5.0 起的 MJCF 导入器也走 `mujoco-usd-converter`，所以 USD（Isaac Sim / RTX 渲染用）与 URDF（ROS 2 / MoveIt 用）一律由 MJCF 生成，不手改、不反向转换。原因：URDF → MJCF 会丢掉最影响接触的参数（每个 geom 的摩擦、`solref` / `solimp`、MuJoCo 专有传感器），反向转换后要手补且容易漂移。转换脚本、生成物与接触参数随资产同一版本进 git，生成物哈希进 lineage；自研本体（[inhouse-isomorphic-end-effector.md](inhouse-isomorphic-end-effector.md)）同样适用，外购本体优先取 MuJoCo Menagerie 的官方 MJCF。注意 `mujoco-usd-converter` 仍是 alpha（0.6.0），生成的 USD 需在 Isaac Lab 里做一次接触回归再用。依据见 [research-rd-tooling.md](research-rd-tooling.md) §2–§3。
 - 场景/物体：优先开源资产库（Isaac 内置、Objaverse 子集）；**自建场景走 SimFoundry real2sim**：输入为我们自己的采集视频（human 轨头戴视频、robot 轨场地相机、Creator 手机视频），产出孪生场景 + 物体表亲（[research-simfoundry.md](research-simfoundry.md) §5.1）；物体标签与 Creator App 共用词表 `object_tags`。仅限桌面式布局（SimFoundry 限制），全身/移动场景仍用手工资产。
 - 场景生成结果版本化：SimFoundry 各阶段配置哈希 + 生成物哈希进 lineage（其 VLM 阶段非确定，同输入不同输出），与 §4 随机化版本化同一纪律。
 - 每个资产带 license 标注，非商用资产只进研究分支（cleaning-algo-selection 纪律 2 同样适用于资产）。

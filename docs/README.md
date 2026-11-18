@@ -37,6 +37,8 @@
 | [recorder-sync-and-storage.md](recorder-sync-and-storage.md) | 机上落盘、flush/fsync、带宽与存储预算、断电恢复 | 2026-09-08 |
 | [ingest-spec.md](ingest-spec.md) | 入湖校验、对齐算法、重试/死信、幂等键、断点续传 | 2026-09-08 |
 | [capture-devices-design.md](capture-devices-design.md) | 关键采集设备五件套设计：触觉同构 UMI、头戴参考套件、Creator 手机套件、遥操作站 + 手套、车队回流录制器；规格/同步/契约/BOM/验收 | 2026-09-12 |
+| [inhouse-isomorphic-end-effector-history-20261026.md](inhouse-isomorphic-end-effector-history-20261026.md) | 历史候选档案：旧三节、驱动假设与迭代概念图，不作为当前规格 | 2026-10-26 |
+| [inhouse-isomorphic-end-effector.md](inhouse-isomorphic-end-effector.md) | 当前用户认可的 T/I/S 两节构型：加粗指组、掌面、背侧拇食间向内相机；穿戴采集器、机器人接口、数据契约与验证边界 | 2026-10-26 |
 | [device-track-umi.md](device-track-umi.md) | device 轨（UMI 手持夹爪）P0 可执行清单 | 2026-08-29 |
 | [robot-track-teleop.md](robot-track-teleop.md) | robot 轨：本体选型框架、遥操作站、接管打点、回流 | 2026-09-08 |
 | [sim-track.md](sim-track.md) | sim 轨：仿真器/资产/增殖/域随机化/sim QC/动捕归属 | 2026-09-08 |
@@ -67,6 +69,7 @@
 | [plans-review-hard-points.md](plans-review-hard-points.md) | 方案评审：洗衣两套方案、分类大脑、叠晾计划、追平 Dyna 最快路线、D1-H 的难点与卡点排序、逐项对策、前 4 周去风险清单、需领导新增拍板的事项 | 2026-09-20 |
 | [laundry-fold-hang-plan.md](laundry-fold-hang-plan.md) | 交付二（叠 / 晾 / 收纳）：大脑 v2 与共用动作原语的分工、规范化、结构类数据覆盖、跨品类泛化探针（兼方案 B 启动判据）、品类白名单 | 2026-09-20 |
 | [laundry-two-plans-brief.md](laundry-two-plans-brief.md) | 管理层汇报稿：洗衣房四任务的后训练方案 vs 预训练方案，效果、成本、训练流程、数据与管线需求、风险与决策请求 | 2026-09-20 |
+| [client-capture-to-training-report.md](client-capture-to-training-report.md) | 研究报告：各家采集设备与方案横评（动作真值 / 观测同构 / 力 / 规模 / 换代存活度对训练算法的影响），客户家务与无人洗衣房的五件采集设备（含家电事件流）、管线增量、三层模型与四阶段课程、长期通用能力护栏 | 2026-11-06 |
 | [data-platform.md](data-platform.md) | 容量/成本模型、组件选型、lineage 表结构、可观测性 | 2026-09-08 |
 | [compliance-and-security.md](compliance-and-security.md) | 区域矩阵、Creator 协议、保留期、RBAC/审计、安全基线、劳动合规 | 2026-09-08 |
 
@@ -87,9 +90,13 @@
 | [research-xsquare.md](research-xsquare.md) | 自变量数据管线全景（13 份一手归档）：真机遥操 + XRZero-G0/QUANXTA Zero 无本体采集 + TwinDEX + X2Real 仿真合成；同步、清洗质检（含真机物理回放门）、两级指令与具身桥接样本、无本体:真机 1:1/10:1 配比律、幂采样；自报数字可信度与行动项 | 2026-11-02 |
 | [device-landscape.md](device-landscape.md) | 领先采集设备构型横评（多角度图集） | 2026-09-04 |
 | [research-simfoundry.md](research-simfoundry.md) | NVIDIA SimFoundry：单视频→仿真孪生/数字表亲，real2sim 评测与 sim2real 训练，license 边界 | 2026-09-09 |
+| [research-gr00t2.md](research-gr00t2.md) | NVIDIA GR00T 2 世界-动作模型：架构与推理、三阶段训练、人类视频/UMI/遥操配比，以及数据管线（人类 QC 窗口阈值、in-lab 采集验收、UMI 三级质检、Flora 标注、Lance 快照与 QC 视图、处理管线、GearArena 盲测 A/B）与本仓库对照 | 2026-11-18 |
 | [research-dyna-comparison.md](research-dyna-comparison.md) | Dyna DYNA-1/DYNA-2 模型与数据方案；与 Generalist GEN-0/1/1.5、Skild S1、已研究厂商及学术四个接口的横向对比 | 2026-09-14 |
 | [research-four-routes.md](research-four-routes.md) | Figure / Dyna / Sunday / Generalist 四家技术路线精读（37 篇一手页面）：本体·数据·模型·部署评测四层对照，分歧与收敛点，回写清单 | 2026-09-14 |
 | [research-skild.md](research-skild.md) | Skild AI 一手调研（11 篇博客）：Skild Brain 分层、全身体仿真、S1 视频提示 ICL 与 1k–100k h scaling、L1–L5 扰动阶梯、$1:$3 质控、部署飞轮观 | 2026-09-14 |
+| [research-open-ecosystem-2026.md](research-open-ecosystem-2026.md) | 开源生态全景：开放数据集（真机/人类视频/手持设备/仿真，含 license 与口径冲突）、仿真与真机基准（含 2026-06 基准审计结论）、开放权重模型骨架矩阵（VLA 四谱系 + WAM）、训练框架对比、预训练/微调/推理/存储资源账 | 2026-10-13 |
+| [research-rd-tooling.md](research-rd-tooling.md) | 研发工具链：中间件（ROS 2/Zenoh/rosbag2 MCAP/dora-rs/Copper-rs）、仿真与物理引擎（MuJoCo Warp/Newton/Isaac Lab 3.0/Genesis/ManiSkill3）、资产转换、人形全身控制与重定向（SONIC/mjlab/GMR）、规划与动力学（cuRoboV2/Pinocchio/Crocoddyl/Drake）、部署推理、数据平台、建图定位（cuVSLAM/nvblox/RTAB-Map/GLIM/MapAnything/VGGT）、导航（Nav2/InternNav/场景图）、多模态感知（Depth Anything 3/MoGe/CoTracker）、分割识别（SAM 2/3、Grounded-SAM-2、RF-DETR/D-FINE，AGPL 与非商用项标出）；license 按 LICENSE 原文核对；LeRobot 0.7 破坏性改动与回写清单 | 2026-11-05 |
+| [research-commercial-deployments.md](research-commercial-deployments.md) | 已调研厂商的商用落地案例：酒店洗衣房、餐厅厨房（Dyna 鼎泰丰/Monster Laundry、Skild 三井物产厨房试点）及工厂/物流/家庭，按规模部署/试点/演示分档 | 2026-10-09 |
 | [sources/MANIFEST.md](sources/MANIFEST.md) | 一手资料归档：Figure 18 / Dyna 8 / Sunday 4 / Generalist 10 / Skild 11 / 自变量 13 篇官网原文文本（URL、页面日期、抓取日期、HTML sha256），research 文档的引用目标 | 2026-09-14 |
 
 `reports/` 存管理层汇报页的单文件 HTML（[洗衣房两套方案](reports/laundry-two-plans.html)、[追平 Dyna 最快路线](reports/dyna-parity-fast-track.html)、[业内七条路线对照与取舍](reports/industry-routes.html)），前两份分别对应 laundry-two-plans-brief.md 与 dyna-parity-fast-track.md，第三份汇总 research-*.md 与 data-strategy-roadmap.md §1 的已核查条目，更新汇报页时同步覆盖。

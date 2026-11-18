@@ -72,6 +72,12 @@ Stage D RL 闭环     奖励分类器（QC 成功/失败/介入标记直接当�
 | Isaac Lab-Arena / LIBERO / RoboTwin | 仿真评测 |
 | lerobot HIL-SERL 实现 | Stage D actor-learner 基座 |
 
+**lerobot 版本（2026-11-05 更新）**：0.7.0 已于 2026-11-05 发布（[research-rd-tooling.md](research-rd-tooling.md) §7）。引入顺序按 governance R-15：先用 `fdp.*` 扩展列与 golden fixture 跑一次 export→读回往返测试，通过后训练栈直接锁 `lerobot` 0.7.x，不先写 0.6 代码再迁移；不通过则冻结 0.6 并自维护 v3 reader。0.7 下要改的写法：
+- 实验追踪由 W&B 换成 Trackio（`--trackio.*`），检查点默认不再作为 artifact 上传；配方哈希入 lineage 由 mixture-runner 登记，不依赖追踪工具。
+- 多卡由 FSDP1 换成 FSDP2/HSDP（`--parallelism.dp_shard` / `dp_replicate`），0.6 存的 FSDP 检查点不能续训，跨版本不续训。
+- Linux 默认装 CUDA 13 轮子，训练机驱动须 ≥ 580.65。
+- **0.6 的两个静默失效**：`--policy.use_peft=true` 实际跑全参微调；批量图像增强中 7 种变换（GaussianNoise、MotionBlur 等）在 uint8 帧上是空操作。Stage A 的"LoRA 单卡"与任何开增强的对照实验必须在 0.7 上跑；外部或历史报数若来自 0.6，标注版本后再比较。
+
 ### 3.2 自建（差异化所在，M3 交付物）
 
 1. **mixture-runner**：读配方 yaml → 构建混合流式数据集 → 提交训练 → 登记 lineage。消融=多配方并行。

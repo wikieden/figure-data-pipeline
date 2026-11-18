@@ -24,7 +24,7 @@
 | R-12 | 流程 | 文档同步失效：research 新发现不回灌总设计（厂商论文 三套数字、具身转换未进架构、embedding 选型两文档相反、GPL 未传导） | 中 | 同一事实两处不一致 | docs/README.md 索引 + "research → 设计"回灌清单（§4）；每份 research 文档末尾必须有"已同步到"行；CI 链接扫描 | PM | 每次 review | mitigating |
 | R-13 | 流程 | 设计-实现漂移无追踪 | 低 | 设计写明"已落地"但代码无 | training-pipeline §4 状态列；architecture §7 能力→模块表；测试基线（schema 兼容、CLI smoke、golden fixture） | DATA | 每里程碑 | mitigating |
 | R-14 | 数据 | 采集速度多模态污染：以操作者数量为再平衡目标会引入速度分布多峰，损害策略（GO-1-Pro v2）；Sunday 要求采集员刻意放慢 | 中 | 同任务速度带方差 >2× 且策略在快慢样本上成功率差 >10pt | 采集 SOP 定义速度带并记入 EpisodeMeta，速度带作为独立元数据轴；操作者轴保留用于人口/地域覆盖（R-11）与 held-out 组切分，但不作为策略性能的再平衡目标；ISR 重采样作 export 选项（[data-strategy-roadmap.md](data-strategy-roadmap.md) L1/L3） | CUR | M2 | open |
-| R-15 | 依赖 | LeRobot 0.7 流优先重设计的破坏性变更（episode 变派生视图） | 中 | 0.7 正式版破坏 v3 读侧或 `fdp.*` 扩展列 | 冻结在 0.6 一个季度评估；writer 接口抽象；必要时自维护 v3 reader | DATA | 0.7 发布时 | open |
+| R-15 | 依赖 | LeRobot 0.7 流优先重设计的破坏性变更（episode 变派生视图） | 中 | 0.7 正式版破坏 v3 读侧或 `fdp.*` 扩展列 | 冻结在 0.6 一个季度评估；writer 接口抽象；必要时自维护 v3 reader。**2026-11-05 触发**：0.7.0 发布，发布说明的数据集破坏性改动只有流式读取（新的免落盘 episode-pool reader，`Backtrackable` 移除），v3 磁盘格式未列为破坏性；另新增存储后端注册表与 LanceDB 后端（不改决策 1，不引入第三种持久化格式）。训练侧破坏性改动（Trackio、FSDP2/HSDP、0.6 的 `use_peft` 与增强静默失效）见 [training-pipeline.md](training-pipeline.md) §3.1。待办：`fdp.*` 扩展列 + golden fixture 往返测试，通过即改锁 0.7.x 并关闭本条 | DATA | 0.7 发布时（已触发，往返测试待做） | open |
 | R-16 | 数据 | 估值分数（影响函数/medoid/PSD）过拟合当前策略与当前任务簇 | 中 | 估值 top-50% 训练不优于随机 50%（止损门 G5） | 估值只作排序不作删除；每季度用新策略重算；held-out 上不做任何估值决策 | CUR | M3 | open |
 | R-17 | 评测 | 世界模型代理评测在 off-expert 动作区失效（WorldSimProbe/WorldEcho），误判策略排序 | 高 | 代理与真机 Pearson <0.8 连续两季度（止损门 G4） | 代理必须附"可观测模拟器契约"测试；只在专家动作分布内使用；三层（孪生→代理→真机）相关性每季度重估 | TRAIN | M3 起每季度 | open |
 | R-18 | 数据/合规 | 端上脱敏损伤手部可见率与动作伪标签（脱敏是 raw 永存唯一例外，且因旁观者诉讼必须前置） | 中 | 脱敏后 MPJPE 差 >10% 或手部可见率降 >5pt | 脱敏工具链选型消融（U-32）；脱敏前帧哈希留存 90 天；损伤指标进 QC | CUR + LEGAL | H0 末 | open |
@@ -35,6 +35,7 @@
 | R-23 | 依赖 | 洗烘机器无法由程序启动：家用机远程启动常需每次在面板手动开启 ⚠️ 未核查，商用机多无开放接口 ⚠️（W-1） | 中 | 选定机型接口验证失败 | **2026-09-20 新增**。接口与"机器人按面板（解析原语）"两条路第 1 周并行验证；洗涤剂改自动投放 | HW | 立项后第 1 周 | open |
 | R-24 | 硬件/安全 | 位控手臂做刚性接触（开关门、台面捏布、筒内）产生大内力，损坏本体或机器；力控未就绪（X-2） | 高 | 采集或评测中出现过流保护 / 机械损伤 | **2026-09-20 新增**。关节电流软件柔顺与碰撞保护；门与面板走解析原语；门磁吸、软垫台面、柔性指尖；遥操作端电流提示 | HW + TRAIN | A0 结束时 | open |
 | R-25 | 数据 | 洗衣视频手部遮挡导致伪动作通过率低，每可用小时成本高于一般场景口径；人手策略不适用于二指夹爪（P-1、P-2） | 中 | 50 h 试购通过率 <30% | **2026-09-20 新增**。签大单前先试购实测；洗衣场景以 D1-H 真值为主 | CUR + TRAIN | 签约前 | open |
+| R-26 | 评测 | 仿真消融主基准被捷径刷分：2026-06 审计（arXiv:2606.04233）显示 LIBERO 可被 0.09B 无语言探针刷到 SOTA、仅 19.8% SOTA 声明统计显著，CALVIN 同样失败；若 eval-CI 以 LIBERO 为主裁决，配方消融结论不可信（[research-open-ecosystem-2026.md](research-open-ecosystem-2026.md) §2.1） | 中 | 配方 A/B 在 LIBERO 上差距显著但在 RoboCasa-GR1 / 真机上不复现 | **2026-10-13 新增**。eval-protocol §2 把 LIBERO 降为参考项，主回归改 RoboCasa-GR1（人形，显著性 53%）+ LIBERO-Plus 扰动集 + RoboTwin 2.0 子集（显著性 74%）；接入审计论文的四项诊断脚本；真机对齐 RoboArena 盲测成对比较 | TRAIN | M2 eval-CI 落地前 | open |
 | R-27 | 合规 | 闭源合成模型（厂商合成模型 / 厂商世界模型 等）以"闭源权重 + 受保护联合训练"交付：数据只读授权、不可导出，产物限定在对方云上部署——合成数据与模型权重归属不清，lineage 记不到权重哈希，删除请求传导不到对方副本 | 中 | 合作方案出现"数据不出平台""权重不可导出"条款 | 采用前回答三问：产物与权重能否导出、lineage 能否记录不可变版本标识与调用记录、删除能否传导；任一不满足只进研究分支（[data-pipeline-design.md](data-pipeline-design.md) §7.4） | LEGAL + CUR | 签约前 | open |
 | R-28 | 成本 | VLM 调用量随视频量线性增长：语义质检与打标规模化后可能超出平台预算（某大模型厂商单次验证口径折合每小时四路视频约 1.4 并发槽·小时 ⚠️，打标与合成尚无可信口径） | 中 | 模型网关记账的 VLM 每可用小时成本超过平台成本的 50%，或日预算连续触顶 | 模型网关按阶段设日预算与降级；粗筛漏斗；规则段先拦；本地优先、API 只仲裁；M2 前半 50 小时样本实测后定上限（[data-system-plan.md](data-system-plan.md) §4.2/§6.1） | CUR + PLAT | M2 中 | open |
 | R-29 | 组织 | 子系统数量（9 个）超出 12–20 人团队的建设与运维能力，平台工作挤占策展与评测 | 中 | 平台类工单占数据团队工时 >40%，或 SLO 连续两周不达标 | 采购优先（存储/编排/向量库/界面）；工作台合一；按里程碑只建最小闭环（M1 只做接入 + 存储 + 规则质检 + 报告 + 导出）（[data-system-plan.md](data-system-plan.md) §10–§11） | PM | 每里程碑 | open |
@@ -43,14 +44,18 @@
 
 ## 2. 未决决策登记（U）
 
+**当前认可构型（2026-10-26）**：用户确认[所附参考图](assets/inhouse-hand-reference-20261026/selected-reference.png)“基本是对的”，并要求加入数据与机器人设计。T 拇指、I 独立食指、S 后三指合组均加粗、各两节，有掌面；相机在拇食指根之间靠背侧、固定掌体并向手心看。[当前主设计](inhouse-isomorphic-end-effector.md)承接采集器、执行手与数据契约；[选图记录](assets/inhouse-hand-reference-20261026/README.md)保留原图及哈希。此确认覆盖构型方向，主动轴、对掌方式、尺寸、光学、控制与硬件验收仍未冻结。此前三节方案及下列旧记录按历史语境保留。
+
+**历史方向记录（2026-10-26，已由上段两节方案更新）**：升级为三指、每指三节，构型参考 Sunday，采集器与机器人末端共同设计，主方案见 [三指同构末端接入设计](inhouse-isomorphic-end-effector.md)。这更新 U-04/U-06/U-40 在本产品线的末端方向：二指降为既有基线与对照，不再要求先证明二指不足才能开展三指设计。9 主动关节仅为工程候选；驱动/传动、关节布局、限位、传感与接口仍待验证。以下旧记录保留历史语境，不视为硬件冻结、采购或验收。
+
 | ID | 决策 | 当前倾向 | 裁决所需数据 | 裁决时点 | 不裁决的后果 | owner | 状态 |
 |---|---|---|---|---|---|---|---|
 | U-01 | recorder 中间件：dora-rs 节点 vs 自写采集循环 | 无；MCAP 落盘已定 | 多相机同步残差（目标 <1 ms 硬触发 / <5 ms 软同步，architecture §8.4）、断电落盘不丢 chunk（[recorder-sync-and-storage.md](recorder-sync-and-storage.md) §4 测试）、嵌入式 CPU 占用 <30% | M1 recorder 实现前两周做对比原型 | M1 阻塞 | DATA | open |
 | U-02 | device 轨 ee_pose 60 Hz 与 100–200 Hz 约定冲突 | **已裁决 2026-09-08**：按传感器原生频率（≥50Hz）入湖，export 不上采；CLAUDE.md 决策 3 豁免 | — | — | — | DATA | closed |
 | U-03 | 训练态依赖包：`lerobot-dataset` 独立包 vs `lerobot` 核心；MuJoCo 侧仿真现状 | **已裁决 2026-09-09**：训练态依赖改为 `lerobot` 核心包（≥0.6，锁版本），废弃 `lerobot-dataset`；Rerun .rrd 只作可视化缓存（决策 1 不变）；MuJoCo 侧仿真现状仍待查（转入 sim-track 调研项） | 安装后 API 核查报告；sim-track 调研 | M1 export 实现前 | export 选型返工 | DATA | closed（MuJoCo 项转 sim-track） |
-| U-04 | 目标本体末端：三指简化 vs 五指 | 证据向三指倾斜，不站队 | TwinDEX 式四类任务（精细捏取/手内操作/工具使用/人机交互）消融，本体见 [robot-track-teleop.md](robot-track-teleop.md) §1 选型框架 | H1 中期（有本体后 3 个月内） | 槽位向量灵巧手段布局、P2 触发条件永远无法求值 | HW + TRAIN | open |
+| U-04 | 目标本体末端及工程冻结 | 本产品线已选 T/I/S 两节构型方向；驱动、对掌、接口与硬件验收待验证 | TwinDEX 式四类任务（精细捏取/手内操作/工具使用/人机交互）消融，本体见 [robot-track-teleop.md](robot-track-teleop.md) §1 选型框架 | H1 中期（有本体后 3 个月内） | 槽位向量灵巧手段布局、P2 触发条件永远无法求值 | HW + TRAIN | open |
 | U-05 | 具身转换阶段是否进架构 | **已裁决 2026-09-08**：进 architecture §2.3 作为可选阶段，仅穿戴/头戴 device 子形态触发 | — | — | — | CUR | closed |
-| U-06 | P1 评估 Sunday 式手套 / P2 评估 TwinDEX 式外骨骼 | P1 评估手套；P2 触发依赖 U-04 | U-04 消融结果 + 手套自制原型的动作真值精度 | U-04 后 | 只能停在 UMI 平行夹爪覆盖面 | HW | open |
+| U-06 | 穿戴采集器与执行手的同构验证 | 本产品线按 T/I/S 两节共同设计；穿戴、机械测量与执行映射待验证 | U-04 消融结果 + 手套自制原型的动作真值精度 | U-04 后 | 只能停在 UMI 平行夹爪覆盖面 | HW | open |
 | U-07 | Fast-UMI 改型 | 先原版 UMI ×2 | SLAM 跟丢时长占比（device 质量门指标）**>10% 的 episode 超过 20%** 时触发评估；T265 替代方案（ZED Mini / 自算 VIO）先评 | H0 末看数据 | 弱纹理场景数据大批拒收 | HW | open |
 | U-08 | P2 加 ToF 深度 / 眼动 | 砍掉，量产版再议 | 成本上限 +$30 BOM；眼动收益探针：注意力信号对子任务分割 F1 的提升 | P2 立项前 | 无（默认不加） | HW | accepted |
 | U-09 | 腕带 EMG / 音频振动作为力信号代理 | **已裁决 2026-09-09**：两条都做——H1 同时跑 EgoTac 式视频推断力（L4 伪标签加 `tactile_pred` 槽位，provenance=inferred）与一次腕带 EMG/音频振动小实验，用决策 3 的 500 h 触觉 UMI 对照集作同一真值比较；P2 的 EMG 探针并入本项 | 与 device 轨软指形变（隐式力）配对采集 10 小时，看相关性 | H1 内一次小实验 | R-04 无前向对策 | HW | closed（H1 双探针） |
@@ -84,9 +89,13 @@
 | U-37 | 训练层是否纳入世界-动作模型（WAM）目标：next-frame 与 next-action 协同预测作为 Stage B/C 可选分支 | 已有 Dyna-2、NVIDIA DreamZero、AgiBot GE-Act 2.0、Cosmos Policy 四家独立验证，满足 CLAUDE.md 决策 7 的 ≥2 家门槛；倾向纳入为可选分支，不改数据层，只要求 export 保留连续帧对（research-dyna-comparison §8.1） | Dyna-2 "数据与目标都重要"消融的外部复现；自家 human 轨上 next-frame 协同 vs 仅 next-action 的消融 | 训练负责人 | M3 前 |
 | U-38 | 消融切分器是否加「微调权重位移按模块分解」报告（Generalist 任务向量分析：ΔW 按传感/推理/执行分解，定位该多采哪类数据） | 训练层工具，属「数据层承载创新」的边界外；倾向 M3 作为可选报告，不进 M2 验收 | 自家 Stage B 微调实验上 ΔW 分解与采集干预的因果验证（research-four-routes §6.8） | TRAIN | M3 |
 | U-39 | 是否立项 Dyna 复现 R0（≈$0.35–0.6M、6 个月、6 人）及视频扩散骨干选型（候选 A Cosmos 3 小杯 / 候选 B Wan 2.x） | **2026-09-20 范围收敛**：先执行 [dyna-replica-plan.md](dyna-replica-plan.md) §12（洗衣四任务、仅后训练 + VLM 大脑、自有人形 6 台，9 个月累计 ≈$0.55–1.05M），R0 降为 G-PA 不通过时的后备。原倾向：立项 R0：同时裁决 U-37、测出自家人→机器人迁移指数、完成 M3 训练栈约一半工程；骨干默认 A（已准入），B 待 U-11 核查后只进研究分支；R2 不自费（[dyna-replica-plan.md](dyna-replica-plan.md) §8） | 双臂同构工作站报价；Egocentric-10K 隐私门通过率；2B 档单卡推理实测频率；program-plan §4 Stage B 算力能否与 R1 合并 | 训练负责人 | M2 验收后、Stage B 开跑前 |
-| U-40 | 预训练数据两轴配比：头戴视频伪动作 vs 与自研夹爪同构的手持采集器真值（D1-H）；前提是负责人 2026-09-20 确认"只服务自研本体，跨品牌本体不是目标" | 倾向两轴并进，主力模型按 10 万小时视频 + 8–10 万小时真值起步（[dyna-parity-fast-track.md](dyna-parity-fast-track.md) §2.3）；本产品线上 U-04 视为已定（二指力控夹爪），D1 直接做同构版（capture-devices-design §1.1） | 换算率四组对照实验：1 小时真值 ≈ 多少小时视频（零样本动作误差 + 叠 / 晾后训练成功率）；D1-H 轨迹复现成功率 ≥90% | 训练负责人 + HW | 立项后第 10 周 |
+| U-40 | 预训练数据两轴配比：头戴视频伪动作 vs 与自研夹爪同构的手持采集器真值（D1-H）；前提是负责人 2026-09-20 确认"只服务自研本体，跨品牌本体不是目标" | 倾向两轴并进，主力模型按 10 万小时视频 + 8–10 万小时真值起步（[dyna-parity-fast-track.md](dyna-parity-fast-track.md) §2.3）；原二指基线见 capture-devices-design §1.1；当前升级方向为 T/I/S 两节同构手（§1.2），起量与预算需重新估算 | 换算率四组对照实验：1 小时真值 ≈ 多少小时视频（零样本动作误差 + 叠 / 晾后训练成功率）；D1-H 轨迹复现成功率 ≥90% | 训练负责人 + HW | 立项后第 10 周 |
 | U-41 | 上肢力控的上线窗口：交付一期间是否冻结控制器版本 | 倾向冻结，力控只在交付边界切换，切换后先跑新旧混训消融（[plans-review-hard-points.md](plans-review-hard-points.md) X-9） | 力控开发排期；新旧控制器下同一策略的成功率差 | 交付一批准时 | 交付中途动力学变化，已采数据变负资产 | 负责人 + HW | **已裁决 2026-09-20**：负责人确认冻结，力控只在交付边界切换 |
 | U-42 | 分筐方案 v1：筐数、"不可烘"单独成筐、小订单合并规则 | 倾向按试点方现行做法配置，"不可烘"洗前单独成筐或装网袋（S-1） | 试点方现行分筐做法、订单件数与件重统计 | 立项后第 1 周 | 洗后无法挑出不可烘衣物；小锅过多压低洗衣机利用率 | PM + TRAIN | open（2026-09-20 新增） |
+| U-43 | Stage A / ingest 回归用哪份外部开放人形数据集 | 倾向 Unitree UnifoLM-WBT（G1 全身遥操作、~50 任务 × ~300 条、第三方称 Apache-2.0）为首个外部样本，Humanoid Everyday（CC BY 4.0）第二；AgiBot World 2026（CC BY-NC-SA）只进研究分支做 QC 门校准（[research-open-ecosystem-2026.md](research-open-ecosystem-2026.md) §1.1/§6） | UnifoLM-WBT 数据卡 license 核实；LeRobot v2.1→v3 转换是否无损（时间戳、相机命名） | M1 ingest 可跑通后 | 四轨 schema 没有外部真实样本检验，export 兼容性只在自家数据上验证 | DATA | open（2026-10-13 新增） |
+| U-44 | Stage B（M 档 0→1 预训练）训练框架：LeRobot 单一路线 vs StarVLA | 倾向并列候选：StarVLA（MIT；Qwen3-VL-4B 骨干与 M 档选型一致；FAST/OFT/π/GR00T 四头可直接做离散桥→流匹配课程消融；12 个基准内置；8→256 A100 扩展效率 ~80%；缺点：自定义数据格式需写 LeRobot v3 适配器、依赖 DeepSpeed）；openpi JAX 不支持多机，不作 Stage B 候选（[research-open-ecosystem-2026.md](research-open-ecosystem-2026.md) §4） | 两框架上同一 50 h 数据 S 档模型的吞吐与 RoboCasa-GR1 分数对照；适配器工程量估算 | 数据阶段 B 开始前 | Stage B 开跑时临时选型，mixture-runner / lineage 对接推迟 | TRAIN | open（2026-10-13 新增） |
+| U-45 | 家电与环境事件流是否进入数据契约 0.3：`/event/appliance/{door,program,fault}`、`/signal/appliance_load_kg`、`/signal/bin_weight_*`，与机器人数据写入同一 MCAP、同一时钟 | 倾向进入：同时解决程序启动（R-23）、筒内取空检查（plans-review W-4）与 Stage D 自动奖励；按 CLAUDE.md 先改 data-format-contract 再改 schema（[client-capture-to-training-report.md](client-capture-to-training-report.md) §5.1/§6） | 客户洗衣机 / 烘干机可开放的接口与传感器清单（⚠️ 待家电业务确认）；事件时间戳精度与对时方式；筐体秤选型 | 立项后第 2 周（家电接口确认后） | 成败与进度标签只能靠视觉与人工；"取空"零容忍项无检查手段；RL 奖励需另建模型 | DATA + HW | open（2026-11-06 新增） |
+| U-46 | T/I/S 两节同构手的数据是否同时导出"拇食间距 → 二指开合度"兼容视图，使两节手与二指夹爪的数据互相可用 | 倾向导出：保住硬件换代后的数据存活度；原始编码器读数永久保留，兼容视图只是 export 派生（[client-capture-to-training-report.md](client-capture-to-training-report.md) §5.2/§8；构型见 [inhouse-isomorphic-end-effector.md](inhouse-isomorphic-end-effector.md)） | 样机上的投影误差；兼容视图数据在二指本体上的开环回放成功率（对照 D1-H 的 ≥90% 门） | 两节手单手样机完成后 | 两套末端数据各自孤立，末端换代时已采数据只能进视觉目标 | HW + TRAIN | open（2026-11-06 新增） |
 | U-47 | 人类视频 → 机器人演示的合成产物归属与启动时点；采集规则（collection_rule / quality_rule）哈希是否进契约 0.3 | 倾向归 sim 轨 `source=human2robot_composite`、`parent_episode_id` 指回 human 轨原始（观测部分生成 + 伪动作，与 sim-track §6 判据一致，不新增 track）；M3 启动，首批只做自有本体与二指兼容视图；规则哈希进 0.3 待入项（[data-pipeline-design.md](data-pipeline-design.md) §3/§7.2） | human 轨伪标签质量分分布；合成专属 QC 通过率；合成组 vs 无合成组的消融 | M3 前 | 合成产物无处落地，或混进 human 轨污染伪标签统计 | CUR + DATA | open |
 | U-48 | 挖掘（检索）模块归属与 CLI | 倾向归 curation 层：`curation.mining`，`fdp curate --stage mine`（建索引）/ `--query <name>`（执行查询、产出快照）；查询为 `configs/queries/` 版本化文件，快照哈希入 manifest（[data-pipeline-design.md](data-pipeline-design.md) §6） | 演示库与难例挖掘的实际查询形态；检索基准（成对难查询）基线 | M2 后半 | 演示库与回流闭环无检索底座，训练集挑选不可复现 | CUR | open |
 | U-49 | 数据平台底座自建 vs 托管云厂商（对象存储/云数据湖、云数据开发平台、云数仓、云机器学习平台、云模型服务） | 不预设：管线逻辑（状态机、规则、规范、查询、配方、lineage 语义）一律留在本仓库；底座按业务方所在云与数据驻留要求采购，托管前须回答 R-27 三问（[data-pipeline-design.md](data-pipeline-design.md) §11） | 数据驻留要求、成本对比、导出与 lineage 能力实测 | M2 前 | 底座与逻辑耦合，换云即重写 | PLAT + PM | open |
@@ -104,20 +113,20 @@
 | 5 | HaWoR | 世界系手部轨迹 | ⚠️待核查 | H0 伪标签 v0 | 待查 | LEGAL |
 | 6 | Dyn-HaMR | 世界系手部轨迹 | ⚠️待核查 | 备选 | 待查 | LEGAL |
 | 7 | ORB-SLAM3 | device 轨位姿 | GPLv3 ⚠️ | P0 | 服务端限定使用，见 U-10 | LEGAL |
-| 8 | MASt3R-SLAM | 弱纹理兜底 | ⚠️待核查 | H1 | 待查 | LEGAL |
+| 8 | MASt3R-SLAM | 弱纹理兜底 | **CC BY-NC-SA 4.0**（LICENSE 原文，2026-11-05）⚠️ | H1 | 原文已核：非商用，研究分支限定；默认路径兜底候选改为 MapAnything（#41）/ VGGT-SLAM + 商用权重（#38），见 [research-rd-tooling.md](research-rd-tooling.md) §9 | LEGAL |
 | 9 | DPVO | 弱纹理兜底 | ⚠️待核查 | 备选 | 待查 | LEGAL |
 | 10 | DROID-SLAM | 弱纹理兜底 | ⚠️待核查 | 备选 | 待查 | LEGAL |
 | 11 | GeoCalib | 众包视频标定 | ⚠️待核查 | **P0 手机方案硬依赖** | 待查，H0 开工前 | LEGAL |
 | 12 | DroidCalib | 众包视频标定 | ⚠️待核查 | **P0 手机方案硬依赖** | 待查，H0 开工前 | LEGAL |
-| 13 | Depth Anything 大杯 | 单目深度 | 疑 CC-BY-NC ⚠️ | — | 默认用小/中杯（Apache） | CUR |
+| 13 | Depth Anything 大杯（含 Depth Anything 3） | 单目深度 | DA3 官方 README 权重表（2026-11-05）：DA3-SMALL / DA3-BASE / **DA3METRIC-LARGE 为 Apache-2.0**；DA3-LARGE / GIANT / NESTED 为 **CC BY-NC 4.0** ⚠️ | — | 默认用 SMALL / BASE / METRIC-LARGE；第三方站点对 Metric-Large 说法矛盾，以官方表为准 | CUR |
 | 14 | InternVideo2 | 去重 embedding | 部分权重非商用 ⚠️ | 升级项 | 待查 | LEGAL |
 | 15 | VideoMAE V2 | 去重 embedding | ⚠️待核查 | 升级项 | 待查 | LEGAL |
 | 16 | MegaSAM | 世界系相机位姿 | ⚠️待核查 | H0 伪标签 v0 | 待查 | LEGAL |
-| 17 | MoGe-2 | 稠密深度 | ⚠️待核查 | H0 伪标签 v0 | 待查 | LEGAL |
+| 17 | MoGe-2 | 稠密深度 | 代码 **MIT**（内含 DINOv2 代码 Apache-2.0，官方 README 2026-11-05）；**权重未核** ⚠️ | H0 伪标签 v0 | 代码部分已核；权重待查 | LEGAL |
 | 18 | Claude API（ToS） | VLM 仲裁 | 输出用于训练数据的条款未审 | M2 | 待查 | LEGAL |
 | 19 | Hunyuan3D-2.1（SimFoundry 默认网格） | sim 轨场景重建 | 腾讯社区许可，EU/UK/韩国无授权 ⚠️ | U-20 | 默认换 TRELLIS.2（MIT） | LEGAL |
-| 20 | FoundationPose / FoundationStereo / nvdiffrast | sim 轨位姿精修 | NVIDIA 非商用 ⚠️ | U-20 | 待找替代 | LEGAL |
-| 21 | SAM3 | sim 轨分割 | Meta SAM License，非 OSS、gated ⚠️ | U-20 | 待查；SAM2 为 Apache 备选 | LEGAL |
+| 20 | FoundationPose / FoundationStereo / nvdiffrast | sim 轨位姿精修 | NVIDIA 非商用 ⚠️；FoundationStereo LICENSE 原文第 3.3 条"仅限研究用途"（2026-11-05 核） | U-20 | 待找替代 | LEGAL |
+| 21 | SAM3（含 SAM 3.1 权重） | sim 轨分割；离线概念分割（衣物类别掩码） | Meta SAM License（2025-11-19），非 OSI、gated ⚠️。原文要点（2026-11-05 核）：允许商用、再分发与衍生；分发须附协议副本；发表须致谢；禁止 ITAR 管制及军事、核、间谍、武器用途 | U-20 | 原文已读，待 LEGAL 意见；SAM2 为 Apache 备选 | LEGAL |
 | 22 | Gemini API（ToS） | SimFoundry VLM 阶段 | 输出用于训练数据条款未审 | U-20 | 默认换本地 Qwen-VL | LEGAL |
 | 23 | GR00T N1.7 权重 | sim 轨微调基座 / 对照 | NVIDIA Open Model License（非 Apache；README 自相矛盾）⚠️ | U-29 | 研究分支；默认路径待裁决 | LEGAL |
 | 24 | Cosmos-Reason2-2B（N1.7 骨干） | 同上 | NOML、gated 点击接受 ⚠️ | U-29 | 随 N1.7 | LEGAL |
@@ -129,6 +138,20 @@
 | 30 | ABC-130K / ABC 训练代码（DINOv3） | 配方起点 / 参考基线 | 数据 Apache-2.0（LICENSE 文件缺失）；代码 Apache-2.0 但依赖 Meta DINOv3 许可 ⚠️ | L6 | 数据可用（固定 README 声明）；基线复现需审 DINOv3 | LEGAL |
 | 31 | Wan 2.x 视频扩散骨干（1.3B / 5B / 14B） | Dyna 复现 WAM 骨干候选 B（dyna-replica-plan §4.1） | 许可未核查 ⚠️ | R0 | 待核查；核查前仅研究分支 | LEGAL |
 | 32 | Build AI Egocentric-10K | Dyna 复现 R0 预训练语料（1 万 h 工厂第一视角） | 数据 Apache-2.0（HF 卡）；旁观者脱敏零说明 ⚠️ | R0 | 入湖先过隐私门；LEGAL 出具意见前不进默认配方 | LEGAL |
+| 33 | DEIMv2 | 实时检测（备选） | **DEIMv2 License：仅限非商用**，原文明确禁止集成进商业产品、商业部署、SaaS 与商业硬件；另依赖 DINOv3（#43）⚠️。社区称其 Apache-2.0，与原文不符（原版 DEIM 才是 Apache） | — | 原文已核：排除 | CUR |
+| 34 | Ultralytics（YOLO26 等）/ YOLOE | 实时 / 开放词汇检测（备选） | **AGPL-3.0**（GitHub 元数据）；商用需购 Ultralytics 企业许可 ⚠️；网络服务条款与 PL3 策展即服务（R-19）冲突 | — | 排除；不得"先用后换" | CUR |
+| 35 | CoTracker（CoTracker3） | 点跟踪 / 伪动作提取 | **CC BY-NC 4.0**（LICENSE 原文）⚠️ | — | 原文已核：研究分支限定 | CUR |
+| 36 | FAST-LIO2 / FAST-LIVO2 | 激光（-视觉）里程计 | **GPL-2.0**（GitHub 元数据）；README 称商用可另与作者谈许可 ⚠️ | 备选 | 同 #7：仅服务端、独立进程 | LEGAL |
+| 37 | cuVSLAM（Isaac ROS Visual SLAM） | 机上视觉定位 | **NVIDIA Community License**（原文）：可商用、可发衍生作品，但**仅许在 NVIDIA 平台上使用** ⚠️ | H1（若采集设备用 Jetson） | 原文已读；平台绑定是否可接受待 LEGAL + HW 意见；非 NVIDIA 平台用 Basalt（U-10） | LEGAL |
+| 38 | VGGT / VGGT-SLAM | 前馈重建 / 单目 SLAM，弱纹理兜底候选 | VGGT License（2025-07-29）：代码可商用（军事除外）；**仅 `VGGT-1B-Commercial` 权重可商用**，原权重非商用，需申请；VGGT-SLAM 代码 BSD-2-Clause ⚠️ | H1 | 原文已读；只许用 Commercial 权重，待 LEGAL 意见 | LEGAL |
+| 39 | RF-DETR | 机上实时检测 | 仓库 **Apache-2.0**；Roboflow 许可页称 Atto / Femto / Pico / XL / 2XL 部分权重走 Platform Model License ⚠️ | M2 | 按所用 checkpoint 逐个核；D-FINE（Apache-2.0）为备选 | CUR |
+| 40 | NavDP | 学习型导航 | **仓库无 LICENSE 文件**（默认保留全部权利）；System 1 权重需填表 ⚠️ | — | 排除直至发布许可 | LEGAL |
+| 41 | MapAnything | 度量三维重建，弱纹理兜底候选 | 代码 **Apache-2.0**（GitHub 元数据）；**权重未核** ⚠️ | H1 | 权重待查 | LEGAL |
+| 42 | SAM 3D Objects | sim 轨物体资产候选 | Meta 自定义许可，未逐条核 ⚠️ | U-20 | 待查 | LEGAL |
+| 43 | DINOv3 | 视觉骨干（DEIMv2、ABC 基线等的上游） | DINOv3 License（Meta 自定义，2025-08-19）：分发须附协议、发表须致谢，禁止 ITAR 管制及军事、核、间谍、武器用途 ⚠️ | 随下游 | 原文已读；与 #30 合并审，待 LEGAL 意见 | LEGAL |
+| 44 | DINOv2 | 视觉骨干（DINOv3 待审期间的默认）；去重特征对照 | 主模型代码与权重 **Apache-2.0**（官方 README，2026-11-05 核）；**同仓库 XRay-DINO 权重、Cell-DINO 代码与权重为 FAIR 非商用许可** ⚠️ | 随下游 | 原文已核：主模型可用，子模型排除；引入时锁定主模型权重 URL | CUR |
+
+#8、#13、#17、#20、#21 与 #33–#44 的依据见 [research-rd-tooling.md](research-rd-tooling.md) §9–§12（2026-11-05 读取各仓库 LICENSE 原文）。
 
 ---
 
@@ -165,9 +188,13 @@
 | D-25 | Sunday ACT-2：泛化差距（域内−域外）随预训练规模 82→10→8→4→0；高质量子采样 12.5%/25%/50% → 75.6/87.9/92.3% vs 均匀 43.8/53.6/64.1%；785 次 99.1%±0.3、每户零适配；单条示例 SFT 教会可泛化折法 | sunday.ai ACT-2 预览一手（2026-09-14 curl）；自评标注（两轮独立、评分表事前固定）、单任务族、模型架构与数据小时数未披露 | eval-protocol 泛化差距指标与 Solve 声明格式；curation §7 高质量子采样消融目标量级；L3 估值排序器（D-14）价值预期 | 策展增益量级不复现 → 估值线降级（G5） | 自家 human/device 轨复现同一消融，目标只作量级 | M2 |
 | D-26 | Dyna 生产指标：DYNA-1 35 条/h、75% 达标 → DYNA-2 95 条/h、93% 达标（1,590/天）；新站点 3 天达 ROI；车队每站每天 >1 TB；鼎泰丰全门店扩张、2027 上半年数百台 | dyna.co《Not Just a Model, But a Product》一手；首页 KPI（100/180/200 件/h、≥98%、<90 s、±2 mm）自 2026-09-16 起为 dyna.co 首页一手（sources/dyna/home.txt）；单客户单任务族，无第三方 | data-platform 容量模型（1 TB/站/天）；R-20 飞轮反证的对照面；D5 触发式固化「两家验证」状态 | 容量模型分母偏高一档 | 容量按自家 D5 码率重算；D5 状态不依赖 Dyna 商业数字 | M3 |
 | D-27 | Figure 产能与车队：350+ 台 F03、1 台/小时、末端首检良率 >80%、电池线 99.3%、9,000+ 执行器；BMW 1,250 h / 9 万件 / 3 万台 X3、KPI 84 s / >99% / 零干预；Index 周活 69,943、35 min/s（第三方 ⚠️） | figure.ai 一手（产能、BMW）；Humanoids Daily 转述（周活） | 战略 §1.1 对标分母；robot-track-teleop §6 车队 KPI 模板（周期/精度/干预三项） | 无设计依赖，仅作量级 | — | H1 |
+| D-28 | NVIDIA Cosmos 3：Super 64B（32B 推理器 + 32B 生成器）/ Nano 8B 或 16B（来源矛盾）、20T token、"RoboArena 第一策略模型" | 第三方转述 NVIDIA 技术报告；RoboArena 排名为厂商自称 ⚠️ | [research-open-ecosystem-2026.md](research-open-ecosystem-2026.md) §3.2；U-39 骨干候选 A 的能力预期 | 候选 A 仅作视频扩散骨干，不依赖其策略排名 | 读 NVIDIA 技术报告原文；RoboArena 榜单直接核 | M2 |
+| D-29 | Build AI Egocentric-100K（10 万小时 / 14,228 名工人）与 Egocentric-1M（约 100 万小时，2026-04-08） | 单一第三方博客（Labellerr），Build AI 自身页面未核 ⚠️；Egocentric-10K（1 万小时 / 16.4 TB / Apache-2.0）为官方数据卡一手 | [research-open-ecosystem-2026.md](research-open-ecosystem-2026.md) §1.2；human 轨外购数据量级（U-39/U-40 的 Egocentric-10K 隐私门） | 只按已核的 1 万小时规划；更大集按 Apache-2.0 核实后再计入 | 直抓 builddotai HF 组织页核数据卡 | M1 |
 | D-31 | 自变量 XRZero-G0："10:1（500 无本体 + 50 真机）≈ 500 纯真机"、"无本体数据成本 ≈ 遥操 1/20"、"有效率 85%"、"G0-Dataset 2,000 h" | 公司自报（技术报告 + 新闻稿，[sources/xsquare/xrzero-g0-paper.txt](sources/xsquare/xrzero-g0-paper.txt)）；5 个桌面双臂任务，评测次数未披露；85% 为受控条件且含人工复核；开放的 XRZero-G0-3K 仅 34 GB / 10,726 行、无数据卡，与 2,000 h 不符 ⚠️ | [research-xsquare.md](research-xsquare.md) §7/§9-3；device 轨与 robot 轨配比消融模板（G2）、物理回放门的必要性 | 配比律不迁移到我们的任务/本体：robot 轨遥操预算不能按 1/10 削减 | 只作消融起点：mixture-runner 预置 0/1×/10× 与总量可比替代组，自家 G2 结果替换外部数字；外部数据集不进默认路径 | G2 后 |
 | D-32 | 自变量 QUANXTA Zero："数采成本降低 60%"、"近 100 条/小时（2.33×）"、"传感器同步 ≤1 ms" | 公司新闻稿（[sources/xsquare/quanxta-zero-launch.txt](sources/xsquare/quanxta-zero-launch.txt)）；60% 仅见官网新闻列表标题，第三方另称 95% / 33× ⚠️；2.33× 是简单任务倍率（中/难 1.88× / 1.71×） | [research-xsquare.md](research-xsquare.md) §3.2/§9-8；PL3"策展即服务"的竞品定位、device 轨采集效率外部参照（与 D-03 并列） | 无设计依赖，只影响 PL3 定价与差异化论证 | 自家 device 轨实测吞吐与成本每季度替换（同 D-03） | 每季度 |
+| D-30 | X-Humanoid RoboMIND 2.0 "700+ 任务、对外交付近 3 万小时"；某大模型厂商 厂商操作模型 "RoboChallenge 第一、相对 +20%、38,100 h 全开源数据预训练" | 前者媒体转述机构口径 ⚠️；后者论文自报，权重是否开放来源矛盾 ⚠️ | [research-open-ecosystem-2026.md](research-open-ecosystem-2026.md) §1.1/§3.1；"全开源数据能到 RoboChallenge 榜首"是对我们"数据层承载创新"路线的正向旁证 | 无设计依赖，仅作量级 | RoboChallenge 榜单与 厂商官方博客直接核 | M2 |
 | D-33 | 某大模型厂商计算平台具身数据方案（客户交流 PDF，2026-08）：AI 自动完成 80–90% 标注；帧上叠加手部轨迹收益是打磨切分规则的 3 倍；粒度与用途不匹配训练效果降 60%；同一方法跨采集形态差 2.6 倍；两把尺子 2.7×/7.5×（单视频）；corner case 召回 70%+（驾驶图片） | 公司自报 ⚠️，非公开材料，单家来源，多数无实验设置 | [data-pipeline-design.md](data-pipeline-design.md) §5.1 标注档案、§10.3 两把尺子、curation §1.1/§1.2 v0 阈值 | 档案划分与阈值起点失据 | 只作起点与方向；档案收益、阈值、尺子口径由自家金标准集与消融裁决（curation §7） | M2 |
+| D-34 | NVIDIA GR00T 2（白皮书 2026-11）：人类视频 0→100% 使真机新任务成功率 18%→41% 且未饱和；Dexter-50 零样本 40%、5 条演示 + 30 min LoRA 达 95%；GearArena 比 π0.5 高 236 Elo；仿真-真机 Pearson 0.93；Flora 切分 F1 50.3；处理管线 722–780 示范小时/小时；人类 QC 窗口阈值（表 8）与 in-lab 验收表（表 9） | 公司自报 ⚠️（[sources/nvidia/gr00t-2-whitepaper.txt](sources/nvidia/gr00t-2-whitepaper.txt)），自家站点与操作员评测、无第三方复现；缩放消融每档单次训练，误差棒不含训练方差 | [research-gr00t2.md](research-gr00t2.md) §5：human 轨 L1 阈值 v0 外部起点、in-lab 采集验收参照、U-37 WAM 证据、U-40 人类视频轴的方向性旁证 | 人类视频对我们本体的收益不成立或远小于此，U-40 视频轴配比失据；阈值不适用于我们的头戴设备 | 阈值只作 v0，由自家消融裁决（curation §7）；U-40 换算率实验照做，不引用其数字定配比 | U-40 实验后 |
 
 ---
 
@@ -190,4 +217,7 @@
 | research-skild.md | governance D-23（已改一手）；eval-protocol §3（L1–L5 扰动阶梯、干预记账，待 M2）；device-track-umi §0（Skild 三轴表引用，待 M1）；data-format-contract 秒级切片含 human 轨（待契约 0.3） | 2026-09-14（登记，设计文档待 M1/M2） |
 | research-four-routes.md | governance U-38/D-25–D-27（已登记）；eval-protocol §1/§3（泛化差距、Solve 声明、槽位探针、反向 KL）；curation §4.1/§7（失败模式本体、高质量子采样消融）；robot-track-teleop §1/§6 + data-format-contract（视觉自标定、hardware_health）；capture-devices-design D5 状态（已改） | 2026-09-14（登记 + D5 状态，其余待 M2） |
 | research-dyna-comparison.md | governance U-37/R-20/D-22–D-24（已登记）；training-pipeline §2 WAM 分支；data-format-contract §3 连续帧对与 grasp_aperture；eval-protocol §3 少样本三刻度；program-plan §4 质控预算比 | 2026-09-14（登记，设计文档回写待 M2/M3） |
+| research-open-ecosystem-2026.md | governance R-26/U-43/U-44/D-28–D-30（已登记）；eval-protocol §2（LIBERO 降级、RoboCasa-GR1 + LIBERO-Plus 主回归，待 M2）；training-pipeline §3.1（StarVLA 候选，待 U-44）；program-plan 预算（3B 预训练 3e4–1e5 GPU·h、单任务后训练 1e1–1e2 GPU·h）；runtime-and-deployment 延迟预算（3B 级 Jetson Thor ~19 Hz）；data-platform 容量（单路第一视角 ~1.6 TB/千小时） | 2026-10-13（登记，设计文档待 M1/M2） |
+| research-rd-tooling.md | training-pipeline §3.1（lerobot 0.7 引入顺序与改动，已写回）；governance R-15（已更新）；sim-track §2（MJCF 唯一手写源，已写回）；sim-track §1 任务 API 二选一、ingest-spec（rosbag2 MCAP 直收）、curation L1（逆动力学力矩门、重定向伪影门）、robot-track-teleop（SONIC 评估）、`pyproject.toml`（rerun 升级）待定；§9–§12 的 license 原文核对结论已进 U-11；cleaning §1.7 弱纹理兜底换件、runtime-and-deployment 场地建图、laundry-sorting-brain-plan 检测器许可限定 | 2026-11-05（§13 第 1–2、9–10 项已写回：training §3.1、R-15、sim-track §2、U-11 #8/#13/#17/#20/#21/#33–#43；3–8、11–13 项待确认） |
+| research-gr00t2.md | governance D-34（已登记）；curation §1.3b 样本窗口判定、§4.1 三条描述规则、§5 QC 视图（已写回）；capture-devices-design §2.1 机器人对齐采集协议（已写回）；eval-protocol §3.1 盲测 A/B + Bradley-Terry、§5 仿真标定后用途（已写回）；data-pipeline-design §4.2 device 轨三级执行（已写回）；data-system-plan §4.1 任务生成（已写回）；U-37 WAM 证据、U-40 换算率仍需自测、training-pipeline 观察名单（每具身 MLP 未变，不触发）、U-11 待 12 月代码与权重许可发布后补 | 2026-11-18 |
 | data-strategy-roadmap.md（战略层，含 225 条扫描证据） | 回写清单见其 §7.2：data-format-contract（契约 0.3）、curation（段级/估值）、architecture §2.3、sim-track（优先级）、training（conditioning）、eval-protocol（分级/序贯/代理）、compliance（脱敏前置/同意图）、program-plan（组织/预算/止损门）；本次已改 research-opensource、research-generalist-dora、U-03、R-10 | 2026-09-09 |

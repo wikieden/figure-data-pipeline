@@ -69,8 +69,11 @@
 | xsquare | [`xsquare/wall-x-readme.txt`](xsquare/wall-x-readme.txt) | Wall-X GitHub README | 无（News 最新 2026-06） | https://raw.githubusercontent.com/X-Square-Robot/wall-x/main/README.md | 7,448 | `41ed3bd50524` |
 | xsquare | [`xsquare/hf-org-listing.txt`](xsquare/hf-org-listing.txt) | Hugging Face x-square-robot 数据集与模型清单（API JSON 摘要） | 抓取当日快照 | https://huggingface.co/api/datasets?author=x-square-robot ；…/api/models?author=x-square-robot | 2,631 | `64aabbede996` |
 | xsquare | [`xsquare/hf-xrzero-g0-3k.txt`](xsquare/hf-xrzero-g0-3k.txt) | XRZero-G0-3K 数据集页（无数据卡；行数与体积） | 仓库创建 2026-05-16 | https://huggingface.co/datasets/x-square-robot/XRZero-G0-3K | 759 | `3e0e7a21bf58` |
+| nvidia | [`nvidia/gr00t-2.txt`](nvidia/gr00t-2.txt) | GR00T 2: Scaling Robot Foundation Models for Generalization, Dexterity, and Adaptation（项目页） | 2026-11 | https://research.nvidia.com/labs/gear/gr00t-2/ | 22,514 | `8bb6fbc9cb23` |
+| nvidia | [`nvidia/gr00t-2-whitepaper.txt`](nvidia/gr00t-2-whitepaper.txt) | GR00T 2 白皮书（135 页 PDF，节选 §1–§5、B.1.2–B.1.3、附录 C、K.6；sha256 为 PDF） | 2026-11-09（PDF 生成日期） | https://research.nvidia.com/labs/gear/gr00t-2/assets/gr00t2_whitepaper.pdf | 185,061 | `a7316845d53a` |
+| nvidia | [`nvidia/human-1m-100k-card.txt`](nvidia/human-1m-100k-card.txt) | PhysicalAI Human-1M — 100K hours 数据卡（HF README，CC BY 4.0） | 仓库创建 2026-11-04 | https://huggingface.co/datasets/nvidia/PhysicalAI-Human-1M-100K | 7,962 | `e0353a2e172d` |
 
-共 64 篇：Figure 18、Dyna 8（首页与公司页于 2026-09-16 归档）、Sunday 4、Generalist 10、Skild 11（skild.ai 于 2026-09-14 晚间可达，全部博客归档）、自变量 13（2026-11-02 归档；x2robot.com 新闻详情页与产品页为 SPA，curl 只得空壳，新闻稿改走 PR Newswire 公司原文；arXiv 技术报告视同公司一手）。
+共 67 篇：Figure 18、Dyna 8（首页与公司页于 2026-09-16 归档）、Sunday 4、Generalist 10、Skild 11（skild.ai 于 2026-09-14 晚间可达，全部博客归档）、自变量 13（2026-11-02 归档；x2robot.com 新闻详情页与产品页为 SPA，curl 只得空壳，新闻稿改走 PR Newswire 公司原文；arXiv 技术报告视同公司一手）、NVIDIA 3（2026-11-18 归档；白皮书只节选正文与数据相关附录）。
 
 ## 图片归档（docs/assets/sources/）
 
