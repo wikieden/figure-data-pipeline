@@ -1,0 +1,444 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>机器人数据系统总览</title>
+<meta name="description" content="figure-data-pipeline 机器人数据系统信息汇总：采集、入湖、清洗质检、标注、数据集构建、训练、评测与回流闭环的流程剖析与当前进度。">
+<style>
+:root{
+  --bg:#f7f6f2; --surface:#ffffff; --surface-2:#f0eee8; --line:#e2dfd6;
+  --text:#1d1c19; --muted:#6a675f; --faint:#9a968c;
+  --accent:#2f5bd3; --accent-soft:#e6ecfb;
+  --ok:#1f7a4d; --ok-soft:#e3f2ea;
+  --warn:#9a6200; --warn-soft:#fbf0d9;
+  --todo:#6a675f; --todo-soft:#ecebe6;
+  --new:#a3376b; --new-soft:#f8e6ee;
+  --shadow:0 1px 2px rgba(0,0,0,.04),0 4px 14px rgba(0,0,0,.04);
+  --radius:12px;
+  --mono:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
+  --sans:-apple-system,BlinkMacSystemFont,"PingFang SC","Hiragino Sans GB","Noto Sans CJK SC","Microsoft YaHei",system-ui,sans-serif;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#141413; --surface:#1c1c1a; --surface-2:#242421; --line:#33332f;
+    --text:#ecebe6; --muted:#a6a398; --faint:#76736a;
+    --accent:#7fa0ff; --accent-soft:#1f2a47;
+    --ok:#5fc796; --ok-soft:#173226;
+    --warn:#e0a84a; --warn-soft:#3a2c12;
+    --todo:#a6a398; --todo-soft:#2a2a27;
+    --new:#e586b2; --new-soft:#3a1d2b;
+    --shadow:none;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#141413; --surface:#1c1c1a; --surface-2:#242421; --line:#33332f;
+  --text:#ecebe6; --muted:#a6a398; --faint:#76736a;
+  --accent:#7fa0ff; --accent-soft:#1f2a47;
+  --ok:#5fc796; --ok-soft:#173226;
+  --warn:#e0a84a; --warn-soft:#3a2c12;
+  --todo:#a6a398; --todo-soft:#2a2a27;
+  --new:#e586b2; --new-soft:#3a1d2b;
+  --shadow:none;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth;scroll-padding-top:64px}
+body{margin:0;background:var(--bg);color:var(--text);font:15px/1.65 var(--sans);-webkit-font-smoothing:antialiased}
+a{color:var(--accent);text-decoration:none}
+a:hover{text-decoration:underline}
+code{font-family:var(--mono);font-size:.86em;background:var(--surface-2);padding:1px 5px;border-radius:4px}
+.wrap{max-width:1120px;margin:0 auto;padding:0 16px}
+
+/* nav */
+nav.top{position:sticky;top:0;z-index:10;background:color-mix(in srgb,var(--bg) 88%,transparent);backdrop-filter:blur(8px);border-bottom:1px solid var(--line)}
+nav.top .wrap{display:flex;align-items:center;gap:16px;height:52px}
+nav.top .brand{font-weight:650;white-space:nowrap}
+nav.top .links{display:flex;gap:2px;overflow-x:auto;scrollbar-width:none;flex:1}
+nav.top .links::-webkit-scrollbar{display:none}
+nav.top .links a{color:var(--muted);padding:6px 10px;border-radius:8px;white-space:nowrap;font-size:14px}
+nav.top .links a:hover{background:var(--surface-2);color:var(--text);text-decoration:none}
+#theme{border:1px solid var(--line);background:var(--surface);color:var(--text);border-radius:8px;padding:5px 9px;cursor:pointer;font:inherit;font-size:13px}
+
+/* hero */
+header.hero{padding:44px 0 20px}
+.eyebrow{color:var(--muted);font-size:13px;letter-spacing:.04em}
+h1{font-size:clamp(26px,4.2vw,38px);line-height:1.25;margin:6px 0 12px;letter-spacing:-.01em}
+.lede{font-size:17px;color:var(--muted);max-width:780px;margin:0}
+.lede b{color:var(--text);font-weight:600}
+.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:10px;margin:26px 0 8px}
+.stat{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);padding:12px 14px;box-shadow:var(--shadow)}
+.stat .n{font-size:24px;font-weight:650;font-variant-numeric:tabular-nums}
+.stat .l{color:var(--muted);font-size:13px}
+
+section{padding:34px 0 8px}
+h2{font-size:22px;margin:0 0 6px}
+.sub{color:var(--muted);margin:0 0 18px;max-width:820px}
+h3{font-size:17px;margin:0 0 6px}
+
+/* status */
+.status-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:12px}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);padding:16px 18px;box-shadow:var(--shadow)}
+.pill{display:inline-block;font-size:12px;font-weight:600;padding:1px 8px;border-radius:999px;vertical-align:1px}
+.pill.ok{background:var(--ok-soft);color:var(--ok)}
+.pill.warn{background:var(--warn-soft);color:var(--warn)}
+.pill.todo{background:var(--todo-soft);color:var(--todo)}
+.pill.new{background:var(--new-soft);color:var(--new)}
+.card ul{margin:8px 0 0;padding-left:18px}
+.card li{margin:3px 0}
+
+/* flow */
+.flow{display:grid;grid-template-columns:repeat(auto-fill,minmax(104px,1fr));gap:6px;margin:4px 0 10px}
+.node{border:1px solid var(--line);background:var(--surface);border-radius:10px;padding:10px 10px 9px;cursor:pointer;text-align:left;font:inherit;color:inherit;position:relative;transition:border-color .15s,transform .15s}
+.node:hover{border-color:var(--accent);transform:translateY(-1px)}
+.node[aria-selected="true"]{border-color:var(--accent);background:var(--accent-soft)}
+.node .k{font-family:var(--mono);font-size:11px;color:var(--faint)}
+.node .t{font-weight:600;display:block;margin:1px 0 2px}
+.node .s{font-size:12px;color:var(--muted);display:block}
+.node .dot{position:absolute;top:9px;right:9px;width:8px;height:8px;border-radius:50%}
+.dot.ok{background:var(--ok)} .dot.warn{background:var(--warn)} .dot.todo{background:var(--faint)} .dot.new{background:var(--new)}
+.legend{display:flex;flex-wrap:wrap;gap:14px;font-size:12.5px;color:var(--muted);margin-bottom:14px}
+.legend span{display:inline-flex;align-items:center;gap:6px}
+.legend i{width:8px;height:8px;border-radius:50%;display:inline-block}
+.loopnote{font-size:13px;color:var(--muted);border-left:3px solid var(--new);padding:2px 0 2px 10px;margin:4px 0 18px}
+
+.detail{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);padding:20px 22px;box-shadow:var(--shadow)}
+.detail-head{display:flex;flex-wrap:wrap;gap:10px;align-items:baseline;justify-content:space-between;margin-bottom:12px}
+.detail-head .meta{font-size:13px;color:var(--muted)}
+.cols{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:16px}
+.cols h4{font-size:13px;color:var(--muted);font-weight:600;margin:0 0 6px;letter-spacing:.02em}
+.cols ul{margin:0;padding-left:18px}
+.cols li{margin:4px 0}
+.docs-links{margin-top:14px;padding-top:12px;border-top:1px dashed var(--line);font-size:13.5px}
+.docs-links a{margin-right:12px;white-space:nowrap}
+
+/* tables */
+.tbl{width:100%;border-collapse:collapse;font-size:14px}
+.tbl th,.tbl td{text-align:left;padding:9px 10px;border-bottom:1px solid var(--line);vertical-align:top}
+.tbl th{font-size:12.5px;color:var(--muted);font-weight:600;background:var(--surface-2)}
+.tbl-wrap{overflow-x:auto;background:var(--surface);border:1px solid var(--line);border-radius:var(--radius)}
+.tbl td:first-child{font-weight:600;white-space:nowrap}
+
+/* decisions */
+.dec{counter-reset:d;display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:12px;list-style:none;padding:0;margin:0}
+.dec li{counter-increment:d;background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);padding:14px 16px 14px 48px;position:relative}
+.dec li::before{content:counter(d);position:absolute;left:14px;top:13px;width:24px;height:24px;border-radius:50%;background:var(--accent-soft);color:var(--accent);font-weight:650;font-size:13px;display:grid;place-items:center}
+.dec b{display:block;margin-bottom:2px}
+.dec span{color:var(--muted);font-size:14px}
+
+.timeline{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:12px}
+.ms .tag{font-family:var(--mono);font-size:12px;color:var(--accent);font-weight:600}
+
+.fig{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);padding:12px;margin:0}
+.fig img{width:100%;height:auto;display:block;border-radius:6px;background:#fff}
+.fig figcaption{font-size:13px;color:var(--muted);margin-top:8px}
+
+footer{padding:40px 0 60px;color:var(--faint);font-size:13px}
+.note{font-size:13px;color:var(--muted)}
+@media (max-width:640px){
+  .detail{padding:16px}
+  nav.top .brand{display:none}
+}
+</style>
+</head>
+<body>
+
+<nav class="top">
+  <div class="wrap">
+    <span class="brand">机器人数据系统</span>
+    <div class="links">
+      <a href="#status">进度</a>
+      <a href="#flow">全链路</a>
+      <a href="#tracks">四轨与设备</a>
+      <a href="#decisions">贯穿决策</a>
+      <a href="#benchmarks">业界对标</a>
+      <a href="#roadmap">里程碑</a>
+      <a href="#risks">风险与未决</a>
+      <a href="#docs">文档</a>
+    </div>
+    <button id="theme" type="button" aria-label="切换明暗主题">明暗</button>
+  </div>
+</nav>
+
+<header class="hero wrap">
+  <div class="eyebrow">figure-data-pipeline · 信息汇总 · 2026-11-22</div>
+  <h1>机器人数据系统：从采集到评测的全流程剖析</h1>
+  <p class="lede">对标 Figure（Helix 02 + Figure 03 + Index）的开源人形机器人<b>数据管线与采集工具</b>。核心主张是<b>数据层承载创新、训练层设计保守</b>：护城河在过滤、对齐、估值和验证，而不在原始小时数。目前<b>设计文档已成体系，代码处于 M1 起步</b>（schema 0.2 已实现，各管线层为占位）。</p>
+  <div class="stats">
+    <div class="stat"><div class="n">5</div><div class="l">管线层</div></div>
+    <div class="stat"><div class="n">4</div><div class="l">数据轨（同一 schema）</div></div>
+    <div class="stat"><div class="n">5</div><div class="l">采集设备</div></div>
+    <div class="stat"><div class="n">9</div><div class="l">子系统 · 8 类数据产品</div></div>
+    <div class="stat"><div class="n">53</div><div class="l">设计文档（含 19 份调研）</div></div>
+    <div class="stat"><div class="n">29 / 51 / 34</div><div class="l">风险 / 未决 / 自报数字</div></div>
+  </div>
+</header>
+
+<main class="wrap">
+
+<section id="status">
+  <h2>当前进度</h2>
+  <p class="sub">一句话：<b>“怎么做”基本想清楚了，“做出来”刚开始。</b>M1 的目标是跑通入湖 → 规则段质检 → 报告 → 导出 → 训练读入的最小闭环。</p>
+  <div class="status-grid">
+    <div class="card">
+      <h3>代码 <span class="pill warn">M1 起步</span></h3>
+      <ul>
+        <li><code>schema.py</code> EpisodeMeta 0.2，带 0.1→0.2 读侧迁移，冻结样本永远可读</li>
+        <li>CLI <code>record / ingest / curate / export / viz</code> 已接好，实现均为占位</li>
+        <li>9 个测试通过；docs 链接与禁用词扫描进 CI</li>
+      </ul>
+    </div>
+    <div class="card">
+      <h3>设计 <span class="pill ok">成体系</span></h3>
+      <ul>
+        <li>五层架构、数据契约、入湖规范、策展规范、训练与评测协议齐全</li>
+        <li>2026-11-17 补齐全链路设计（挖掘、合成、回流闭环）和数据系统规划</li>
+        <li>治理三表：风险、未决决策、他家自报数字</li>
+      </ul>
+    </div>
+    <div class="card">
+      <h3>调研 <span class="pill ok">19 份</span></h3>
+      <ul>
+        <li>Figure、GR00T 2、某大模型厂商、Dyna、Sunday、Skild、自变量等</li>
+        <li>一手来源归档进 <code>docs/sources/</code>，自报数字标 ⚠️</li>
+        <li>结论按回灌清单写回设计文档</li>
+      </ul>
+    </div>
+    <div class="card">
+      <h3>下一步 <span class="pill todo">前 8 周</span></h3>
+      <ul>
+        <li>冻结质检报告 schema v1 与规则文件格式</li>
+        <li>ingest 接上规则快照哈希，规则段质检落地</li>
+        <li>lineage 核心表上线，用外部数据集跑通端到端</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<section id="flow">
+  <h2>全链路流程</h2>
+  <p class="sub">点击任一环节查看它做什么、关键规则、产物与对应文档。原则贯穿全程：<b>清洗是标记不是删除</b>，raw 永存（隐私脱敏与合法删除除外），每一步写 lineage。</p>
+  <div class="legend">
+    <span><i style="background:var(--ok)"></i>设计完成</span>
+    <span><i style="background:var(--warn)"></i>M1 实现中</span>
+    <span><i style="background:var(--faint)"></i>M2/M3 待建</span>
+    <span><i style="background:var(--new)"></i>2026-11 新补环节</span>
+  </div>
+  <div class="flow" role="tablist" id="flowNodes"></div>
+  <p class="loopnote">⑨ 回流闭环把评测失败和车队干预按“缺数据 / 被过滤 / 标错”三类分别送回采集、质检、打标与挖掘合成；合成产物重新进入质检。</p>
+  <div class="detail" id="stageDetail" role="tabpanel" aria-live="polite"></div>
+</section>
+
+<section>
+  <figure class="fig">
+    <img src="../docs/assets/strategy/p01-data-pipeline-flow.svg" alt="数据管线全链路流程图" loading="lazy" onerror="this.closest('figure').style.display='none'">
+    <figcaption>图 P1　数据管线全链路流程（来自 data-pipeline-design.md）。黄色条为新增或补齐的环节。</figcaption>
+  </figure>
+</section>
+
+<section id="tracks">
+  <h2>四条数据轨与五件采集设备</h2>
+  <p class="sub">四轨共用同一个 <code>EpisodeMeta</code>，用 <code>track</code> 字段区分；所有模态可空（掩码）。采集方式是组合不是单选，新增采集形态 = 新增 track 值，不新增 schema。</p>
+  <div class="tbl-wrap">
+    <table class="tbl">
+      <thead><tr><th>轨</th><th>内容</th><th>动作来源</th><th>在训练中的角色</th><th>主要设备</th></tr></thead>
+      <tbody>
+        <tr><td>human</td><td>第一视角视频：官方头戴 + Creator App 手机众包</td><td>无标签；手部 3D 关键点经伪标签工厂产出伪动作</td><td>预训练体量层（覆盖物体、场景、任务）；机器人对齐子集是精品层</td><td>D2 头戴参考套件、D3 Creator 手机</td></tr>
+        <tr><td>device</td><td>UMI / 同构穿戴式手持采集</td><td>硬件真值（VIO 位姿、编码器开合、夹持力、触觉）</td><td>任务层主力；校准 human 轨伪标签</td><td>D1 触觉同构 UMI、D1-TIS2 两节同构穿戴采集器</td></tr>
+        <tr><td>robot</td><td>遥操作与车队回流</td><td>动作真值 + 干预段</td><td>对齐层：play 数据、后训练演示、DAgger 素材</td><td>D4 遥操站 + 手套、D5 车队回流录制器</td></tr>
+        <tr><td>sim</td><td>仿真 rollout、增殖、世界模型生成、人→机合成</td><td>仿真真值或 IDM 伪动作</td><td>评测孪生 → 长尾补充 → 数据增殖（优先级依次降低）</td><td>Isaac Lab、SimFoundry</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p class="note">分层采样率：视觉流约 10–30 Hz，状态/动作流 100–200 Hz，统一纳秒时间戳对齐，不做全局重采样；device 轨动作流按传感器原生频率（≥50 Hz）入湖。同步预算：视觉↔动作 ≤5 ms（robot/device）/ ≤15 ms（human），IMU↔视觉 ≤2 ms，多相机 ≤1 ms。</p>
+</section>
+
+<section id="decisions">
+  <h2>七条贯穿性决策</h2>
+  <p class="sub">偏离任何一条，都必须先更新 architecture.md。</p>
+  <ol class="dec">
+    <li><b>双格式</b><span>采集与原始数据用 MCAP（append-only、多流单文件）；训练与发布用 LeRobotDataset v3（parquet + mp4）。不引入第三种持久化格式。</span></li>
+    <li><b>四轨同 schema</b><span>robot / human / device / sim 共用 EpisodeMeta，模态可空，schema 带版本，新增传感器不破坏旧数据可读性。</span></li>
+    <li><b>分层采样率</b><span>视觉对齐 VLM 消费，状态/动作对齐动作专家消费，统一时间戳，不重采样到单一频率。</span></li>
+    <li><b>策展五阶段</b><span>自动质量门 → 欺诈与来源审计 → embedding 去重 → 多样性再平衡 → VLM 分层标注；QC 分 L1 运动学 / L2 统计 / L3 VLM 语义三级。</span></li>
+    <li><b>视频编码</b><span>机上 h264 硬编，入湖转 AV1（svt-av1）+ yuv420p，解码用 torchcodec。</span></li>
+    <li><b>质量优先于吞吐</b><span>Figure 用 8 小时精策划数据即出可用策略；缩放消融切分器是数据集层内建能力。</span></li>
+    <li><b>训练保守、数据创新</b><span>模型决策只抄 ≥2 家独立验证的共识，不自研骨干；数据配方是版本化一等公民，哈希入 lineage。</span></li>
+  </ol>
+</section>
+
+<section id="benchmarks">
+  <h2>业界对标：我们借鉴了什么</h2>
+  <p class="sub">他家数字均为公司自报 ⚠️，只用于判断方向，不作为设计参数（登记在 governance D 表）。</p>
+  <div class="tbl-wrap">
+    <table class="tbl">
+      <thead><tr><th>对象</th><th>路线要点</th><th>写回到我们设计的内容</th></tr></thead>
+      <tbody>
+        <tr><td>Figure（Helix 02 / Index）</td><td>Index 五阶段策展；采集终端与机器人协同设计；8 小时精策划数据出可用策略</td><td>策展五阶段、质量优先、Creator 众包形态</td></tr>
+        <tr><td>NVIDIA GR00T 2</td><td>世界-动作模型；40 万小时人类视频 + 1 万小时 UMI + 2.35 万小时遥操 ⚠️；目标本体只给 play 数据；Flora 标注引擎；盲测 A/B Elo</td><td>样本窗口 QC 与 QC 视图、机器人对齐采集协议、UMI 三级质检、任务生成、盲测 A/B、相机安装基准冻结、play 任务类型、奖励列</td></tr>
+        <tr><td>某大模型厂商 具身链路</td><td>入湖 → 质检 → 打标 → 挖掘 → 合成 → 训练评估 → 回流飞轮；质检已交付客户</td><td>全链路总图、质检做成交付物、标注档案、挖掘与合成环节、回流闭环</td></tr>
+        <tr><td>Dyna</td><td>100 万小时人类视频、零机器人数据预训练 ⚠️；生产车队触发式固化</td><td>WAM 可选分支（U-37）、车队环形缓冲与触发固化</td></tr>
+        <tr><td>Sunday / Skild / 自变量 等</td><td>手套镜像、少样本适应、物理回放门等</td><td>同构末端路线、少样本三刻度评测、待 M2 的若干门</td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<section id="roadmap">
+  <h2>里程碑</h2>
+  <p class="sub">三套前缀不混用：M 是工程里程碑（按管线层），H 是 Index 复刻的硬件/平台线，P 是采集硬件成熟度。</p>
+  <div class="timeline">
+    <div class="card ms"><div class="tag">M1 · 0–3 月 · 当前</div><h3>采集与格式</h3><ul><li>MCAP 采集器、时间对齐</li><li>入湖 + 采集规则快照绑定</li><li>规则段质检 + 报告骨架</li><li>LeRobot v3 导出、rerun 检视</li></ul><p class="note">出口：外部数据集与自采数据走通全链，lineage 能从训练分片追到 raw。</p></div>
+    <div class="card ms"><div class="tag">M2 · 3–6 月</div><h3>策展管线</h3><ul><li>语义质检、四阶段打标、伪标签</li><li>去重再平衡、检索底座、演示库</li><li>模型网关、统一工作台、金标准集</li><li>缩放消融切分器</li></ul><p class="note">出口：50 小时样本实测 VLM 成本，SLO 达标两周。</p></div>
+    <div class="card ms"><div class="tag">M3 · 6–12 月</div><h3>训练与闭环</h3><ul><li>动作专家微调配方、评测 CI</li><li>人→机合成、世界模型接入</li><li>回流闭环与 loop 记录</li><li>HIL-SERL、异步推理运行时</li></ul><p class="note">出口：至少一轮完整闭环且有评测前后对比。</p></div>
+  </div>
+</section>
+
+<section id="risks">
+  <h2>关键风险与未决项</h2>
+  <p class="sub">完整清单在 governance.md：29 条风险、51 条未决决策、34 组他家自报数字。下面是最影响数据层的几条。</p>
+  <div class="tbl-wrap">
+    <table class="tbl">
+      <thead><tr><th>编号</th><th>问题</th><th>当前处理</th></tr></thead>
+      <tbody>
+        <tr><td>U-40</td><td>各数据源之间的“汇率”：一小时人类视频顶几小时遥操？</td><td>GR00T 2 也说未知，只能靠我们自己的四组换算率实验裁决</td></tr>
+        <tr><td>U-04</td><td>自研本体末端工程冻结（T/I/S 两节构型）</td><td>构型方向已定，驱动、对掌和接口待验证；冻结时同步冻结相机安装基准</td></tr>
+        <tr><td>U-37</td><td>训练层是否纳入世界-动作模型目标</td><td>多家独立验证，作为可选分支；数据层只要求保留连续帧对</td></tr>
+        <tr><td>U-47 / U-48</td><td>人→机合成产物归属；挖掘模块归属与 CLI</td><td>提议分别归 sim 轨与 curation 层，待裁决</td></tr>
+        <tr><td>R-04</td><td>human 轨没有触觉和力，接触密集任务的天花板未知</td><td>500 小时触觉 UMI 对照集 + 按任务簇拆分的增量消融</td></tr>
+        <tr><td>R-27</td><td>闭源合成模型与受保护训练带来的数据归属、lineage 与删除传导风险</td><td>三问任一不满足，只进研究分支</td></tr>
+        <tr><td>R-28 / R-29</td><td>VLM 调用成本随视频量线性增长；子系统数量超出团队运维能力</td><td>模型网关记账与日预算、采购优先、分阶段建</td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<section id="docs">
+  <h2>按角色的阅读路径</h2>
+  <p class="sub">链接指向 GitHub 上的文档原文。</p>
+  <div class="tbl-wrap">
+    <table class="tbl" id="docsTable">
+      <thead><tr><th>角色</th><th>建议顺序</th></tr></thead>
+      <tbody></tbody>
+    </table>
+  </div>
+</section>
+
+</main>
+
+<footer class="wrap">
+  本页由仓库设计文档汇总生成，内容以 <a href="https://github.com/wikieden/figure-data-pipeline/tree/main/docs">docs/</a> 为准。他家数字均为公司自报 ⚠️。最后更新 2026-11-22。
+</footer>
+
+<script>
+const GH = 'https://github.com/wikieden/figure-data-pipeline/blob/main/docs/';
+const doc = (f, label) => `<a href="${GH}${f}" target="_blank" rel="noopener">${label || f}</a>`;
+
+const STAGES = [
+  { k:'00', t:'采集', s:'四轨 · 五件设备', st:'ok', ms:'M1 recorder · H0–H2 设备',
+    what:['robot / human / device / sim 四轨按组合采集，配比由消融裁决','设备只为三个战略控制点服务：D1 触觉同构 UMI、D2 头戴参考套件、D3 Creator 手机、D4 遥操站 + 手套、D5 车队回流录制器','采集任务包下发：任务说明 + collection_rule + quality_rule + 配额，下发后不可改'],
+    rules:['MCAP 落盘：chunk 4 MB / 1 s flush，断电可恢复','标定随数据走：calibration_ref 哈希进 EpisodeMeta','隐私硬件三件套：硬连线录制灯、遮挡即停录、物理停录开关','机器人对齐子集：双手 100% 可见、腕速度分布、腕部相机尺度 0.8–1.2×','相机安装基准在本体冻结时写入具身档案，三类支架以它为基准','play 任务：与任务无关的本体数据，按覆盖度验收'],
+    out:['MCAP 多流单文件','/event/task 采集事件（失败、重拍、换道具）','/meta/health 设备健康'],
+    docs:[['capture-devices-design.md'],['recorder-sync-and-storage.md'],['robot-track-teleop.md'],['data-system-plan.md','任务下发 SS2']]},
+  { k:'01', t:'入湖', s:'校验 · 对齐 · 转码', st:'warn', ms:'M1 ingest',
+    what:['上传 → 校验 → 拆流对齐 → 转码 → 登记，每步幂等','绑定采集规则快照：每条 episode 写入 collection_rule 与 quality_rule 的哈希','held-out 评测集在入湖后、策展前就按场景与操作者组切分固定'],
+    rules:['哈希不符或损坏 → reject_corrupt','对齐超预算 → 入湖但标 flag:sync_budget_exceeded','转 AV1（svt-av1）+ yuv420p，分辨率阶梯：存档 / 训练 448p–720p / 预览 320p','重试、退避、死信；断点续传'],
+    out:['状态 raw → ingested','artifacts 表记录每步产物','split_version 冻结的 held-out 清单'],
+    docs:[['ingest-spec.md'],['data-format-contract.md'],['architecture.md','architecture §8 时间同步']]},
+  { k:'02', t:'清洗 · 质检', s:'规则段 · 语义段 · 报告', st:'warn', ms:'规则段 M1 · 语义段 M2',
+    what:['规则段（CPU、确定性）：技术门、视觉门、L1 运动学门、L2 统计门；明显坏样本在这里拦截，不送 VLM','语义段（VLM 先粗后细）：联系图粗筛圈出候选段，再细检任务匹配、完成度、摆拍','反欺诈：设备指纹、屏幕翻拍检测、跨账户 embedding 碰撞'],
+    rules:['临时阈值：Laplacian <100 记模糊；时长 <10 s 拒；手可见率 <60% 降级路由','human 轨按训练样本窗口判定：头角速度 ≤20°/s、腕速度 ≤1.0 m/s 等五项（GR00T 2 起点 ⚠️）','device 轨三级：采集站侧 → agent 四方面打分 → 人工对金标准审计','阈值改动必须走消融，指标不涨的严格化一律回退'],
+    out:['quality_flags 原因码 + quality_score','episode 质检报告 quality_report.json + 批次汇总','QC 视图：判定结果作为列追加，不改写原数据'],
+    docs:[['curation-pipeline.md','curation §1'],['data-pipeline-design.md','全链路 §4'],['cleaning-algo-selection.md']]},
+  { k:'03', t:'标注', s:'边界 · 描述 · 伪动作', st:'todo', ms:'M2',
+    what:['先定边界、再写描述，两步解耦','边界：硬件事件 > 手物接触 > 速度极小值 > VLM 时序定位，确定性后处理','描述：任务级 + 子任务级，事后反推式提示，按槽位（动作、对象、目标位置、结果）结构化存储','human 轨伪标签工厂：手部关键点 → 时序优化 → 世界系解耦 → 重定向 → 质量分'],
+    rules:['分割器验收两把尺子：宽松切点 F1 + 严格 IoU≥0.75 一对一 F1','错误主要出在指代上，抽检优先盯容器、位置、结果槽位','失败尝试按意图描述，不暗示成功；双手并发动作分开标','双模型交叉标注，分歧进人工队列；规范未覆盖的进待裁决队列'],
+    out:['子任务区间表 + 槽位化描述','伪动作与质量分','演示库切片（3–12 s）','状态 segmented → labeled'],
+    docs:[['curation-pipeline.md','curation §3–§4'],['data-pipeline-design.md','标注档案 §5'],['gr00t2-trends-analysis.md','标注趋势']]},
+  { k:'04', t:'去重 · 再平衡', s:'embedding · 四轴聚类', st:'todo', ms:'M2',
+    what:['SigLIP 帧特征聚合起步，license 通过后升级视频级表征','按任务 × 物体 × 环境 × 操作者四轴聚类，统计簇覆盖度','稀缺簇生成采集配额，过剩簇降权'],
+    rules:['近重复（余弦 >0.95）保留质量分最高的 1 条；语义重复（0.85–0.95）不删只降权','同人去重严、跨人去重松','只在 train 池内做，held-out 不参与'],
+    out:['多样性 KPI：每 1,000 小时的独特任务 / 物体 / 场景 / 操作者数','稀缺簇 → 采集配额'],
+    docs:[['curation-pipeline.md','curation §2'],['eval-protocol.md','指标字典']]},
+  { k:'05', t:'挖掘 · 合成', s:'检索 · 人→机 · 世界模型', st:'new', ms:'检索 M2 · 合成 M3',
+    what:['挖掘：结构化过滤 + embedding 召回 + 交叉编码器精排；用于演示库检索、难例挖掘、按查询建训练集、评测失败反查','合成：仿真增殖、具身转换、人类视频 → 机器人演示（新）、世界模型生成','查询即配置：保存的查询版本化，快照进 lineage'],
+    rules:['检索验收用自家标注构造“成对难查询”（方向相反、左右手、成败）','合成由挖掘结果驱动，不普遍铺开；评测集永不含合成数据','合成产物落 sim 轨，parent_episode_id 指回种子，并重新过质检','闭源合成模型三问不满足只进研究分支（R-27）'],
+    out:['查询结果快照','派生 episode（sim 轨）'],
+    docs:[['data-pipeline-design.md','全链路 §6–§7'],['sim-track.md']]},
+  { k:'06', t:'数据集构建', s:'可训练性 · 配方 · manifest', st:'warn', ms:'M1 export · M2 完整版',
+    what:['可训练性检查 → 按配方采样 → 按标注档案组装 → 导出 LeRobot v3 与演示库切片 → 冻结 manifest','统一槽位向量 96 维 + 有效掩码；同时导出 π0 兼容视图','标注档案：action_expert / planner / pretrain 三种用途从同一份槽位化标注组装'],
+    rules:['归一化统计只在 QC 视图保留的样本上计算，随数据集版本走','数据配方 configs/mixtures/*.yaml 改动即新版本，哈希进训练 lineage','训练前跑 train↔held-out 近重复泄漏检查','增强不落盘，在 dataloader 做'],
+    out:['DP1 训练数据集 + 冻结 manifest','状态 training_ready'],
+    docs:[['data-format-contract.md','契约 §2'],['curation-pipeline.md','curation §5'],['data-platform.md']]},
+  { k:'07', t:'训练', s:'fdp-policy · 四阶段课程', st:'todo', ms:'M3（独立仓库）',
+    what:['VLM 主干 + flow-matching 动作头（多家共识），不自研骨干','Stage A 管线验证：在 10–50 小时精策划数据上微调 openpi / SmolVLA','Stage B 0→1 预训练：数据 <1e3 小时不启动；S 档起步，5e3–1e4 小时换 M 档','Stage C 任务后训练；Stage D RL 闭环（HIL-SERL、残差 RL）'],
+    rules:['相机系增量末端动作为主动作空间','两段式动作课程：先离散 token，再流匹配','WAM 目标作为可选配方开关（U-37）','档位切换只看混合等效小时数和缩放曲线，不按日历'],
+    out:['checkpoint + 训练 run 元数据（配方哈希、数据集版本）'],
+    docs:[['training-pipeline.md'],['research-vla-pretraining.md']]},
+  { k:'08', t:'评测', s:'仿真 CI · 真机 · 盲测 A/B', st:'ok', ms:'协议已定 · M3 落地',
+    what:['仿真基准：LIBERO、SIMPLEREnv、Isaac Lab-Arena 自建任务集、RoboTwin、长任务规划基准','真机协议模板：每任务 ≥20 trial，ABAB 交替，操作员盲测，至少一个 held-out 场地','checkpoint 排名：盲测 A/B + Bradley-Terry Elo，按任务重采样置信区间'],
+    rules:['消融判定：Fisher 精确检验 / Welch t，α = 0.05，效应量 ≥5 个百分点才算收益','Stage A 放行：微调比零样本高 ≥10 个百分点且显著','仿真与真机相关 r ≥0.8 的任务簇才允许用仿真替代真机做回归','对外任何能力宣称必须能指向一个 run_id 及其日志'],
+    out:['评测报告（成功率 + Wilson 区间、进度分、介入率、吞吐）','arena 比较记录','失败案例索引'],
+    docs:[['eval-protocol.md'],['research-simfoundry.md']]},
+  { k:'09', t:'回流闭环', s:'失败归类 → 再评测', st:'new', ms:'M3',
+    what:['触发：评测报告或车队回流（干预、失败、OOD 事件）','失败片段按失败模式词表归类，再用挖掘反查训练集','诊断三选一：缺数据 → 采集配额或合成；被过滤 → 检查阈值；标错 → 规范裁决 + 重映射'],
+    rules:['每一轮写一条 loop 记录：触发、查询快照、动作、数据集版本、评测前后对比','评测不涨，本轮数据改动回退','车队：环形缓冲 5 分钟，接管或 OOD 触发固化前 30 s / 后 60 s'],
+    out:['新数据集版本','loop 记录（“飞轮转没转”的唯一证据）'],
+    docs:[['data-pipeline-design.md','全链路 §9'],['runtime-and-deployment.md']]},
+];
+const ST = {ok:'设计完成', warn:'M1 实现中', todo:'M2/M3 待建', new:'2026-11 新补'};
+const PILL = {ok:'ok', warn:'warn', todo:'todo', new:'new'};
+
+const flowEl = document.getElementById('flowNodes');
+const detailEl = document.getElementById('stageDetail');
+const li = a => a.map(x => `<li>${x}</li>`).join('');
+
+function render(i){
+  const s = STAGES[i];
+  [...flowEl.children].forEach((n, j) => n.setAttribute('aria-selected', j === i));
+  detailEl.innerHTML = `
+    <div class="detail-head">
+      <h3>${s.k === '00' ? '' : s.k.replace(/^0/, '') + ' · '}${s.t} <span class="pill ${PILL[s.st]}">${ST[s.st]}</span></h3>
+      <span class="meta">${s.ms}</span>
+    </div>
+    <div class="cols">
+      <div><h4>做什么</h4><ul>${li(s.what)}</ul></div>
+      <div><h4>关键规则与阈值</h4><ul>${li(s.rules)}</ul></div>
+      <div><h4>产物</h4><ul>${li(s.out)}</ul></div>
+    </div>
+    <div class="docs-links">相关文档：${s.docs.map(d => doc(d[0], d[1])).join('')}</div>`;
+  try { history.replaceState(null, '', '#stage-' + s.k); } catch(e) {}
+}
+
+STAGES.forEach((s, i) => {
+  const b = document.createElement('button');
+  b.className = 'node'; b.type = 'button'; b.setAttribute('role', 'tab');
+  b.innerHTML = `<span class="dot ${s.st}"></span><span class="k">${s.k}</span><span class="t">${s.t}</span><span class="s">${s.s}</span>`;
+  b.addEventListener('click', () => render(i));
+  flowEl.appendChild(b);
+});
+const m = location.hash.match(/^#stage-(\d\d)$/);
+render(m ? Math.max(0, STAGES.findIndex(s => s.k === m[1])) : 2);
+
+const ROLES = [
+  ['新成员（30 分钟）', [['architecture.md'], ['governance.md'], ['README.md', '文档索引']]],
+  ['管理层 / CTO', [['data-strategy-roadmap.md'], ['program-plan.md']]],
+  ['数据层实现（M1）', [['architecture.md'], ['data-format-contract.md'], ['recorder-sync-and-storage.md'], ['ingest-spec.md'], ['device-track-umi.md']]],
+  ['策展层实现（M2）', [['data-pipeline-design.md'], ['curation-pipeline.md'], ['cleaning-algo-selection.md'], ['eval-protocol.md'], ['data-platform.md']]],
+  ['训练层（M3）', [['training-pipeline.md'], ['research-vla-pretraining.md'], ['eval-protocol.md'], ['runtime-and-deployment.md']]],
+  ['硬件 / 采集', [['capture-devices-design.md'], ['inhouse-isomorphic-end-effector.md'], ['robot-track-teleop.md'], ['sim-track.md']]],
+  ['平台 / 运维', [['data-system-plan.md'], ['data-platform.md'], ['compliance-and-security.md']]],
+  ['趋势与调研', [['research-gr00t2.md'], ['gr00t2-trends-analysis.md'], ['research-vendor-robotics.md'], ['research-figure.md']]],
+];
+document.querySelector('#docsTable tbody').innerHTML = ROLES.map(([r, ds]) =>
+  `<tr><td>${r}</td><td>${ds.map(d => doc(d[0], d[1])).join(' → ')}</td></tr>`).join('');
+
+const root = document.documentElement, KEY = 'fdp-theme';
+try { const t = localStorage.getItem(KEY); if (t) root.dataset.theme = t; } catch(e) {}
+document.getElementById('theme').addEventListener('click', () => {
+  const dark = root.dataset.theme ? root.dataset.theme === 'dark' : matchMedia('(prefers-color-scheme: dark)').matches;
+  root.dataset.theme = dark ? 'light' : 'dark';
+  try { localStorage.setItem(KEY, root.dataset.theme); } catch(e) {}
+});
+</script>
+</body>
+</html>
