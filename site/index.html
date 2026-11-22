@@ -3,8 +3,8 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>机器人数据系统总览</title>
-<meta name="description" content="figure-data-pipeline 机器人数据系统信息汇总：采集、入湖、清洗质检、标注、数据集构建、训练、评测与回流闭环的流程剖析与当前进度。">
+<title>机器人数据系统全景</title>
+<meta name="description" content="机器人行业数据系统全景：头部团队怎么采集、清洗、标注、训练、评测，以及 figure-data-pipeline 的方案与进度。">
 <style>
 :root{
   --bg:#f7f6f2; --surface:#ffffff; --surface-2:#f0eee8; --line:#e2dfd6;
@@ -104,7 +104,7 @@ h3{font-size:17px;margin:0 0 6px}
 .detail{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);padding:20px 22px;box-shadow:var(--shadow)}
 .detail-head{display:flex;flex-wrap:wrap;gap:10px;align-items:baseline;justify-content:space-between;margin-bottom:12px}
 .detail-head .meta{font-size:13px;color:var(--muted)}
-.cols{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:16px}
+.cols{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:16px}
 .cols h4{font-size:13px;color:var(--muted);font-weight:600;margin:0 0 6px;letter-spacing:.02em}
 .cols ul{margin:0;padding-left:18px}
 .cols li{margin:4px 0}
@@ -146,11 +146,12 @@ footer{padding:40px 0 60px;color:var(--faint);font-size:13px}
   <div class="wrap">
     <span class="brand">机器人数据系统</span>
     <div class="links">
+      <a href="#landscape">行业格局</a>
       <a href="#status">进度</a>
       <a href="#flow">全链路</a>
       <a href="#tracks">四轨与设备</a>
       <a href="#decisions">贯穿决策</a>
-      <a href="#benchmarks">业界对标</a>
+      <a href="#benchmarks">各家借鉴</a>
       <a href="#roadmap">里程碑</a>
       <a href="#risks">风险与未决</a>
       <a href="#docs">文档</a>
@@ -160,20 +161,50 @@ footer{padding:40px 0 60px;color:var(--faint);font-size:13px}
 </nav>
 
 <header class="hero wrap">
-  <div class="eyebrow">figure-data-pipeline · 信息汇总 · 2026-11-22</div>
-  <h1>机器人数据系统：从采集到评测的全流程剖析</h1>
-  <p class="lede">对标 Figure（Helix 02 + Figure 03 + Index）的开源人形机器人<b>数据管线与采集工具</b>。核心主张是<b>数据层承载创新、训练层设计保守</b>：护城河在过滤、对齐、估值和验证，而不在原始小时数。目前<b>设计文档已成体系，代码处于 M1 起步</b>（schema 0.2 已实现，各管线层为占位）。</p>
+  <div class="eyebrow">figure-data-pipeline · 行业全景 · 2026-11-22</div>
+  <h1>机器人数据系统全景：行业怎么做，我们怎么做</h1>
+  <p class="lede">起点是对标 Figure，现在的视野是<b>整个机器人行业</b>：Figure、NVIDIA、某大模型厂商、Dyna、Generalist、Sunday、Skild、自变量等头部团队的数据采集、清洗、标注、训练与评测做法，以及我们据此设计的开源<b>数据管线与采集工具</b>。核心主张是<b>数据层承载创新、训练层设计保守</b>：护城河在过滤、对齐、估值和验证，而不在原始小时数。我们自己的进度：<b>设计文档已成体系，代码处于 M1 起步</b>。</p>
   <div class="stats">
     <div class="stat"><div class="n">5</div><div class="l">管线层</div></div>
     <div class="stat"><div class="n">4</div><div class="l">数据轨（同一 schema）</div></div>
     <div class="stat"><div class="n">5</div><div class="l">采集设备</div></div>
     <div class="stat"><div class="n">9</div><div class="l">子系统 · 8 类数据产品</div></div>
-    <div class="stat"><div class="n">53</div><div class="l">设计文档（含 19 份调研）</div></div>
+    <div class="stat"><div class="n">19</div><div class="l">份行业调研 · 覆盖 15+ 家</div></div>
+    <div class="stat"><div class="n">53</div><div class="l">设计文档</div></div>
     <div class="stat"><div class="n">29 / 51 / 34</div><div class="l">风险 / 未决 / 自报数字</div></div>
   </div>
 </header>
 
 <main class="wrap">
+
+<section id="landscape">
+  <h2>行业格局</h2>
+  <p class="sub">2026 年头部团队在“人类是数据源”上已经趋同，分歧在<b>人类数据怎么变成动作真值</b>和<b>模型怎么分层</b>。下列数字均为公司自报 ⚠️，只看方向。</p>
+  <div class="tbl-wrap">
+    <table class="tbl">
+      <thead><tr><th>团队</th><th>预训练主语料</th><th>动作真值从哪来</th><th>模型路线</th></tr></thead>
+      <tbody>
+        <tr><td>Figure</td><td>Index 众包第一视角视频（16M 条）+ 遥操作</td><td>遥操作；人类视频提取头部与手部轨迹</td><td>VLA 分层（Helix 02）</td></tr>
+        <tr><td>NVIDIA</td><td>40 万小时人类视频 + 1 万小时 UMI + 2.35 万小时遥操</td><td>手部 3D 位姿 + UMI 硬件真值 + 遥操作</td><td>世界-动作模型（GR00T 2）</td></tr>
+        <tr><td>Dyna</td><td>100 万+ 小时头戴视频，零机器人数据</td><td>3D 手姿 → 腕位姿 + 拇食开合度</td><td>世界-动作模型（DYNA-2）</td></tr>
+        <tr><td>Generalist</td><td>UMI 式手持夹爪，约 50 万小时</td><td>手持设备硬件真值</td><td>从零训练的单流模型（GEN）</td></tr>
+        <tr><td>Sunday</td><td>手套采集的传感化人类数据，零遥操作</td><td>手套硬件真值 + 抹人合成</td><td>端到端单网络（ACT）</td></tr>
+        <tr><td>Skild</td><td>多源（含 UMI），10 万小时级预训练</td><td>多源；任务用视频指定</td><td>全身体通用大脑 + 上下文学习（S1）</td></tr>
+        <tr><td>某大模型厂商</td><td>真机 + 人类视频 + 世界模型生成</td><td>真机 + 人→机合成（15 种本体）</td><td>VLA（厂商 VLA / Manip）</td></tr>
+        <tr><td>自变量</td><td>真机遥操 + 无本体设备 + 孪生灵巧手 + 仿真</td><td>真机锚定，物理回放验证</td><td>VLA</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="status-grid" style="margin-top:14px">
+    <div class="card"><h3>共识 1　人类视频是预训练主轴</h3><p class="note">NVIDIA、Dyna、Figure、Riemann 等都把第一视角视频推到 10⁵–10⁶ 小时，机器人数据退为对齐层。</p></div>
+    <div class="card"><h3>共识 2　原始供给过剩，可用数据稀缺</h3><p class="note">众包视频约 $3–9/小时，熟练采集员有效数据仅 1/3–1/2。Skild：每花 1 美元采集，花 3 美元做质控。</p></div>
+    <div class="card"><h3>共识 3　采集器与机器人共同设计</h3><p class="note">Figure 03 × Index、Sunday 手套孪生手、NVIDIA DexUMI 一一对应：同构到底时连本体 play 数据都不需要。</p></div>
+    <div class="card"><h3>共识 4　不删只标，失败数据是一等公民</h3><p class="note">π0.7 用元数据条件化纳入失败与自主 rollout；标注、奖励、QC 都变成可重算的列。</p></div>
+    <div class="card"><h3>共识 5　标注引擎化</h3><p class="note">NVIDIA Flora 两天重标 40 万小时；某大模型厂商打标自动化 80–90%。人只做种子、金标准和审计。</p></div>
+    <div class="card"><h3>共识 6　评测走向盲测排名与代理</h3><p class="note">GearArena / RoboArena 盲测成对比较，仿真孪生先标定相关性再替代真机；部署车队就是采集车队。</p></div>
+  </div>
+  <p class="note">未解的问题：各数据源之间的“汇率”。一小时人类视频顶几小时遥操，没有任何一家给出答案。</p>
+</section>
 
 <section id="status">
   <h2>当前进度</h2>
@@ -216,7 +247,7 @@ footer{padding:40px 0 60px;color:var(--faint);font-size:13px}
 
 <section id="flow">
   <h2>全链路流程</h2>
-  <p class="sub">点击任一环节查看它做什么、关键规则、产物与对应文档。原则贯穿全程：<b>清洗是标记不是删除</b>，raw 永存（隐私脱敏与合法删除除外），每一步写 lineage。</p>
+  <p class="sub">我们的方案按十个环节展开。点击任一环节查看它做什么、关键规则、产物、<b>行业里其他团队怎么做</b>，以及对应文档。原则贯穿全程：<b>清洗是标记不是删除</b>，raw 永存（隐私脱敏与合法删除除外），每一步写 lineage。</p>
   <div class="legend">
     <span><i style="background:var(--ok)"></i>设计完成</span>
     <span><i style="background:var(--warn)"></i>M1 实现中</span>
@@ -267,7 +298,7 @@ footer{padding:40px 0 60px;color:var(--faint);font-size:13px}
 </section>
 
 <section id="benchmarks">
-  <h2>业界对标：我们借鉴了什么</h2>
+  <h2>各家借鉴：写回到我们设计里的内容</h2>
   <p class="sub">他家数字均为公司自报 ⚠️，只用于判断方向，不作为设计参数（登记在 governance D 表）。</p>
   <div class="tbl-wrap">
     <table class="tbl">
@@ -277,7 +308,11 @@ footer{padding:40px 0 60px;color:var(--faint);font-size:13px}
         <tr><td>NVIDIA GR00T 2</td><td>世界-动作模型；40 万小时人类视频 + 1 万小时 UMI + 2.35 万小时遥操 ⚠️；目标本体只给 play 数据；Flora 标注引擎；盲测 A/B Elo</td><td>样本窗口 QC 与 QC 视图、机器人对齐采集协议、UMI 三级质检、任务生成、盲测 A/B、相机安装基准冻结、play 任务类型、奖励列</td></tr>
         <tr><td>某大模型厂商 具身链路</td><td>入湖 → 质检 → 打标 → 挖掘 → 合成 → 训练评估 → 回流飞轮；质检已交付客户</td><td>全链路总图、质检做成交付物、标注档案、挖掘与合成环节、回流闭环</td></tr>
         <tr><td>Dyna</td><td>100 万小时人类视频、零机器人数据预训练 ⚠️；生产车队触发式固化</td><td>WAM 可选分支（U-37）、车队环形缓冲与触发固化</td></tr>
-        <tr><td>Sunday / Skild / 自变量 等</td><td>手套镜像、少样本适应、物理回放门等</td><td>同构末端路线、少样本三刻度评测、待 M2 的若干门</td></tr>
+        <tr><td>Generalist</td><td>UMI 式手持夹爪规模化；物理提示（演示放进上下文）随规模涌现</td><td>device 轨定位、训练接口预留演示槽位</td></tr>
+        <tr><td>Sunday</td><td>手套采集、机器人手镜像手套；Skill Transform 抹人</td><td>采集器与执行手共同设计、具身转换环节</td></tr>
+        <tr><td>Skild</td><td>1:3 采集与质控投入；L1–L5 扰动阶梯；1 条演示 ≈ 380 条遥操 ⚠️</td><td>少样本三刻度评测、扰动阶梯（待 M2）</td></tr>
+        <tr><td>自变量</td><td>无本体采集为主、真机做锚；物理回放验证；具身桥接样本</td><td>物理回放门、配比消融模板（待 M2/M3）</td></tr>
+        <tr><td>开源生态</td><td>LeRobot、openpi、StarVLA、Isaac Lab、Newton；ros2 bag 默认 MCAP</td><td>双格式选型、训练框架直接采用、评测基准取舍</td></tr>
       </tbody>
     </table>
   </div>
@@ -326,7 +361,7 @@ footer{padding:40px 0 60px;color:var(--faint);font-size:13px}
 </main>
 
 <footer class="wrap">
-  本页由仓库设计文档汇总生成，内容以 <a href="https://github.com/wikieden/figure-data-pipeline/tree/main/docs">docs/</a> 为准。他家数字均为公司自报 ⚠️。最后更新 2026-11-22。
+  本页由仓库设计文档与 19 份行业调研汇总生成，内容以 <a href="https://github.com/wikieden/figure-data-pipeline/tree/main/docs">docs/</a> 为准。他家数字均为公司自报 ⚠️。最后更新 2026-11-22。
 </footer>
 
 <script>
@@ -334,52 +369,52 @@ const GH = 'https://github.com/wikieden/figure-data-pipeline/blob/main/docs/';
 const doc = (f, label) => `<a href="${GH}${f}" target="_blank" rel="noopener">${label || f}</a>`;
 
 const STAGES = [
-  { k:'00', t:'采集', s:'四轨 · 五件设备', st:'ok', ms:'M1 recorder · H0–H2 设备',
+  { k:'00', ind:['Figure Index：App 众包第一视角视频，按通过分钟计酬','Dyna：100 万+ 小时头戴视频 ⚠️','Generalist：UMI 式手持夹爪约 50 万小时 ⚠️','Sunday：手套采集，零遥操作','NVIDIA：40 万小时人类视频 + 1 万小时 UMI + 2.35 万小时遥操 ⚠️','自变量：真机 + 无本体设备 + 孪生灵巧手'], t:'采集', s:'四轨 · 五件设备', st:'ok', ms:'M1 recorder · H0–H2 设备',
     what:['robot / human / device / sim 四轨按组合采集，配比由消融裁决','设备只为三个战略控制点服务：D1 触觉同构 UMI、D2 头戴参考套件、D3 Creator 手机、D4 遥操站 + 手套、D5 车队回流录制器','采集任务包下发：任务说明 + collection_rule + quality_rule + 配额，下发后不可改'],
     rules:['MCAP 落盘：chunk 4 MB / 1 s flush，断电可恢复','标定随数据走：calibration_ref 哈希进 EpisodeMeta','隐私硬件三件套：硬连线录制灯、遮挡即停录、物理停录开关','机器人对齐子集：双手 100% 可见、腕速度分布、腕部相机尺度 0.8–1.2×','相机安装基准在本体冻结时写入具身档案，三类支架以它为基准','play 任务：与任务无关的本体数据，按覆盖度验收'],
     out:['MCAP 多流单文件','/event/task 采集事件（失败、重拍、换道具）','/meta/health 设备健康'],
     docs:[['capture-devices-design.md'],['recorder-sync-and-storage.md'],['robot-track-teleop.md'],['data-system-plan.md','任务下发 SS2']]},
-  { k:'01', t:'入湖', s:'校验 · 对齐 · 转码', st:'warn', ms:'M1 ingest',
+  { k:'01', ind:['NVIDIA：Ray 处理管线，每月 PB 级输入 ⚠️','某大模型厂商：云数据湖 全模态湖仓，统一时间基准与 episode 切分','ROS 2：ros2 bag 默认写 MCAP，与我们采集格式一致'], t:'入湖', s:'校验 · 对齐 · 转码', st:'warn', ms:'M1 ingest',
     what:['上传 → 校验 → 拆流对齐 → 转码 → 登记，每步幂等','绑定采集规则快照：每条 episode 写入 collection_rule 与 quality_rule 的哈希','held-out 评测集在入湖后、策展前就按场景与操作者组切分固定'],
     rules:['哈希不符或损坏 → reject_corrupt','对齐超预算 → 入湖但标 flag:sync_budget_exceeded','转 AV1（svt-av1）+ yuv420p，分辨率阶梯：存档 / 训练 448p–720p / 预览 320p','重试、退避、死信；断点续传'],
     out:['状态 raw → ingested','artifacts 表记录每步产物','split_version 冻结的 held-out 清单'],
     docs:[['ingest-spec.md'],['data-format-contract.md'],['architecture.md','architecture §8 时间同步']]},
-  { k:'02', t:'清洗 · 质检', s:'规则段 · 语义段 · 报告', st:'warn', ms:'规则段 M1 · 语义段 M2',
+  { k:'02', ind:['Skild：每花 1 美元采集花 3 美元质控（一手原句）','某大模型厂商：规则 / VLM / 报告三段质检，已交付客户','NVIDIA：按样本窗口逐时间步过滤；UMI 三级质检滤掉约四分之一 ⚠️','自变量：抽样在目标真机开环回放，能完成才算有效'], t:'清洗 · 质检', s:'规则段 · 语义段 · 报告', st:'warn', ms:'规则段 M1 · 语义段 M2',
     what:['规则段（CPU、确定性）：技术门、视觉门、L1 运动学门、L2 统计门；明显坏样本在这里拦截，不送 VLM','语义段（VLM 先粗后细）：联系图粗筛圈出候选段，再细检任务匹配、完成度、摆拍','反欺诈：设备指纹、屏幕翻拍检测、跨账户 embedding 碰撞'],
     rules:['临时阈值：Laplacian <100 记模糊；时长 <10 s 拒；手可见率 <60% 降级路由','human 轨按训练样本窗口判定：头角速度 ≤20°/s、腕速度 ≤1.0 m/s 等五项（GR00T 2 起点 ⚠️）','device 轨三级：采集站侧 → agent 四方面打分 → 人工对金标准审计','阈值改动必须走消融，指标不涨的严格化一律回退'],
     out:['quality_flags 原因码 + quality_score','episode 质检报告 quality_report.json + 批次汇总','QC 视图：判定结果作为列追加，不改写原数据'],
     docs:[['curation-pipeline.md','curation §1'],['data-pipeline-design.md','全链路 §4'],['cleaning-algo-selection.md']]},
-  { k:'03', t:'标注', s:'边界 · 描述 · 伪动作', st:'todo', ms:'M2',
+  { k:'03', ind:['NVIDIA Flora：切分 / 描述 / 奖励三模型，两天重标 40 万小时 ⚠️','某大模型厂商：四阶段打标，自动化 80–90% ⚠️','Figure：事后反推式指令','自变量：从轨迹自动合成 1,200 万条具身桥接 VQA ⚠️'], t:'标注', s:'边界 · 描述 · 伪动作', st:'todo', ms:'M2',
     what:['先定边界、再写描述，两步解耦','边界：硬件事件 > 手物接触 > 速度极小值 > VLM 时序定位，确定性后处理','描述：任务级 + 子任务级，事后反推式提示，按槽位（动作、对象、目标位置、结果）结构化存储','human 轨伪标签工厂：手部关键点 → 时序优化 → 世界系解耦 → 重定向 → 质量分'],
     rules:['分割器验收两把尺子：宽松切点 F1 + 严格 IoU≥0.75 一对一 F1','错误主要出在指代上，抽检优先盯容器、位置、结果槽位','失败尝试按意图描述，不暗示成功；双手并发动作分开标','双模型交叉标注，分歧进人工队列；规范未覆盖的进待裁决队列'],
     out:['子任务区间表 + 槽位化描述','伪动作与质量分','演示库切片（3–12 s）','状态 segmented → labeled'],
     docs:[['curation-pipeline.md','curation §3–§4'],['data-pipeline-design.md','标注档案 §5'],['gr00t2-trends-analysis.md','标注趋势']]},
-  { k:'04', t:'去重 · 再平衡', s:'embedding · 四轴聚类', st:'todo', ms:'M2',
+  { k:'04', ind:['NVIDIA：单任务占比 ≤1.2%，按稀缺度而非小时设采样份额','GO-1-Pro：任务多样性比每任务数据量更重要','Index：多样性计数对标 373 任务 / 1,146 物体 / 116 环境 ⚠️'], t:'去重 · 再平衡', s:'embedding · 四轴聚类', st:'todo', ms:'M2',
     what:['SigLIP 帧特征聚合起步，license 通过后升级视频级表征','按任务 × 物体 × 环境 × 操作者四轴聚类，统计簇覆盖度','稀缺簇生成采集配额，过剩簇降权'],
     rules:['近重复（余弦 >0.95）保留质量分最高的 1 条；语义重复（0.85–0.95）不删只降权','同人去重严、跨人去重松','只在 train 池内做，held-out 不参与'],
     out:['多样性 KPI：每 1,000 小时的独特任务 / 物体 / 场景 / 操作者数','稀缺簇 → 采集配额'],
     docs:[['curation-pipeline.md','curation §2'],['eval-protocol.md','指标字典']]},
-  { k:'05', t:'挖掘 · 合成', s:'检索 · 人→机 · 世界模型', st:'new', ms:'检索 M2 · 合成 M3',
+  { k:'05', ind:['某大模型厂商：1,933 小时人类视频合成 15 种本体共 24,808 小时演示 ⚠️','NVIDIA：单条人类视频 → 仿真 RL 专家 → 零样本上真机','Sunday：Skill Transform 抹人合成机器人'], t:'挖掘 · 合成', s:'检索 · 人→机 · 世界模型', st:'new', ms:'检索 M2 · 合成 M3',
     what:['挖掘：结构化过滤 + embedding 召回 + 交叉编码器精排；用于演示库检索、难例挖掘、按查询建训练集、评测失败反查','合成：仿真增殖、具身转换、人类视频 → 机器人演示（新）、世界模型生成','查询即配置：保存的查询版本化，快照进 lineage'],
     rules:['检索验收用自家标注构造“成对难查询”（方向相反、左右手、成败）','合成由挖掘结果驱动，不普遍铺开；评测集永不含合成数据','合成产物落 sim 轨，parent_episode_id 指回种子，并重新过质检','闭源合成模型三问不满足只进研究分支（R-27）'],
     out:['查询结果快照','派生 episode（sim 轨）'],
     docs:[['data-pipeline-design.md','全链路 §6–§7'],['sim-track.md']]},
-  { k:'06', t:'数据集构建', s:'可训练性 · 配方 · manifest', st:'warn', ms:'M1 export · M2 完整版',
+  { k:'06', ind:['NVIDIA LanceDS：快照钉住，QC 列追加不重写','LeRobot v0.6：逐帧子任务、进度与奖励列','ABC-130K：3,500 小时直接以 LeRobot v3 发布'], t:'数据集构建', s:'可训练性 · 配方 · manifest', st:'warn', ms:'M1 export · M2 完整版',
     what:['可训练性检查 → 按配方采样 → 按标注档案组装 → 导出 LeRobot v3 与演示库切片 → 冻结 manifest','统一槽位向量 96 维 + 有效掩码；同时导出 π0 兼容视图','标注档案：action_expert / planner / pretrain 三种用途从同一份槽位化标注组装'],
     rules:['归一化统计只在 QC 视图保留的样本上计算，随数据集版本走','数据配方 configs/mixtures/*.yaml 改动即新版本，哈希进训练 lineage','训练前跑 train↔held-out 近重复泄漏检查','增强不落盘，在 dataloader 做'],
     out:['DP1 训练数据集 + 冻结 manifest','状态 training_ready'],
     docs:[['data-format-contract.md','契约 §2'],['curation-pipeline.md','curation §5'],['data-platform.md']]},
-  { k:'07', t:'训练', s:'fdp-policy · 四阶段课程', st:'todo', ms:'M3（独立仓库）',
+  { k:'07', ind:['共识：VLM 主干 + 流匹配动作头（π0、GR00T N1、RDT2、某大模型厂商）','WAM 路线：Dyna-2、GR00T 2 同时预测未来视频与动作','后训练收敛到每任务几分钟到几小时，或把演示放进上下文'], t:'训练', s:'fdp-policy · 四阶段课程', st:'todo', ms:'M3（独立仓库）',
     what:['VLM 主干 + flow-matching 动作头（多家共识），不自研骨干','Stage A 管线验证：在 10–50 小时精策划数据上微调 openpi / SmolVLA','Stage B 0→1 预训练：数据 <1e3 小时不启动；S 档起步，5e3–1e4 小时换 M 档','Stage C 任务后训练；Stage D RL 闭环（HIL-SERL、残差 RL）'],
     rules:['相机系增量末端动作为主动作空间','两段式动作课程：先离散 token，再流匹配','WAM 目标作为可选配方开关（U-37）','档位切换只看混合等效小时数和缩放曲线，不按日历'],
     out:['checkpoint + 训练 run 元数据（配方哈希、数据集版本）'],
     docs:[['training-pipeline.md'],['research-vla-pretraining.md']]},
-  { k:'08', t:'评测', s:'仿真 CI · 真机 · 盲测 A/B', st:'ok', ms:'协议已定 · M3 落地',
+  { k:'08', ind:['NVIDIA GearArena：盲测 A/B + Bradley-Terry Elo；仿真代理 Pearson 0.93 ⚠️','RoboArena / RoboChallenge Table30：社区真机榜','Skild：L1–L5 扰动阶梯；SimFoundry real2sim 相关 0.911'], t:'评测', s:'仿真 CI · 真机 · 盲测 A/B', st:'ok', ms:'协议已定 · M3 落地',
     what:['仿真基准：LIBERO、SIMPLEREnv、Isaac Lab-Arena 自建任务集、RoboTwin、长任务规划基准','真机协议模板：每任务 ≥20 trial，ABAB 交替，操作员盲测，至少一个 held-out 场地','checkpoint 排名：盲测 A/B + Bradley-Terry Elo，按任务重采样置信区间'],
     rules:['消融判定：Fisher 精确检验 / Welch t，α = 0.05，效应量 ≥5 个百分点才算收益','Stage A 放行：微调比零样本高 ≥10 个百分点且显著','仿真与真机相关 r ≥0.8 的任务簇才允许用仿真替代真机做回归','对外任何能力宣称必须能指向一个 run_id 及其日志'],
     out:['评测报告（成功率 + Wilson 区间、进度分、介入率、吞吐）','arena 比较记录','失败案例索引'],
     docs:[['eval-protocol.md'],['research-simfoundry.md']]},
-  { k:'09', t:'回流闭环', s:'失败归类 → 再评测', st:'new', ms:'M3',
+  { k:'09', ind:['Dyna：生产车队环形缓冲，告警触发固化为 episode','1X：全自主 / 共享 / 全遥操三档自主','Figure：车队越大，为 Helix 生成的数据越多（官方）'], t:'回流闭环', s:'失败归类 → 再评测', st:'new', ms:'M3',
     what:['触发：评测报告或车队回流（干预、失败、OOD 事件）','失败片段按失败模式词表归类，再用挖掘反查训练集','诊断三选一：缺数据 → 采集配额或合成；被过滤 → 检查阈值；标错 → 规范裁决 + 重映射'],
     rules:['每一轮写一条 loop 记录：触发、查询快照、动作、数据集版本、评测前后对比','评测不涨，本轮数据改动回退','车队：环形缓冲 5 分钟，接管或 OOD 触发固化前 30 s / 后 60 s'],
     out:['新数据集版本','loop 记录（“飞轮转没转”的唯一证据）'],
@@ -404,6 +439,7 @@ function render(i){
       <div><h4>做什么</h4><ul>${li(s.what)}</ul></div>
       <div><h4>关键规则与阈值</h4><ul>${li(s.rules)}</ul></div>
       <div><h4>产物</h4><ul>${li(s.out)}</ul></div>
+      <div><h4>行业做法</h4><ul>${li(s.ind)}</ul></div>
     </div>
     <div class="docs-links">相关文档：${s.docs.map(d => doc(d[0], d[1])).join('')}</div>`;
   try { history.replaceState(null, '', '#stage-' + s.k); } catch(e) {}
@@ -427,7 +463,8 @@ const ROLES = [
   ['训练层（M3）', [['training-pipeline.md'], ['research-vla-pretraining.md'], ['eval-protocol.md'], ['runtime-and-deployment.md']]],
   ['硬件 / 采集', [['capture-devices-design.md'], ['inhouse-isomorphic-end-effector.md'], ['robot-track-teleop.md'], ['sim-track.md']]],
   ['平台 / 运维', [['data-system-plan.md'], ['data-platform.md'], ['compliance-and-security.md']]],
-  ['趋势与调研', [['research-gr00t2.md'], ['gr00t2-trends-analysis.md'], ['research-vendor-robotics.md'], ['research-figure.md']]],
+  ['行业调研', [['research-four-routes.md', '四家路线精读'], ['research-model-recipes.md', '五家模型对比'], ['research-gr00t2.md'], ['research-vendor-robotics.md'], ['research-open-ecosystem-2026.md', '开源生态']]],
+  ['趋势', [['data-strategy-roadmap.md', '2026 态势判断'], ['gr00t2-trends-analysis.md']]],
 ];
 document.querySelector('#docsTable tbody').innerHTML = ROLES.map(([r, ds]) =>
   `<tr><td>${r}</td><td>${ds.map(d => doc(d[0], d[1])).join(' → ')}</td></tr>`).join('');
