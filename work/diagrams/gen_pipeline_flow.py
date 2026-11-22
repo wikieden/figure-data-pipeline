@@ -8,7 +8,7 @@ from pathlib import Path
 
 OUT = Path(__file__).resolve().parents[2] / "docs/assets/strategy/p01-data-pipeline-flow.svg"
 
-W, H = 1100, 1052
+W, H = 1120, 1196
 FONT = "'Noto Sans SC','PingFang SC','Microsoft YaHei',system-ui,sans-serif"
 GRAY = "rgba(128,136,144,0.9)"
 FILL = "rgba(128,136,144,0.10)"
@@ -91,7 +91,7 @@ text(MX0 + 150, 30, "实线 = 数据流　虚线 = 回流 / 反馈　黄色条 =
 
 # ---------------- 采集 ----------------
 tracks = [
-    ("robot 轨", "遥操作 · 车队回流", C["robot"]),
+    ("robot 轨", "遥操作 · 车队回流（分档）", C["robot"]),
     ("human 轨", "第一视角 · 手机众包", C["human"]),
     ("device 轨", "UMI · 穿戴采集器", C["device"]),
     ("sim 轨", "仿真 · 生成 · 合成", C["sim"]),
@@ -208,6 +208,35 @@ text(MX0 + 18, TY8 + 29, "⑧ 训练 · 评测", size=12, bold=True)
 tag(MX0 + 108, TY8 + 17, "M3")
 text(MX0 + 148, TY8 + 29, "fdp-policy 配方消融 · eval-protocol 统计判定 · held-out 入湖即固定，合成数据不进评测集", size=10.5)
 
+# ---------------- ⑩ 渐进式自主 ----------------
+Y10, H10 = 898, 118
+RX10 = 1098  # 右：档位产出回入湖的回线
+line([((MX0 + MX1) / 2, TY8 + TH8), ((MX0 + MX1) / 2, Y10)])
+text((MX0 + MX1) / 2 + 8, TY8 + TH8 + 16, "checkpoint + 统计判定", size=10, gray=True)
+rect(MX0, Y10, MX1 - MX0, H10, new=True)
+text(MX0 + 18, Y10 + 20, "⑩ 渐进式自主（新）", size=12, bold=True)
+tag(MX0 + 152, Y10 + 8, "M3")
+text(MX0 + 196, Y10 + 20, "按 任务簇 × 站点 定档；新任务 / 新站点 / 新本体从 T0 起", size=10.5, gray=True)
+tiers = ["T0 全遥操 · 演示", "T1 共享 · 干预段", "T2 全自主 · rollout"]
+tx0, tx1, ty, th, tgap = MX0 + 18, MX1 - 14, Y10 + 32, 30, 74
+tcw = (tx1 - tx0 - tgap * 2) / 3
+for i, s_ in enumerate(tiers):
+    cx = round(tx0 + i * (tcw + tgap))
+    chip(cx, ty, round(tcw), th, s_, size=11)
+    out.append(f'<rect x="{cx}" y="{ty}" width="4" height="{th}" rx="1.5" fill="{C["robot"]}"/>')
+    if i < 2:
+        ax0, ax1 = cx + round(tcw) + 4, cx + round(tcw) + tgap - 4
+        line([(ax0, ty + 9), (ax1, ty + 9)])
+        text((ax0 + ax1) / 2, ty + 4, "晋档", size=9.5, anchor="middle", gray=True)
+        line([(ax1, ty + 22), (ax0, ty + 22)], dashed=True)
+        text((ax0 + ax1) / 2, ty + 38, "降档", size=9.5, anchor="middle", gray=True)
+text(MX0 + 18, Y10 + 88, "晋档：⑧ 统计判定通过 + 干预率连续 N 周低于档线 + 部署检查单　降档：接管率周环比 >30% 或成功率跌破阈值", size=10.5)
+text(MX0 + 18, Y10 + 107, "episode 带 autonomy_tier / by / policy_version；干预段固化 [−30 s, +60 s] 优先上传；干预率为内部 KPI，不对外", size=10.5, gray=True)
+# 各档产出经 robot 轨回 ① 入湖（右侧回线）
+line([(MX1, Y10 + 24), (RX10, Y10 + 24), (RX10, IY + 44), (MX1 + 2, IY + 44)], dashed=True)
+text(RX10 + 12, (Y10 + IY) / 2 + 40, "各档产出（演示 / 干预段 / rollout）经 robot 轨回 ① 入湖", size=10.5, anchor="middle", gray=True, rotate=-90)
+text(SX, Y10 + 52, "→ autonomy_tier 定档", size=11, bold=True)
+
 # ---------------- ⑨ 回流闭环（左列） ----------------
 rect(LX0, TY, LX1 - LX0, TY8 + TH8 - TY, new=True, dashed=True)
 text(LX0 + 16, TY + 20, "⑨ 回流闭环（新 · M3）", size=12, bold=True)
@@ -224,7 +253,7 @@ def lbox(y, h, l1, l2, gray2=False):
 
 
 # 自下而上的三步
-lbox(TY8 + 2, 44, "触发", "评测失败 · 车队干预 / OOD")
+lbox(TY8 + 2, 44, "触发", "评测失败 · 干预 / OOD · 降档")
 lbox(778, 40, "失败归类", "失败模式词表")
 lbox(730, 40, "调用 ⑤ 挖掘反查训练集", "诊断：缺数据 / 被过滤 / 标错")
 line([(MX0, TY8 + 24), (BX1 + 2, TY8 + 24)])
@@ -247,7 +276,7 @@ text(BX0 + 8, 690, "每轮写 loop 记录；新数据集", size=10, gray=True)
 text(BX0 + 8, 705, "版本再评测，不涨即回退", size=10, gray=True)
 
 # ---------------- 横切能力 ----------------
-CY = 900
+CY = 1046
 text(LX0, CY - 8, "横切能力（贯穿全部环节）", size=12, bold=True)
 cross = [
     ("lineage", ["decisions · artifacts · qc_reports", "queries · loops · datasets"]),
@@ -265,7 +294,7 @@ for i, (t, ls) in enumerate(cross):
     text(x + 14, CY + 57, ls[1], size=10)
 
 # ---------------- 图例 ----------------
-LY = 1004
+LY = 1150
 lx = LX0
 for name, col in [("robot", C["robot"]), ("human", C["human"]), ("device", C["device"]), ("sim", C["sim"]), ("新增 / 补齐", C["new"])]:
     out.append(f'<rect x="{lx}" y="{LY}" width="10" height="10" rx="2" fill="{col}"/>')
@@ -273,11 +302,11 @@ for name, col in [("robot", C["robot"]), ("human", C["human"]), ("device", C["de
     lx += 30 + 7 * len(name) + (20 if not name.isascii() else 0)
 tag(lx + 10, LY - 3, "M1")
 text(lx + 38, LY + 9, "里程碑（M1 采集与格式 · M2 策展 · M3 训练与闭环）", size=10.5)
-text(LX0, LY + 32, "详见 data-pipeline-design.md §1–§12；新模块与 CLI 为提议，待 governance U-47 / U-48 裁决。", size=10.5, gray=True)
+text(LX0, LY + 32, "详见 data-pipeline-design.md §1–§12（⑩ 见 §9.4）；新模块、CLI 与档位门槛为提议，待 governance U-47 / U-48 / U-52 裁决。", size=10.5, gray=True)
 
 svg = (
     f'<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 {W} {H}" width="{W}" height="{H}" role="img" '
-    f'aria-label="数据管线全链路流程：采集四轨 → 入湖 → 质检 → 打标 → 去重再平衡 → 挖掘与合成 → 数据集构建 → 训练评测，左侧为回流闭环，底部为横切能力" '
+    f'aria-label="数据管线全链路流程：采集四轨 → 入湖 → 质检 → 打标 → 去重再平衡 → 挖掘与合成 → 数据集构建 → 训练评测，下方为渐进式自主分档，左侧为回流闭环，底部为横切能力" '
     f'font-family="{FONT}" style="max-width:100%;height:auto">'
     '<defs><marker id="arr" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" '
     'orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="currentColor"/></marker></defs>'

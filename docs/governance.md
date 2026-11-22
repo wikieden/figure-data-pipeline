@@ -101,6 +101,7 @@
 | U-49 | 数据平台底座自建 vs 托管云厂商（对象存储/云数据湖、云数据开发平台、云数仓、云机器学习平台、云模型服务） | 不预设：管线逻辑（状态机、规则、规范、查询、配方、lineage 语义）一律留在本仓库；底座按业务方所在云与数据驻留要求采购，托管前须回答 R-27 三问（[data-pipeline-design.md](data-pipeline-design.md) §11） | 数据驻留要求、成本对比、导出与 lineage 能力实测 | M2 前 | 底座与逻辑耦合，换云即重写 | PLAT + PM | open |
 | U-50 | 数据服务新增 CLI 子命令 `fdp catalog`（目录查询）与 `fdp report`（质检报告、数据集说明卡） | 倾向新增：二者是数据集层的读服务，不新增管线层；CLI 为 API 薄封装，默认排除 held-out 与 `reject_*`（[data-system-plan.md](data-system-plan.md) §4.4） | M1 报告骨架与 M2 目录 API 的实际调用形态 | M1 末 | 报告与目录查询散落在脚本里，对外交付无统一出口 | DATA | open |
 | U-51 | 人工作业台选型：自建界面 vs Label Studio / Encord / Foxglove 等 | 队列与规则自建，界面倾向采购；硬约束两条：直接读 MCAP / LeRobot v3、数据不出自有存储（[data-system-plan.md](data-system-plan.md) §4.5；[research-rd-tooling.md](research-rd-tooling.md) §8） | 2–3 个候选按硬约束试用一周的记录；license 与驻留条款 | M2 前 | 五个人工触点各用一套工具，审核记录进不了 lineage | CUR + PLAT | open |
+| U-52 | 渐进式自主的档位门槛与字段：晋档档线、连续周数 N、降档阈值；`autonomy_tier` / `by` 是否进契约 0.3 | 倾向三档 T0 全遥操 / T1 共享 / T2 全自主（沿用 1X 三档，官方），按 任务簇 × 站点 定档；晋档 = ⑧ 统计判定 + 干预率连续 N 周低于档线 + 部署检查单；降档 = 接管率周环比 >30% 或成功率跌破阈值；字段沿用 capture-devices §5（[data-pipeline-design.md](data-pipeline-design.md) §9.4） | H0 三任务簇的干预率基线；首批部署的接管分布 | M3 前 | 部署档位凭感觉放权，干预段与自主 rollout 混在一起无法分别计量 | DATA + PM | open |
 
 ### U-11 license 核查追踪表
 

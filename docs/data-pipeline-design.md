@@ -14,7 +14,7 @@
 
 ![图 P1：数据管线全链路流程](assets/strategy/p01-data-pipeline-flow.svg)
 
-*图 P1　数据管线全链路流程。中间是主链路（采集四轨 → ① 入湖 → ② 质检 → ③ 打标 → ④ 去重再平衡 → ⑤ 挖掘 / ⑥ 合成 → ⑦ 数据集构建 → ⑧ 训练评测），右侧是各环节对应的 episode 状态，左侧是 ⑨ 回流闭环（失败归类后按"缺数据 / 被过滤 / 标错"分别回到采集、质检、打标、挖掘与合成），右侧虚线表示合成产物重新进入质检，底部是贯穿全部环节的横切能力。黄色条标出本方案新增或补齐的环节，圆角标签是落地里程碑。生成脚本：`work/diagrams/gen_pipeline_flow.py`。*
+*图 P1　数据管线全链路流程。中间是主链路（采集四轨 → ① 入湖 → ② 质检 → ③ 打标 → ④ 去重再平衡 → ⑤ 挖掘 / ⑥ 合成 → ⑦ 数据集构建 → ⑧ 训练评测 → ⑩ 渐进式自主定档），右侧是各环节对应的 episode 状态，右侧外圈虚线表示各档位产出经 robot 轨回到入湖，左侧是 ⑨ 回流闭环（失败归类后按"缺数据 / 被过滤 / 标错"分别回到采集、质检、打标、挖掘与合成），右侧虚线表示合成产物重新进入质检，底部是贯穿全部环节的横切能力。黄色条标出本方案新增或补齐的环节，圆角标签是落地里程碑。生成脚本：`work/diagrams/gen_pipeline_flow.py`。*
 
 下面是同一流程的文字版，便于检索与纯文本阅读：
 
@@ -45,6 +45,9 @@
         │                LeRobot v3（parquet + mp4）· 演示库切片                  → training_ready
         ▼
  ⑧ 训练 · 评测（fdp-policy，training-pipeline / eval-protocol）
+        ▼
+ ⑩ 渐进式自主（新）── T0 全遥操 → T1 共享 → T2 全自主，按 任务簇 × 站点 定档（§9.4）
+        │                各档产出（演示 / 干预段 / rollout）经 robot 轨回 ① 入湖   → autonomy_tier
         ▼
  ⑨ 回流闭环（新）── 评测失败 + 车队干预 → 失败归类 → 挖掘查询
                       → 已有数据重加权 / 合成种子 / 采集配额 → 新数据集版本 → 再评测
@@ -268,6 +271,30 @@
 
 M3 起按评测节奏运行（每个配方 A/B 周期一轮）；单任务部署场景（如 [laundry-sorting-brain-plan.md](laundry-sorting-brain-plan.md) 的每周难例集）可以更快，但仍走同一记录格式。
 
+### 9.4 ⑩ 渐进式自主（新增，提议）
+
+![图 P3：渐进式自主](assets/strategy/p03-progressive-autonomy.svg)
+
+*图 P3　渐进式自主：三档（T0 全遥操 / T1 共享自主 / T2 全自主）各自产出不同的数据，经单次运行录制进入数据管线，训练评测后按晋降档门定档，新档位随新 checkpoint 回到部署。黄色为本方案新增。生成脚本：`work/diagrams/gen_progressive_autonomy.py`。*
+
+部署不是"上线即全自主"，而是按档位逐级放权；每一档都是一种采集形态，档位决定这台机器人此刻产出哪类数据。三档划分沿用 1X 的三档自主（全自主 / 共享 / 全遥操，官方，见 [data-strategy-roadmap.md](data-strategy-roadmap.md) §1.6），字段沿用 [capture-devices-design.md](capture-devices-design.md) §5 的 `autonomy_tier` 与 `by`。
+
+| 档位 | 控制与人的角色 | 产出 | 训练用途 | 上传 |
+|---|---|---|---|---|
+| T0 全遥操 | 操作员全程控制（D4 遥操作站或远程） | 演示 episode（动作真值） | 对齐集、BC 后训练 | 全量 |
+| T1 共享自主 | 策略执行，人实时监看；OOD 二级或主动接管 | 干预段（接管前 30 s / 后 60 s、恢复标记） | DAgger、RECAP、残差 RL | 干预段 100%，回坞优先 |
+| T2 全自主 | 策略独立运行，人抽检、远程待命 | 自主 rollout + 成败 + OOD 事件 | 车队 RL、成败条件化、负样本 | 失败 / OOD 优先，成功抽样 20% |
+
+**定档粒度**：按 任务簇 × 站点 定，不是整机一档。新任务、新站点、新本体一律从 T0 起。
+
+**晋档门**（每档一道）：⑧ 评测统计判定通过（序贯检验或 Wilson 下界，口径同 [eval-protocol.md](eval-protocol.md)）；干预率（每 1,000 任务）连续 N 周低于档线；部署检查单通过（[runtime-and-deployment.md](runtime-and-deployment.md) §5：延迟预算、安全过滤器、OOD 阈值来自当前 dataset_version）。新 checkpoint 先在 T1 复核，不直接继承上一版的档位。
+
+**降档与临时接管**：OOD 二级请求人工接管、三级 estop，属于运行时处置，不降档（runtime §3）；接管率周环比上升 >30% 或任务簇成功率跌破阈值则降一档，同时开 Stage D 后训练 run（runtime §4）并写一条 ⑨ loop 记录（§9.2）。
+
+**进入管线**：① 入湖带 `source=fleet`、`autonomy_tier`、`by`、`policy_version`；②③ 对干预段做段级切分与接管 / 恢复标记；⑦ 配方的 conditioning 段加档位与成败（与 roadmap 决策 7 的 conditioning 段同一处）；每次定档决定写 lineage。
+
+**约束**：干预率是内部 KPI，不对外宣称（R-03）；安全基线与隐私处理同 runtime §5 与 [compliance-and-security.md](compliance-and-security.md)。档线、N 与各门槛未定，待 U-52 裁决；M3 先在 H0 三任务簇上建立干预率基线，再定档线。
+
 ## 10. 横切能力
 
 ### 10.1 lineage 增补
@@ -357,6 +384,7 @@ loops(loop_id PK, trigger, failure_stats JSONB, snapshot_ids[], actions JSONB,
 
 - **U-47**：人类视频 → 机器人演示的合成产物归属（提议 sim 轨 `source=human2robot_composite`）与是否在 M3 启动；采集规则哈希字段进契约 0.3。
 - **U-48**：挖掘模块归属与 CLI（提议 `curation.mining` / `fdp curate --stage mine|--query`）。
+- **U-52**：渐进式自主的档位门槛（档线、连续周数 N、降档阈值）与 `autonomy_tier` 是否进契约（§9.4）。
 - **U-49**：平台底座自建 vs 托管云厂商。
 - **R-27**：闭源合成模型与受保护联合训练带来的数据归属、lineage 与删除传导风险。
 - **D-33**：本文所引某大模型厂商 某大模型厂商材料的自报数字（打标自动化 80–90%、轨迹叠加收益 3 倍、粒度不匹配下降 60%、跨形态差 2.6 倍、两把尺子 2.7×/7.5×、corner case 召回 70%+）。
