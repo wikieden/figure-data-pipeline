@@ -1,6 +1,8 @@
 # figure-data-pipeline (fdp)
 
-对标 Figure（Helix 02 · Figure 03 · Index）的开源人形机器人数据管线与采集工具。
+面向整个机器人行业的开源人形机器人数据管线与采集工具。项目从对标 Figure（Helix 02 · Figure 03 · Index）起步（仓库名沿用），现在的设计对照 NVIDIA、某大模型厂商、Dyna、Generalist、Sunday、Skild、自变量等头部团队的数据做法。
+
+- 全景页：<https://wikieden.github.io/figure-data-pipeline/>
 
 - 文档索引与阅读路径：[docs/README.md](docs/README.md)
 - 总体架构：[docs/architecture.md](docs/architecture.md)

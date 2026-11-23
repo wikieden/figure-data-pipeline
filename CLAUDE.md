@@ -4,7 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## 项目定位
 
-对标 Figure（Helix 02 + Figure 03 + Index）的开源人形机器人**数据管线与数据采集工具**。总设计见 [docs/architecture.md](docs/architecture.md)——改动任何管线层之前先读它；全部文档的索引与按角色阅读路径见 [docs/README.md](docs/README.md)；风险登记、未决决策、自报数字登记见 [docs/governance.md](docs/governance.md)；设计之上的战略层（态势判断、方向线条 L1–L8、实现路径、产品化）见 [docs/data-strategy-roadmap.md](docs/data-strategy-roadmap.md)，改变线条优先级或新增采集形态前先看它的 §3 与 §6。
+面向整个机器人行业的开源人形机器人**数据管线与数据采集工具**：从对标 Figure（Helix 02 + Figure 03 + Index）起步（仓库名沿用），现对照 NVIDIA、某大模型厂商、Dyna、Generalist、Sunday、Skild、自变量等头部团队的做法设计；各家调研见 docs/research-*.md，行业全景页源文件在 `site/index.html`（GitHub Pages 自动部署）。总设计见 [docs/architecture.md](docs/architecture.md)——改动任何管线层之前先读它；全部文档的索引与按角色阅读路径见 [docs/README.md](docs/README.md)；风险登记、未决决策、自报数字登记见 [docs/governance.md](docs/governance.md)；设计之上的战略层（态势判断、方向线条 L1–L8、实现路径、产品化）见 [docs/data-strategy-roadmap.md](docs/data-strategy-roadmap.md)，改变线条优先级或新增采集形态前先看它的 §3 与 §6。
 
 ## 常用命令
 

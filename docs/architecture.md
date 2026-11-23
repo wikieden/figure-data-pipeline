@@ -1,4 +1,6 @@
-# 人形机器人数据-模型-运行时架构（对标 Figure 03 × Index × Helix 02）
+# 人形机器人数据-模型-运行时架构（以 Figure 03 × Index × Helix 02 为起点，对照行业头部做法）
+
+> 2026-11-22 定位更新：项目范围从对标 Figure 扩展为整个机器人行业。§1–§3 的 Figure 拆解保留为起点基线；NVIDIA、某大模型厂商、Dyna、Generalist、Sunday、Skild、自变量等的做法见各 research 文档，行业对照汇总见 [data-strategy-roadmap.md](data-strategy-roadmap.md) §1 与全景页（仓库 `site/index.html`）。
 
 > 综合三轮调研（2026-08-29）：[research-figure.md](research-figure.md)、[research-opensource.md](research-opensource.md)、deep-research 工作流 37 个来源的论断提取（对抗核查阶段未完成，本文以多源交叉印证替代；单一来源的论断已标注）。本文档是本仓库的**总设计**；全部文档的阅读路径见 [README.md](README.md)，风险/未决决策/自报数字登记见 [governance.md](governance.md)。
 
