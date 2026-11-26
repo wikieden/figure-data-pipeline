@@ -1,0 +1,3305 @@
+<!doctype html><html lang="zh-CN"><head><meta charset="utf-8"><base href="file:///Users/wiki/figure-data-pipeline/docs/book/"><title>具身数据管线：从采集到回流</title><style>
+@page { size: A4; margin: 18mm 16mm; }
+body { font-family: "PingFang SC", "Hiragino Sans GB", "Noto Sans CJK SC", sans-serif;
+       font-size: 10.5pt; line-height: 1.65; color: #1a1a1a; }
+h1 { font-size: 20pt; border-bottom: 2px solid #333; padding-bottom: 4px; margin-top: 0; }
+h2 { font-size: 14pt; margin-top: 1.4em; border-bottom: 1px solid #ccc; }
+h3 { font-size: 12pt; margin-top: 1.1em; }
+table { border-collapse: collapse; width: 100%; margin: 0.6em 0; font-size: 9pt; page-break-inside: auto; }
+th, td { border: 1px solid #bbb; padding: 3px 6px; vertical-align: top; }
+th { background: #f0f0f0; }
+tr { page-break-inside: avoid; }
+pre { background: #f6f6f6; border: 1px solid #ddd; padding: 8px; font-size: 8.5pt;
+      white-space: pre-wrap; page-break-inside: avoid; }
+code { font-family: "SF Mono", Menlo, monospace; font-size: 0.92em; }
+img { max-width: 100%; display: block; margin: 0.6em auto; }
+blockquote { color: #555; border-left: 3px solid #ccc; margin-left: 0; padding-left: 10px; }
+.chapter { page-break-before: always; }
+.chapter:first-child { page-break-before: avoid; }
+</style></head><body><section class="chapter"><h1>具身数据管线：从采集到回流</h1>
+<blockquote>
+<p>专题书 · 2026-11-20 · 基于本仓库截至 2026-11-18 的全部设计与调研文档整理</p>
+</blockquote>
+<p>这本书把仓库里分散在五十多份设计、规范与调研文档中的内容，按"一条数据从被录下来到让机器人变好"的顺序重新讲一遍。它回答三类问题：</p>
+<ul>
+<li><strong>为什么</strong>：具身数据和互联网数据、自动驾驶数据有什么不同，瓶颈到底在哪；</li>
+<li><strong>怎么做</strong>：每一层（采集、入湖、质检、标注、合成、挖掘、数据集、训练消费、评测回流）做什么、产出什么、按什么规则；</li>
+<li><strong>凭什么</strong>：每个决策依据哪家的做法、证据可信度如何、哪些仍是未决项。</li>
+</ul>
+<p>本书不是新的规范。规范以各层原文为准（每章末尾列出），书里出现的阈值、字段与流程如与原文冲突，以原文为准，并请把冲突登记到 governance.md。</p>
+<h2>目录</h2>
+<p><strong>前言</strong></p>
+<ul>
+<li>前言：为什么要写一本数据管线的书</li>
+</ul>
+<p><strong>第一部分 问题与原则</strong></p>
+<ul>
+<li>第 1 章 具身数据的瓶颈在哪里</li>
+<li>第 2 章 七条贯穿性决策</li>
+</ul>
+<p><strong>第二部分 采集</strong></p>
+<ul>
+<li>第 3 章 四条采集轨与两种采集哲学</li>
+<li>第 4 章 采集设备与机上录制</li>
+<li>第 5 章 时间、同步与标定</li>
+</ul>
+<p><strong>第三部分 格式与入湖</strong></p>
+<ul>
+<li>第 6 章 数据契约：MCAP、EpisodeMeta 与版本迁移</li>
+<li>第 7 章 入湖：校验、对齐、转码、幂等</li>
+</ul>
+<p><strong>第四部分 策展</strong></p>
+<ul>
+<li>第 8 章 质检：清洗是标记不是删除</li>
+<li>第 9 章 分割与标注：先定边界，再写描述</li>
+<li>第 10 章 伪标签、具身转换与合成</li>
+<li>第 11 章 去重、再平衡与挖掘</li>
+</ul>
+<p><strong>第五部分 训练态与闭环</strong></p>
+<ul>
+<li>第 12 章 数据集构建：从标记到可训练视图</li>
+<li>第 13 章 训练如何消费数据</li>
+<li>第 14 章 评测与回流闭环</li>
+</ul>
+<p><strong>第六部分 系统、治理与路线</strong></p>
+<ul>
+<li>第 15 章 数据平台与数据系统</li>
+<li>第 16 章 合规、安全与治理</li>
+<li>第 17 章 建设路线与尚未解决的问题</li>
+</ul>
+<p><strong>附录</strong></p>
+<ul>
+<li>附录：术语表 · 关键数字与可信度 · 章节与规范文档对照</li>
+</ul>
+<h2>读法</h2>
+<table>
+<thead>
+<tr>
+<th>读者</th>
+<th>建议路径</th>
+<th>时间</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>第一次接触这个项目</td>
+<td>前言 → 第 1、2 章 → 第 8 章 → 第 14 章</td>
+<td>1 小时</td>
+</tr>
+<tr>
+<td>管理层</td>
+<td>第 1 章 → 第 14 章 §14.6 → 第 15 章 §15.2 → 第 17 章</td>
+<td>30 分钟</td>
+</tr>
+<tr>
+<td>采集与硬件</td>
+<td>第 3、4、5 章 → 第 6 章 §6.1</td>
+<td>1 小时</td>
+</tr>
+<tr>
+<td>数据层实现（M1）</td>
+<td>第 5、6、7 章 → 第 12 章</td>
+<td>1.5 小时</td>
+</tr>
+<tr>
+<td>策展实现（M2）</td>
+<td>第 8–11 章</td>
+<td>2 小时</td>
+</tr>
+<tr>
+<td>训练与评测（M3）</td>
+<td>第 12、13、14 章</td>
+<td>1.5 小时</td>
+</tr>
+</tbody>
+</table>
+<h2>本书约定</h2>
+<ul>
+<li><strong>数字的可信度</strong>：引用他家的数字一律标来源属性。"官方"指公司一手材料，"论文"指公开论文，"第三方"指媒体或分析机构，<strong>⚠️ 自报</strong>指公司未经独立验证的性能、规模、成本数字。依赖自报数字的设计决策都已登记在 governance.md 的 D 表。</li>
+<li><strong>三套里程碑前缀不混用</strong>：M1/M2/M3 是工程里程碑（按管线层）；H0/H1/H2 是 Index 复刻的硬件与平台时间线；P0/P1/P2 是采集硬件成熟度。对外产品线用 PL1–PL5。</li>
+<li><strong>编号引用</strong>：U-xx 为未决决策、R-xx 为风险、D-xx 为自报数字登记，均见 governance.md。</li>
+<li><strong>现状声明</strong>：截至成书日，仓库代码处于 M1，除 <code>schema.py</code>（0.2，含 0.1→0.2 读侧迁移）外，recorder / ingest / export / viz 均为骨架。书中描述的绝大部分是<strong>设计</strong>，不是已实现的能力。</li>
+</ul></section><section class="chapter"><h1>前言：为什么要写一本数据管线的书</h1>
+<h2>一个反直觉的起点</h2>
+<p>2026 年谈机器人基础模型，大家首先想到的是模型：VLM 骨干多大、动作头用扩散还是流匹配、要不要预测下一帧。但把 Figure、Dyna、Generalist、Sunday、Skild、NVIDIA GR00T、某大模型厂商、自变量这些团队公开的做法放在一起看，会发现模型层其实在快速收敛——VLM 骨干加流匹配动作头、统一槽位向量加掩码、相机系增量动作，这几条已经有四五家独立走到了同一处（见第 13 章）。真正拉开差距的，是另一件事：<strong>谁能把异构、嘈杂、海量的原始采集，变成对齐的、可验证的、可复现的训练数据，并且让评测结果反过来指挥下一轮采集。</strong></p>
+<p>这件事就是数据管线。</p>
+<p>本仓库的战略判断（data-strategy-roadmap.md §0）可以压成一句话：机器人数据的瓶颈已经从"采不到"变成"采到的东西对不齐、验不了、用不上"。原始供给——众包第一视角视频、无本体手持设备数据、训练场遥操作——在 2026 年下半年已经过剩，而把它们对齐到同一动作 schema、在段级判定价值、用可校准的评测把数据收益变成成功率，这三件事仍然稀缺。</p>
+<h2>这本书和仓库其他文档的关系</h2>
+<p>仓库里已经有五十多份文档：总设计 architecture.md、全链路设计 data-pipeline-design.md、系统规划 data-system-plan.md、各层规范（格式契约、recorder、ingest、策展、评测、训练）、二十多份对他家的调研，以及治理登记。它们按"谁要实现什么"组织，适合查阅，不适合从头读。</p>
+<p>这本书按另一条线组织：<strong>跟着一条 episode 走完它的一生</strong>。它在某台设备上被录下来，带着时间戳和标定上传，在入湖时被校验和对齐，被质检打上各种标记，被切成子任务、写上描述、补上伪动作，可能被拿去合成更多数据，被检索出来放进某个训练配方，变成一份冻结的数据集，被模型消费，再在评测里暴露出某种失败，然后这个失败沿着 lineage 回到采集端，变成下一批采集任务。每一章讲这条路上的一段：做什么、为什么这样做、他家怎么做、我们的规则是什么、还有什么没定。</p>
+<h2>三条贯穿全书的纪律</h2>
+<p>读这本书时会反复遇到三条纪律，先在这里点出来：</p>
+<ol>
+<li><strong>清洗是标记不是删除。</strong> raw 永存（隐私脱敏和合法删除请求是唯一例外）。所有质检结论都是追加在数据旁边的列，训练时选用哪一份"视图"，就是选用哪一组标记。这让阈值可以被消融裁决，而不是一次拍板永久生效。</li>
+<li><strong>质量优先于吞吐。</strong> Figure 用 8 小时精策划数据就出了可用策略；GR00T 2 预训练混合里人类视频占约 92%，但真正稀缺的是"对齐过的"小时。所以质检和评测排在采集扩张之前。</li>
+<li><strong>每个判断都要能追溯。</strong> 任何一个训练分片都能沿 lineage 追到它的策展决策、所用规则与模型版本、原始上传；任何一个对外的能力宣称都要能指向一个评测 run 和它的日志。引用他家数字时标注来源属性，依赖自报数字的决策登记在案。</li>
+</ol>
+<h2>关于可信度</h2>
+<p>这本书大量引用他家数字。行业里的数字有三种：论文里可复现的、公司一手页面上的、媒体转述的。公司对自己产品性能、规模、成本的陈述，即使出自一手页面，也是自报，未经独立验证，书中一律标 ⚠️。我们用这些数字判断方向、给阈值定起点，但不把它们当设计参数——阈值最终由我们自己的消融裁决。</p>
+<h2>关于现状</h2>
+<p>截至 2026-11-20，本仓库的代码处于 M1（采集与格式）阶段：<code>schema.py</code> 已到 0.2 并带读侧迁移，其余模块是骨架。所以本书描述的绝大部分是经过推敲的设计，不是已运行的系统。第 17 章列出了按里程碑的建设顺序，以及几个连领先团队自己也没解决的问题。</p>
+<h2>致谢与来源</h2>
+<p>本书的事实材料全部来自仓库内已核查的调研文档（<code>docs/research-*.md</code>）与其引用的一手归档（sources/MANIFEST.md）。书中不引入未经仓库核查的新事实。</p></section><section class="chapter"><h1>第 1 章 具身数据的瓶颈在哪里</h1>
+<h2>1.1 具身数据为什么特殊</h2>
+<p>互联网文本和图像数据的问题主要是"多"：清洗、去重、过滤有害内容。自动驾驶数据的问题主要是"长尾"：常规场景多到泛滥，罕见场景采不到。具身操作数据同时面对这两个问题，还多了三个它们没有的难点：</p>
+<ol>
+<li><strong>动作不在画面里。</strong> 一段人做家务的视频，看得见手在动，看不见关节角、末端位姿、抓握力。要把它变成机器人能学的监督信号，必须恢复或合成动作。这是"具身鸿沟"（architecture.md §6）。</li>
+<li><strong>形态各不相同。</strong> 同一个"把杯子放进篮子"，可以由遥操作的双臂机器人、戴头戴相机的人、拿 UMI 夹爪的人、仿真里的虚拟手完成。它们的观测视角、动作空间、采样率、噪声来源都不同，却要进同一个模型。</li>
+<li><strong>时间要对得很准。</strong> 动作专家以 100–200 Hz 消费状态和动作，一个控制周期只有 5–10 ms。视觉帧和动作差一帧，学到的就是错位的因果。</li>
+</ol>
+<h2>1.2 供给过剩，可用稀缺</h2>
+<p>2026 年的态势（data-strategy-roadmap.md §1.2）有一个很清楚的剪刀差：</p>
+<ul>
+<li><strong>供给端在崩价。</strong> 众包第一视角视频的事实价格约 $6/小时（第三方），Figure Index 官方口径每秒入库 30 分钟视频，Generalist 自报 50 万+ 小时手持夹爪数据 ⚠️。</li>
+<li><strong>可用端仍然稀缺。</strong> 熟练采集员的有效数据只有 1/3–1/2，QA 拒收 10–30%；Dyna 自报成功率 99.9%，而客户侧质量通过率只有 87% 和 46% ⚠️；Index 的五阶段策展会丢弃大部分原始上传（Forbes，第三方），可用训练数据远小于 1,600 万条的名义规模。</li>
+</ul>
+<p>结论是：原始小时不是资产，是输入。CTO 的资源应从"多采"转向<strong>对齐、策展、评测</strong>三个自研环节，原始供给当作可外购的大宗商品（roadmap §2.1）。</p>
+<h2>1.3 三层数据结构</h2>
+<p>GR00T 2 的预训练混合给了一个清楚的分层（gr00t2-trends-analysis.md §0，NVIDIA 一手，比例为自报 ⚠️）：人类视频约 92%、机器人遥操约 5%、UMI 约 2%。把这个比例和 roadmap 的态势判断合起来，数据需求可以看成三层：</p>
+<table>
+<thead>
+<tr>
+<th>层</th>
+<th>内容</th>
+<th>量级</th>
+<th>作用</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>覆盖层</td>
+<td>人类第一视角视频（无动作标签）</td>
+<td>10⁵–10⁶ 小时</td>
+<td>世界知识、物体与场景多样性、视频预测</td>
+</tr>
+<tr>
+<td>对齐层</td>
+<td>与机器人对齐的人类/手持数据、遥操作、干预段</td>
+<td>10³–10⁴ 小时</td>
+<td>任务能力、动作语义</td>
+</tr>
+<tr>
+<td>本体层</td>
+<td>目标本体的 play 数据 + 少量后训练演示</td>
+<td>每本体若干小时</td>
+<td>交代"这台机器怎么动、长什么样"</td>
+</tr>
+</tbody>
+</table>
+<p>稀缺的不是覆盖层的原始小时，而是<strong>对齐层的小时和灵巧手的小时</strong>。这决定了本仓库四条采集轨的分工（第 3 章）：human 轨打底，device 轨和 robot 轨做对齐层，sim 轨补长尾、做评测载体。</p>
+<h2>1.4 五个正在发生的转变</h2>
+<p>roadmap §1 用十个维度扫描了 2026-06 至 2026-09 的 225 条来源，归纳出几个与数据管线直接相关的转变：</p>
+<ol>
+<li><strong>人类视频成为预训练主轴</strong>，机器人数据退为对齐层。GR00T N1.7 加入 2 万小时人类视频，Cosmos 3 的动作中训练集 67% 是人类第一视角（官方）；HumanScale 的等小时对比里人类视频优于遥操作（论文）。</li>
+<li><strong>动作空间、格式、质量标准三线收敛。</strong> 至少四家独立收敛到相机系相对末端动作；LeRobot v0.6 把逐帧子任务、进度、奖励列做进标准格式；中国 YD/T 6771-2026 八维数据质量标准 2026-11-01 实施。</li>
+<li><strong>"不删只标"从原则变成方法。</strong> π0.7 用元数据条件化吃失败和自主 rollout 数据，Ambient Diffusion Policy 用次优数据在 OXE 上再涨最多 33%（论文）。失败数据是一等公民。</li>
+<li><strong>评测走向分级、序贯与代理，并在产品化。</strong> 仿真评测器、世界模型评测器开始与真机做相关性标定，但世界模型评测只在专家动作分布内有效。</li>
+<li><strong>监管把 lineage、同意、脱敏变成交付条件。</strong> 欧盟 Data Act、CRA、PLD、机械法规叠层生效，旁观者隐私诉讼出现。</li>
+</ol>
+<h2>1.5 北极星：新任务上线成本</h2>
+<p>如果数据量不是目标，什么是？本仓库的北极星指标（roadmap §2.3）是<strong>新任务上线成本</strong>：让一个新任务在真机上分级得分达到 ≥90% 所需的真机小时数与全成本美元。它同时惩罚预训练弱（要采很多新数据）和策展差（采了用不上）。12 个月目标是 ≤20 真机小时 / ≤$5k（占位值，M2 初用实测曲线重定）。</p>
+<p>数据系统对北极星的贡献可以拆成四个直接可管的量（data-system-plan.md §1.3）：</p>
+<pre><code>新任务上线成本（北极星）
+ ├─ 可用训练小时/月 ········· 入湖量 × 漏斗通过率
+ ├─ 每可用训练小时全成本 ···· 采集计酬 + 设备摊销 + 平台 + VLM + 人工
+ ├─ 采集 → 可训练时延 ········ 上传完成到 training_ready 的 P50 / P95
+ └─ 闭环有效率 ··············· 回流 loop 中评测提升的轮次 / 总轮次
+</code></pre>
+<h2>1.6 三个战略控制点</h2>
+<p>roadmap §2.5 用"三问"检验什么才是值得战略投入的东西：拿掉它，对手的新任务上线成本会不会上升；它是否随每次部署或每季度自动变厚；它能不能用钱买到。通过检验的只有三样：</p>
+<ol>
+<li><strong>评测校准数据</strong>：自家本体 × 自家任务的真机↔孪生↔代理三层配对。它定义"什么是好数据"，必须在自家本体上做。</li>
+<li><strong>对齐层语料</strong>：人↔机同任务配对集 + 干预段。只有同时拥有本体、任务和采集通道的人能产出。</li>
+<li><strong>数据契约 + 同意/来源图</strong>：合规交付条件，一旦成为训练场与 OEM 的交付格式，切换成本落在对方。</li>
+</ol>
+<p>看起来像控制点、其实不是的：原始小时数、头戴设备、模型骨干、仿真引擎。它们要么已是大宗商品，要么领先半年就被追平。</p>
+<p><img alt="图 8：价值链上的三个战略控制点" src="../assets/strategy/f04-control-points.svg" /></p>
+<p><em>图 8（引自 roadmap §2.5）　价值链上的三个控制点（蓝色）与可外购或开放的环节（灰色）。</em></p>
+<h2>1.7 本章小结</h2>
+<ul>
+<li>具身数据的特殊性：动作不在画面里、形态各异、时间要对得准。</li>
+<li>瓶颈已从"采不到"变成"对不齐、验不了、用不上"。</li>
+<li>数据需求呈三层：覆盖层（人类视频）、对齐层（对齐过的小时）、本体层（play 数据）。</li>
+<li>北极星是新任务上线成本，控制点是评测校准数据、对齐层语料、数据契约与同意图。</li>
+<li>所以本书的重心不在"怎么多采"，而在"怎么对齐、怎么质检、怎么评测、怎么闭环"。</li>
+</ul>
+<p><strong>延伸阅读</strong>：data-strategy-roadmap.md §0–§2 · gr00t2-trends-analysis.md §1 · research-four-routes.md</p></section><section class="chapter"><h1>第 2 章 七条贯穿性决策</h1>
+<p>一条管线能不能长期演进，取决于少数几条"不轻易改"的决策是否选对。本仓库把它们写在 CLAUDE.md 里，偏离前必须先更新 architecture.md。本章逐条讲：决策是什么、解决什么问题、代价是什么。</p>
+<h2>2.1 管线的五层骨架</h2>
+<p>先看骨架。数据流分五层，<code>src/fdp/</code> 的子包与之一一对应，CLI 子命令按层命名：</p>
+<pre><code>recorder(采集, MCAP) → ingest(入湖: 校验/对齐/转码) → curation(策展) → export(LeRobotDataset v3) → viz(rerun)
+   fdp record             fdp ingest                     fdp curate        fdp export                 fdp viz
+</code></pre>
+<p>2026-11-17 对照某大模型厂商 具身数据链路（入湖 → 质检 → 打标 → 挖掘 → 合成 → 训练评估 → 回流）后发现缺了<strong>挖掘、人类视频合成、回流闭环</strong>三环。补法是不新增管线层和持久化格式：挖掘与合成作为 curation 层的新阶段，回流闭环作为跨层流程用 lineage 串起（data-pipeline-design.md §0）。</p>
+<p><img alt="图 P1：数据管线全链路流程" src="../assets/strategy/p01-data-pipeline-flow.svg" /></p>
+<p><em>图 P1（引自 data-pipeline-design §1）　全链路：采集四轨 → ① 入湖 → ② 质检 → ③ 打标 → ④ 去重再平衡 → ⑤ 挖掘 / ⑥ 合成 → ⑦ 数据集构建 → ⑧ 训练评测 → ⑨ 回流闭环。</em></p>
+<h2>2.2 决策一：双格式</h2>
+<p><strong>内容</strong>：机上采集和原始数据用 MCAP（append-only、耐崩、多流单文件）；训练和发布用 LeRobotDataset v3（parquet + mp4、流式）。二者之间由 export 层转换，<strong>不引入第三种持久化格式</strong>。</p>
+<p><strong>为什么是两种</strong>：采集态和训练态的需求相反。采集要的是断电不丢、多路传感器各按原生频率写进一个文件、写入时不需要知道将来怎么用；训练要的是按样本随机访问、列式压缩、社区工具直接能读。一种格式两头兼顾，必然两头都不好。</p>
+<p><strong>为什么不能是三种</strong>：每多一种持久化格式，就多一条转换路径、一套一致性校验、一处 lineage 断点。GR00T 2 用 Lance 做快照和 QC 视图，我们的判断是 Lance 只作为 LeRobot 之下可选的存储后端评估，不作为第三种格式（gr00t2-trends-analysis.md §4）。</p>
+<p><strong>外部旁证</strong>：Dyna 在百万小时规模上把 episode 容器从 H5 逐帧 JPEG 换成 canonical MCAP + H.264，并按读取模式分组 topic，自报存储 −68%、样本读延迟 2.9× ⚠️（data-format-contract.md §1.1）。</p>
+<h2>2.3 决策二：四轨同 schema</h2>
+<p><strong>内容</strong>：robot（遥操作/车队，含动作真值）、human（第一视角视频，无动作标签）、device（UMI 类手持/穿戴采集，硬件动作真值）、sim（仿真 rollout）四条 ingest 轨共用同一个 <code>EpisodeMeta</code>，用 <code>track</code> 字段区分。采集方式是组合不是单选；<strong>新增采集形态 = 新增 track 值，不新增 schema</strong>。所有模态可空（mask），schema 带版本号，新增传感器不得破坏旧数据可读性。</p>
+<p><strong>为什么</strong>：如果每种采集形态一套 schema，跨形态混合训练就要在训练侧写 N 套适配；更糟的是，质检、去重、再平衡、lineage 也都要写 N 套。同 schema 加可空模态，让"一条 human 轨 episode 没有动作"和"一条 robot 轨 episode 没有掌心相机"用同一种机制表达：掩码。</p>
+<p><strong>边界</strong>：合成来源不是采集形态。动捕重定向、神经轨迹、人类视频合成的机器人演示都归 sim 轨，用 <code>source</code> 字段区分（sim-track.md §6）。</p>
+<h2>2.4 决策三：分层采样率</h2>
+<p><strong>内容</strong>：视觉流 ~10–30 Hz（对齐 VLM / S2 消费），状态和动作流 100–200 Hz（对齐动作专家 / S1 消费），统一 ns 时间戳对齐，<strong>不做全局重采样到单一频率</strong>。</p>
+<p><strong>豁免</strong>：device 轨的动作流以传感器原生频率入湖（≥50 Hz，如 VIO 位姿 60 Hz），<code>rate_hz</code> 如实记录，export 不上采；训练取帧时对信号流线性插值。</p>
+<p><strong>为什么</strong>：全局重采样要么把视觉上采浪费存储，要么把动作下采丢掉高频信息；而且一旦重采样落盘，原始时间信息就没了。保留原生时间戳、只在训练取帧时插值，等于把"怎么对齐"推迟到消费时决定。</p>
+<h2>2.5 决策四：策展五阶段</h2>
+<p><strong>内容</strong>（对标 Figure Index 的官方披露）：自动质量门 → 欺诈/来源审计 → embedding 去重 → 多样性再平衡 → VLM 分层标注（任务级 + 子任务级指令，事后反推式）。QC 分三级：L1 运动学过滤 / L2 统计过滤 / L3 VLM 语义审计。</p>
+<p><strong>两条附则</strong>：清洗是标记不是删除，raw 永存（隐私脱敏除外）；阈值改动必须走消融裁决。</p>
+<p><strong>为什么是这个顺序</strong>：越便宜的检查越先跑，越贵的越后跑、只对通过者跑。第 8 章会展开这个成本金字塔。</p>
+<h2>2.6 决策五：视频编码</h2>
+<p><strong>内容</strong>：机上 h264 硬编；入湖转 AV1（svt-av1）+ <code>yuv420p</code>；解码用 torchcodec。</p>
+<p><strong>一个踩过的坑</strong>：<code>yuv444p</code> 会导致浏览器和可视化工具无法解码，所以像素格式被写进了决策层而不是留给实现者。</p>
+<h2>2.7 决策六：质量优先于吞吐</h2>
+<p><strong>内容</strong>：Figure 用 8 小时精策划数据即出可用策略（官方）。数据质量评估与过滤模块的优先级高于采集吞吐优化；<strong>缩放消融切分器</strong>（按小时、任务、operator_id）是数据集层的内建能力，不是事后脚本。</p>
+<p><strong>为什么切分器要内建</strong>：判断"再采 100 小时值不值"的唯一可靠方法是缩放曲线——Figure 以 10/20/40/60 小时切分跑曲线来决定采集预算。如果切分要靠临时脚本，曲线就跑不起来，预算就只能拍脑袋。</p>
+<h2>2.8 决策七：训练层保守、数据层创新</h2>
+<p><strong>内容</strong>：模型决策只抄 ≥2 家独立验证的共识（VLM 骨干 + 流匹配头、槽位向量 + 掩码、相机系增量动作、两段式动作课程），不自研骨干；数据配方（<code>configs/mixtures/*.yaml</code>）是版本化一等公民，哈希进 lineage。</p>
+<p><strong>为什么</strong>：骨干领先半年就被开源追平，自研骨干的投入不复利；数据配方、策展规则、评测校准数据才随时间变厚。创新预算放在后者。</p>
+<h2>2.9 在七条之上的五条候选原则</h2>
+<p>roadmap §2.4 提出了五条候选原则，尚待在下一次 review 中裁决是否写入 CLAUDE.md。它们已经在多处设计里被当作默认值使用：</p>
+<ol>
+<li><strong>单一动作 schema</strong>：所有轨最终对齐到相机系相对末端 + 手部/夹爪状态，具身特异性放在提示和掩码里，不放在动作空间里（U-23 已裁决）。</li>
+<li><strong>段级而非 episode 级</strong>：策展、估值、奖励、回流都以段为单位，episode 只是容器。</li>
+<li><strong>评测先于对齐采集</strong>：robot/device 轨的新预算必须先有对应的评测任务簇与代理相关性。</li>
+<li><strong>供给外购、对齐自研</strong>。</li>
+<li><strong>元数据条件化优于过滤</strong>：低质、失败、自主 rollout 数据带标签入训练，由模型学会区分；过滤只针对不可用（同步失败、隐私）与投毒。</li>
+</ol>
+<p>注意第 5 条与决策四的"质量门"并不矛盾：质量门产出的是<strong>标记</strong>，标记既可以用来过滤，也可以作为条件输入。选哪种用法，由训练配方决定，由消融裁决。</p>
+<h2>2.10 本章小结</h2>
+<table>
+<thead>
+<tr>
+<th>决策</th>
+<th>一句话</th>
+<th>主要代价</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>双格式</td>
+<td>采集态 MCAP，训练态 LeRobot v3，无第三种</td>
+<td>export 层必须做好双向一致</td>
+</tr>
+<tr>
+<td>四轨同 schema</td>
+<td>新形态 = 新 track 值</td>
+<td>槽位布局要预留足够维度</td>
+</tr>
+<tr>
+<td>分层采样率</td>
+<td>不全局重采样</td>
+<td>训练取帧逻辑更复杂</td>
+</tr>
+<tr>
+<td>策展五阶段</td>
+<td>便宜的先跑，标记不删除</td>
+<td>存储只增不减</td>
+</tr>
+<tr>
+<td>视频编码</td>
+<td>AV1 + yuv420p</td>
+<td>转码算力</td>
+</tr>
+<tr>
+<td>质量优先</td>
+<td>切分器内建</td>
+<td>早期采集量看起来少</td>
+</tr>
+<tr>
+<td>训练保守</td>
+<td>只抄 ≥2 家共识</td>
+<td>放弃单家领先的新架构</td>
+</tr>
+</tbody>
+</table>
+<p><strong>延伸阅读</strong>：CLAUDE.md · architecture.md §7 · data-strategy-roadmap.md §2.4</p></section><section class="chapter"><h1>第 3 章 四条采集轨与两种采集哲学</h1>
+<h2>3.1 四条轨各管什么</h2>
+<table>
+<thead>
+<tr>
+<th>轨</th>
+<th>典型来源</th>
+<th>动作</th>
+<th>主要价值</th>
+<th>主要难点</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>robot</td>
+<td>遥操作、车队自主运行回流</td>
+<td>真值（关节/末端指令）</td>
+<td>目标本体的精确演示、干预段、成功/失败标签</td>
+<td>贵、慢；空闲段多；任务模板化，错误容易被批量复制</td>
+</tr>
+<tr>
+<td>human</td>
+<td>头戴设备、Creator 手机众包</td>
+<td>无（需伪标签）</td>
+<td>覆盖面：场景、物体、任务多样性</td>
+<td>具身鸿沟、无空间锚点、动作短而密、欺诈</td>
+</tr>
+<tr>
+<td>device</td>
+<td>UMI 手持夹爪、穿戴孪生手套/外骨骼</td>
+<td>硬件真值（末端位姿、开度、关节）</td>
+<td>对齐层主力：观测与机器人同构、成本低</td>
+<td>设备入画、抖动、边界难定；只覆盖末端可完成的任务</td>
+</tr>
+<tr>
+<td>sim</td>
+<td>仿真增殖、遥操作回放、神经轨迹、动捕重定向、规划轨迹</td>
+<td>仿真真值或伪动作</td>
+<td>长尾补充、评测载体、可验证的规划语料</td>
+<td>sim-real gap；生成数据只在专家分布内可信</td>
+</tr>
+</tbody>
+</table>
+<p>这张表的每一格都有对应的 QC 规则（第 8 章的"四维 × 四轨"矩阵）。分割规则也按轨分开调：device 轨难在设备入画和边界，human 轨难在没有空间锚点，robot 轨难在空闲段多（curation-pipeline.md §3.2）。</p>
+<h2>3.2 两种采集哲学</h2>
+<p>四轨背后是两种弥合人→机器人具身鸿沟的对立思路（architecture.md §6.5），本仓库刻意并行两者：</p>
+<table>
+<thead>
+<tr>
+<th></th>
+<th>接口对齐（device 轨，UMI / Data Hands）</th>
+<th>表征对齐（human 轨，Index / 头戴视频）</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>思路</td>
+<td>采集端物理消灭 gap：人与机器人共用同一观测-动作接口（腕装鱼眼 + 同款夹爪 + 末端相对位姿动作）</td>
+<td>数据端全覆盖，靠算法弥合 gap（手部重定向、光流等中间表征）</td>
+</tr>
+<tr>
+<td>泛化保证</td>
+<td>由构造保证：训练与部署分布同构，本体不入观测</td>
+<td>由模型保证：依赖重定向质量与共训练配方</td>
+</tr>
+<tr>
+<td>代价</td>
+<td>泛化锚定在"同款末端"；换灵巧手需适配</td>
+<td>伪标签精度上限、触觉缺失</td>
+</tr>
+<tr>
+<td>任务覆盖</td>
+<td>末端能完成的任务子集</td>
+<td>全部日常任务</td>
+</tr>
+<tr>
+<td>规模证据</td>
+<td>Generalist 50 万+ 小时 → GEN-1.5 物理提示涌现 ⚠️</td>
+<td>Index 1,600 万条 + Go-Big 导航零样本迁移（官方）</td>
+</tr>
+</tbody>
+</table>
+<p><strong>共同点</strong>：接口对齐消灭鸿沟，规模多样性提供燃料，二者缺一不可。device 轨和 human 轨的配比<strong>不由立场决定，由下游消融裁决</strong>——这正是"四轨同 schema、采集方式是组合不是单选"的理论依据。</p>
+<p>一个学术旁证：PrimeU（2026-06，论文）显示人类视频零样本迁移依赖人形本体与人类形态的协同设计。Figure 03 的类人形态本身就是 Index 数据能用的前提。</p>
+<h2>3.3 Figure 03 × Index：一对协同设计的采集终端</h2>
+<p>Figure 的案例值得单独看，因为它展示了 robot 轨和 human 轨如何互为镜像（architecture §1）：</p>
+<table>
+<thead>
+<tr>
+<th>维度</th>
+<th>Figure 03（robot 轨，精度腿）</th>
+<th>Index（human 轨，规模腿）</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>采集端</td>
+<td>头部相机 + 双掌心相机 + 指尖触觉 + 全身本体感知</td>
+<td>手机 App 优先 + 头戴第一视角设备补充</td>
+</tr>
+<tr>
+<td>传输</td>
+<td>回坞 mmWave 批量卸数（store-and-forward）</td>
+<td>消费级公网上传</td>
+</tr>
+<tr>
+<td>规模引擎</td>
+<td>BotQ 量产</td>
+<td>众包（108 国、4.4 万周活，官方 ⚠️）</td>
+</tr>
+<tr>
+<td>策展</td>
+<td>精策划（8 小时数据即可出策略）</td>
+<td>五阶段自动化策展管线</td>
+</tr>
+</tbody>
+</table>
+<p>协同设计的证据链：Figure 03 相机架构官方明说为 Helix 高频视觉运动控制而设计；采集环境就是部署环境（同一物业既供 Index 采数又供机器人部署），刻意最小化域差。</p>
+<h2>3.4 各轨的最小流集合</h2>
+<p>同 schema 不等于同内容。每条轨有一组"必须有"的流，缺了就拒收或降级（data-format-contract.md §1.3）：</p>
+<table>
+<thead>
+<tr>
+<th>track</th>
+<th>必须</th>
+<th>可选</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>robot</td>
+<td>≥1 路 <code>/video/head*</code>、<code>/signal/joint_pos</code>、<code>/signal/joint_vel</code>、<code>/signal/action</code>、<code>/event/intervention</code>、<code>/event/task</code></td>
+<td>腕部/掌心相机、触觉、末端位姿、底座速度</td>
+</tr>
+<tr>
+<td>human</td>
+<td>≥1 路 <code>/video/ego</code>、<code>/imu/head</code>（有 IMU 时）</td>
+<td>SLAM 灰度相机、环境音频、口令事件；众包另带 <code>/meta/task_goal</code></td>
+</tr>
+<tr>
+<td>device</td>
+<td><code>/video/ego_wrist</code>、<code>/signal/ee_pose</code>（原生 ≥50 Hz）、<code>/signal/gripper_width</code>、<code>/imu/wrist</code></td>
+<td>头戴视角、手套关节</td>
+</tr>
+<tr>
+<td>sim</td>
+<td><code>/video/*</code>（渲染）、<code>/signal/joint_pos</code>、<code>/signal/action</code>、<code>/meta/sim</code></td>
+<td>特权信息：物体位姿、接触</td>
+</tr>
+</tbody>
+</table>
+<p>缺失的可选流在 EpisodeMeta 中不出现即可，训练侧用掩码表达。</p>
+<h2>3.5 sim 轨的六种来源</h2>
+<p>sim 轨是一个"合成来源"的集合，用 <code>source</code> 字段区分（sim-track.md §3）：</p>
+<table>
+<thead>
+<tr>
+<th><code>source</code></th>
+<th>输入</th>
+<th>输出量级</th>
+<th>用途</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>teleop_replay</code></td>
+<td>robot 轨 episode 在仿真中重放</td>
+<td>1:1</td>
+<td>sim-real 一致性探针</td>
+</tr>
+<tr>
+<td><code>dexmimicgen</code></td>
+<td>每任务 10–50 条种子演示 + 物体/场景表亲</td>
+<td>100–1000×</td>
+<td>增殖（GR00T：78 万条 ≈ 6,500 h，11 计算小时）</td>
+</tr>
+<tr>
+<td><code>neural_trajectory</code></td>
+<td>视频生成模型</td>
+<td>~10×</td>
+<td>长尾；必须经 IDM 打伪动作并标质量分</td>
+</tr>
+<tr>
+<td><code>mocap_retarget</code></td>
+<td>人体动捕 → 机器人关节空间</td>
+<td>视动捕量</td>
+<td>S0 全身控制（本仓库只入湖不训）</td>
+</tr>
+<tr>
+<td><code>rl_rollout</code></td>
+<td>仿真 RL 后训练</td>
+<td>海量</td>
+<td>默认不入训练集，只入评测与奖励</td>
+</tr>
+<tr>
+<td><code>planning_trace</code></td>
+<td>SimFoundry 孪生 + BDDL 谓词目标 + 脚本执行器</td>
+<td>每场景数十任务 × 数百变体</td>
+<td>S2 规划语料与评测，子任务边界和成败为真值；不喂动作专家</td>
+</tr>
+</tbody>
+</table>
+<p><strong>耦合规则</strong>：增殖的种子 id 写进 <code>parent_episode_id</code>；种子若被策展标记为 <code>reject_*</code>，其增殖产物自动降级——lineage 传导。</p>
+<h2>3.6 新的采集任务类型：play 数据</h2>
+<p>GR00T 2 带来的一个重要启发是：目标本体的数据角色正在从"任务演示"变成"本体说明书"（gr00t2-trends-analysis.md §1.3）。GR00T 2 的 X-Adapt 只用目标本体的 play 数据 + 人 / UMI 演示完成适配；当采集器与执行手一一同构时，连 play 数据都不需要 ⚠️。</p>
+<p>本仓库据此新增了 <code>play.</code> 前缀的任务模板类型（robot-track-teleop.md §5）：按覆盖计划驱动关节空间与工作空间（含双臂相对位姿、手的全行程、各相机视角下的末端外观），不设成功判据。验收看<strong>覆盖度</strong>——关节空间各维分箱填充率、工作空间体素填充率、各相机下末端可见帧占比——不看成功率。play 数据在训练配方里单独成组，不进评测集。</p>
+<h2>3.7 配对采集：对齐层的生产方式</h2>
+<p>对齐层语料（第 1 章的控制点 2）不是"采更多 robot 数据"，而是<strong>同一任务、同一时刻，用两种采集方式同时录</strong>。capture-devices-design.md §7 定义了六组配对：</p>
+<table>
+<thead>
+<tr>
+<th>配对</th>
+<th>产出</th>
+<th>用途</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>头戴（D2）+ 触觉 UMI（D1）同时佩戴</td>
+<td>视觉伪标签 vs 硬件真值</td>
+<td>伪标签质量分定刻度</td>
+</tr>
+<tr>
+<td>头戴 + 固定第三人称相机</td>
+<td>ego + exo 同步对</td>
+<td>上身对齐动作块</td>
+</tr>
+<tr>
+<td>触觉阵列 + 光学触觉并排</td>
+<td>跨传感器配对帧</td>
+<td>触觉迁移</td>
+</tr>
+<tr>
+<td>遥操作手套（D4）+ 本体复现</td>
+<td>人手关节 vs 机器人关节</td>
+<td>重定向误差</td>
+</tr>
+<tr>
+<td>手机（D3）vs 头戴（D2）同任务</td>
+<td>质量差</td>
+<td>决定哪些众包任务只能用头戴</td>
+</tr>
+<tr>
+<td>头戴脱敏前 vs 后</td>
+<td>手部可见率、MPJPE 差</td>
+<td>脱敏损伤基准</td>
+</tr>
+</tbody>
+</table>
+<p>第一组最关键：它用很低的成本给 human 轨伪标签提供了"标准答案"，比动捕手套方案便宜得多（device-track-umi.md §3）。</p>
+<h2>3.8 本章小结</h2>
+<ul>
+<li>四轨分工：human 管覆盖、device 和 robot 管对齐、sim 管长尾与评测。</li>
+<li>接口对齐与表征对齐并行，配比由消融裁决而非立场。</li>
+<li>每条轨有最小流集合；可选流缺失用掩码表达。</li>
+<li>sim 轨是合成来源的集合，<code>source</code> 区分，lineage 传导种子质量。</li>
+<li>play 数据是独立的任务类型，验收看覆盖度。</li>
+<li>对齐层的生产方式是配对采集。</li>
+</ul>
+<p><strong>延伸阅读</strong>：architecture.md §1、§6.5 · device-track-umi.md · robot-track-teleop.md · sim-track.md · research-four-routes.md</p></section><section class="chapter"><h1>第 4 章 采集设备与机上录制</h1>
+<h2>4.1 设备只为控制点服务</h2>
+<p>采集设备的选型逻辑不是"哪种设备采得多"，而是"每件设备喂哪个控制点"（capture-devices-design.md §0）。本仓库规划了五件设备：</p>
+<table>
+<thead>
+<tr>
+<th>设备</th>
+<th>轨</th>
+<th>喂哪个控制点</th>
+<th>BOM 量级</th>
+<th>为什么是它</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>D1 触觉同构 UMI</td>
+<td>device</td>
+<td>对齐集；触觉探针；演示库</td>
+<td>≤$400；触觉版 +$300–600</td>
+<td>观测同构构型；自采的理由是许可与末端匹配，不是缺数据</td>
+</tr>
+<tr>
+<td>D2 受控场地头戴参考套件</td>
+<td>human</td>
+<td>与 D1 同戴的配对集；脱敏对照</td>
+<td>$150–300</td>
+<td>规格已收敛，做参考设计不做产能</td>
+</tr>
+<tr>
+<td>D3 Creator 手机采集套件</td>
+<td>human</td>
+<td>同意图与脱敏元数据；预训练供给</td>
+<td>≈$0 + 支架 &lt;$15</td>
+<td>唯一零设备成本入口</td>
+</tr>
+<tr>
+<td>D4 遥操作站 + 数据手套</td>
+<td>robot</td>
+<td>对齐集与干预段；评测校准演示</td>
+<td>Quest 3 $500 + 手套</td>
+<td>每任务只需几小时对齐数据</td>
+</tr>
+<tr>
+<td>D5 车队回流录制器</td>
+<td>robot（fleet）</td>
+<td>干预段；真机复核</td>
+<td>机器人自带算力 + 512 GB</td>
+<td>单位价值最高的数据只在部署中产生</td>
+</tr>
+</tbody>
+</table>
+<p><img alt="图 D0-1：五件设备、四条轨与三个控制点的对应" src="../assets/strategy/d0-device-overview.svg" /></p>
+<p><em>图 D0-1（引自 capture-devices-design §0）　每件设备至少喂一个控制点；干预段只来自 D4/D5；D3 是唯一零成本入口。</em></p>
+<p>一个重要的战略裁决（U-24）：<strong>原始人类视频供给外购而不自建头戴量产</strong>，D2 止步 DVT 参考设计，不做 PVT。</p>
+<h2>4.2 末端：采集器与执行手共同设计</h2>
+<p>GR00T 2 的 DexUMI 与 XHAND 一一对应，Sunday 的手套复刻目标夹爪几何，TwinDEX 让人穿与机器人同构的外骨骼——多家都在走"采集器与执行手共同设计"（gr00t2-trends-analysis.md §3.1）。</p>
+<p>本仓库的当前方向是 T/I/S 两节同构手（inhouse-isomorphic-end-effector.md）：独立拇指 T、独立食指 I、后三指合组 S，各两节、加粗、有承载掌面；相机在拇食之间靠背侧，向掌心捏取区看。同一构型同时用于穿戴采集器（device 轨）和机器人执行手（robot 轨）。</p>
+<p>这带来了几条数据层的硬要求（data-format-contract.md §1.4，设计待实现）：</p>
+<ul>
+<li>单独版本化的末端档案，区分穿戴采集与执行手、左右、两节与历史二指版本；</li>
+<li>人体测量、映射目标、实际发出的命令、机器人反馈<strong>分别声明来源</strong>——穿戴机械读数不是机器人已执行的动作；</li>
+<li><code>/video/palm_left/right</code> 表示看抓取区的语义视图；</li>
+<li>旧二指数据保留独立身份，不静默替换。</li>
+</ul>
+<p>另一个契约级的趋势是：相机布局收敛为"头部 1 路 + 双腕 2 路"，<strong>腕部相机安装位成为跨设备契约</strong>。本仓库在本体工程冻结时把相机外参写进具身档案 <code>cameras.&lt;name&gt;.mount</code>，作为 D1/D2/D4 支架的共同基准（robot-track-teleop.md §1.1）。</p>
+<h2>4.3 五件设备的共性规范</h2>
+<p>不管哪件设备，都要满足同一组共性规范，缺任一层不进 record→export 验收（capture-devices-design §6）：</p>
+<ol>
+<li><strong>时钟与同步总线</strong>：单调 ns 时钟 + 启动时记录 UTC 偏移；有线场景 PTP，头戴/手持用硬件触发脉冲 + 同步 LED 事件。</li>
+<li><strong>标定随数据走</strong>：出厂内外参 + 时间偏移写进 <code>/meta/calibration</code>，哈希进 EpisodeMeta。</li>
+<li><strong>隐私硬件三件套</strong>：硬连线录制 LED（软件不可关）、遮挡或篡改即停录、物理停录开关。</li>
+<li><strong>设备注册</strong>：一机一码，固件签名，OTA 灰度，设备档案进 lineage。</li>
+<li><strong>固件落盘即 MCAP 契约</strong>：<code>/meta/health</code> 1 Hz、关键帧间隔 ≤1 s、chunk 4 MB/1 s flush、断电可恢复。</li>
+</ol>
+<p>还有一条采集 SOP 的共性：每个任务模板附带"扰动-恢复"子任务，专门产出恢复数据。</p>
+<h2>4.4 recorder 的写入模型</h2>
+<p><code>fdp record</code> 是 robot 轨遥操作站、自研头戴设备固件和 device 轨设备的共同录制规范（recorder-sync-and-storage.md）：</p>
+<ul>
+<li><strong>单进程 MCAP writer</strong>，多生产者经有界队列投递。队列满时<strong>先丢低优先级流</strong>（预览、健康），再丢高优先级流（动作、视频关键帧），丢弃计数写进 <code>/meta/health</code>。</li>
+<li><strong>flush 与 fsync</strong>：每 chunk 4 MB 或 1 s 先到即 flush；每 5 s 或每个关键帧组 fsync 一次。</li>
+<li><strong>分段</strong>：2 GB 或 10 分钟切换 part；每个 part 头部重复写 <code>/meta/episode</code> 和 <code>/meta/calibration</code>，任一文件可独立解析。</li>
+<li><strong>结束标记</strong>：episode 结束写最终 <code>/meta/episode</code>（含 <code>duration_ns</code>）。缺失即表示非正常结束，ingest 会补并打 <code>flag:abnormal_end</code>。</li>
+</ul>
+<h2>4.5 带宽与存储预算</h2>
+<table>
+<thead>
+<tr>
+<th>配置</th>
+<th>视频</th>
+<th>合计写入</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>robot 轨：3 路 1080p30 h264 @ 8 Mbps + 200 Hz 状态/动作 + 触觉</td>
+<td>24 Mbps</td>
+<td>≈ 11.5 GB/h</td>
+</tr>
+<tr>
+<td>自研头戴：1440p60 h265 @ 20 Mbps + 2 路灰度 SLAM + 双 IMU</td>
+<td>28 Mbps</td>
+<td>≈ 13 GB/h</td>
+</tr>
+<tr>
+<td>UMI（GoPro 原生）</td>
+<td>60–100 Mbps</td>
+<td>27–45 GB/h（入湖转 AV1）</td>
+</tr>
+</tbody>
+</table>
+<p>写入介质要求持续 ≥20 MB/s（留 5× 余量）。一个班次 4 小时约 52 GB，256 GB 设备存储可撑 4–5 个班次不回传。</p>
+<p><strong>环形缓冲的铁律</strong>：只有已确认上传（服务端哈希回执）的 part 才可被覆盖；未上传数据占满时<strong>停止录制并提示，不覆盖</strong>。剩余 &lt;10% 关预览流并降码率一档，&lt;5% 停录。</p>
+<h2>4.6 断电与崩溃恢复</h2>
+<ul>
+<li>已 fsync 的 chunk 全部可恢复；未 fsync 的最多丢 5 s；缺失的尾部索引由 ingest 线性扫描恢复。</li>
+<li>崩溃后重启：发现未关闭的 part → 写恢复标记、新开 part 续录<strong>同一 episode</strong>（<code>/meta/segment</code> 记录续接关系），不新开 episode。</li>
+<li><strong>M1 验收必做</strong>：录制中随机断电 20 次，要求 100% 文件可被 ingest 恢复、丢失时长 ≤5 s、无静默数据错位（用已知同步事件验证对齐仍在预算内）。</li>
+</ul>
+<p>"无静默错位"这一条最容易被忽略。文件能打开不等于数据对：如果断电导致某路流的时间基准漂了，文件完全可读，但视觉和动作已经错开。所以恢复测试必须用同步事件验证对齐。</p>
+<h2>4.7 非自研录制端</h2>
+<p>P0 阶段的手机和 GoPro 不要求机上写 MCAP，只需满足输出要求：视频 + 遥测（GPS 剥离）+ 录制起止 UTC 时间；App 写一份等价于 <code>/meta/episode</code> 的 sidecar JSON（<code>episode_id</code>、<code>session_id</code>、<code>device_id</code>、<code>consent_ref</code>、<code>region</code>、任务模板 id、口令时间戳）；多设备同录时开始和结束各做一次 LED 闪烁 + 拍手。ingest 负责拆流转 MCAP。</p>
+<h2>4.8 遥操作站与接管打点</h2>
+<p>robot 轨的遥操作站默认用 Quest 3 手追，接口抽象为 <code>Teleoperator</code> 协议，可替换为 AVP、GELLO 或带力反馈的主从臂（robot-track-teleop.md §2–§4）。三个数据层要点：</p>
+<ol>
+<li><strong>闭环延迟测量</strong>：每帧同时记录 <code>command_time</code>（遥操作端发出）与 <code>publish_time</code>（机器人执行），端到端 ≤150 ms，超过标 <code>flag:teleop_latency</code>。</li>
+<li><strong>即时质控</strong>：episode 结束即给操作员打分（平滑度、时长、静止占比、是否完成），采集时反馈比事后返工便宜得多。</li>
+<li><strong>接管打点由遥操作站写，不是事后标注</strong>：<code>/event/intervention</code> 的 <code>takeover_start / takeover_end / estop / reset</code>，精度 ≤ 一个控制周期（10 ms），带原因枚举和被接管的策略版本。混合 episode（策略自主 + 人接管）是经验后训练的素材，必须保留策略段与人工段的边界。</li>
+</ol>
+<p>操作员纪律：每班次 ≤4 小时，每小时强制 10 分钟休息（质量随疲劳下降是 DROID 的经验）。</p>
+<h2>4.9 本章小结</h2>
+<ul>
+<li>设备选型看它喂哪个控制点；原始人类视频外购，自采只做对齐与校准所需的量。</li>
+<li>采集器与执行手共同设计；腕部相机安装位是契约。</li>
+<li>共性规范五层：时钟、标定、隐私硬件、设备注册、落盘契约。</li>
+<li>recorder 的三条铁律：队列满先丢低优先级、未上传不覆盖、断电后不静默错位。</li>
+<li>接管打点在采集端实时写，不靠事后标注。</li>
+</ul>
+<p><strong>延伸阅读</strong>：capture-devices-design.md · recorder-sync-and-storage.md · robot-track-teleop.md · device-landscape.md · client-capture-to-training-report.md</p></section><section class="chapter"><h1>第 5 章 时间、同步与标定</h1>
+<p>多流对齐是数据可用性的命门。一条 episode 可以画质完美、动作流畅，但只要视觉和动作差了 20 ms，学到的就是错位的因果。这一章讲本仓库的时间语义、同步手段、误差预算和标定纪律（architecture.md §8）。ingest 校验和 curation 拒收判据都以本章为准。</p>
+<h2>5.1 两枚时间戳</h2>
+<p>每条 MCAP 消息带两枚原生时间戳：</p>
+<ul>
+<li><code>log_time</code>：写入记录器的时刻；</li>
+<li><code>publish_time</code>：传感器或驱动声明的<strong>采样时刻</strong>。</li>
+</ul>
+<p><strong>训练与对齐只用 <code>publish_time</code>。</strong> <code>log_time</code> 只用于诊断记录延迟。理由很简单：写入时刻受队列、磁盘、调度影响，和物理世界里"那一刻发生了什么"无关。</p>
+<p>其余约定：</p>
+<ul>
+<li>单位一律 ns，int64；episode 内用<strong>单调时钟</strong>（<code>CLOCK_MONOTONIC_RAW</code> 或等价物），另存一枚"单调→UTC"偏移（<code>started_at_ns</code>），跨设备、跨会话的比较只在 UTC 层做。</li>
+<li><strong>视频帧取曝光中点</strong>，不取帧到达时刻。全局快门相机直接用；卷帘快门相机记录曝光起止，并在标定文件里声明行读出时间。无曝光信息的设备用 <code>pts − 0.5/fps</code> 近似并标 <code>flag:pts_approx</code>。</li>
+<li>遥操作动作另记 <code>command_time</code>（发出时刻），用来量化闭环延迟。</li>
+</ul>
+<h2>5.2 四种同步手段</h2>
+<table>
+<thead>
+<tr>
+<th>手段</th>
+<th>适用</th>
+<th>可达精度</th>
+<th>备注</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>硬件触发（相机 GPIO 同步脉冲 + IMU 同步）</td>
+<td>robot 轨多相机、自研头戴设备</td>
+<td>&lt;0.1 ms</td>
+<td>需全局快门与触发线；自研设备的默认方案</td>
+</tr>
+<tr>
+<td>同一 SoC 单时钟域软同步</td>
+<td>手机、GoPro 单机</td>
+<td>1–5 ms</td>
+<td>零额外硬件，视频与 IMU 同源即可</td>
+</tr>
+<tr>
+<td>PTP（IEEE 1588）/ 有线 NTP</td>
+<td>机器人本体多计算板</td>
+<td>PTP &lt;0.1 ms、NTP 1–10 ms</td>
+<td>robot 轨跨板必须 PTP</td>
+</tr>
+<tr>
+<td>事后相关对齐（IMU 角速度 vs 视觉旋转、LED/拍手标记）</td>
+<td>GoPro + 外部 IMU、多设备同穿戴</td>
+<td>1–3 ms</td>
+<td>零硬件；ingest 内建，产出对齐残差进 QC</td>
+</tr>
+</tbody>
+</table>
+<h2>5.3 跨时钟域</h2>
+<p>每个物理设备是一个时钟域。episode 元数据记录所有参与的时钟域及其对 UTC 的偏移与漂移估计（<code>clock_domains[]</code>：<code>name, offset_to_utc_ns, drift_ppm</code>）。</p>
+<ul>
+<li><strong>多设备同录</strong>（如头戴 + UMI 同戴）：会话开始与结束各做一次同步事件（LED 闪烁 + 拍手，双设备可见可闻），ingest 据此估计偏移和线性漂移；漂移 &gt;1 ms/min 的会话标 <code>flag:clock_drift</code>。</li>
+<li><strong>没有同步事件</strong>的多设备会话：用 IMU 角速度 vs 视觉旋转互相关估计偏移（窗口 30 s，搜索 ±500 ms）（ingest-spec.md §3）。</li>
+<li><strong>机器人本体</strong>：主控为时间主，相机、触觉、遥操作端全部对齐到主控 PTP 时钟；遥操作端走 NTP 到主控，ingest 再用动作-状态互相关校一次。</li>
+</ul>
+<h2>5.4 同步误差预算</h2>
+<p>以动作专家 100–200 Hz 消费为约束，一个控制周期 5–10 ms：</p>
+<table>
+<thead>
+<tr>
+<th>流对</th>
+<th>预算</th>
+<th>依据</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>视觉 ↔ 动作/状态</td>
+<td>≤5 ms（robot/device）；≤15 ms（human，仅供伪标签）</td>
+<td>一个 200 Hz 控制周期内；human 轨无动作真值，要求放宽</td>
+</tr>
+<tr>
+<td>IMU ↔ 视觉</td>
+<td>≤2 ms</td>
+<td>VIO 收敛条件</td>
+</tr>
+<tr>
+<td>多相机彼此</td>
+<td>≤1 ms（硬件触发）/ ≤10 ms（软同步，仅允许 human 轨）</td>
+<td>立体与多视角一致性</td>
+</tr>
+<tr>
+<td>触觉 ↔ 动作</td>
+<td>≤2 ms</td>
+<td>接触事件对齐</td>
+</tr>
+</tbody>
+</table>
+<p><strong>超预算怎么办</strong>：不删除。标 <code>flag:sync_budget_exceeded</code>，从 robot/device 轨训练分片排除，但可以留在 human 轨的消费路径。这是"清洗是标记不是删除"的第一个具体例子：同一条数据对一种用途不合格，对另一种用途仍有价值。</p>
+<h2>5.5 标定工序与漂移再估计</h2>
+<ul>
+<li><strong>出厂标定</strong>：相机内参 + 相机-IMU 外参 + 时间偏移（Kalibr 标准工序，棋盘或 AprilGrid）。标定文件随设备档案走（<code>device_id → calibration_ref</code>），每条 episode 引用标定版本。</li>
+<li><strong>在线再估计</strong>：每次 ingest 用 VIO 残差与 IMU-视觉时间偏移估计值和出厂值比对；时间偏移 &gt;1 ms 或外参旋转 &gt;0.5° 的设备进"待重标"队列，其数据标 <code>flag:calib_stale</code>。</li>
+<li><strong>规模化纪律</strong>：几十台以上设备时，标定一致性成为主要误差源（UMI 规模化的经验）。标定文件哈希进 lineage，任何重标产生新的标定版本，<strong>不覆盖</strong>。</li>
+</ul>
+<p>human 轨众包设备没有出厂标定，内参从视频估计（GeoCalib / DroidCalib 类方法），写入元数据时注明来源为估计值（data-format-contract.md §3.1，契约 0.3 待入项）。</p>
+<h2>5.6 不重采样</h2>
+<p>ingest 阶段的对齐<strong>只产生偏移与残差元数据，不改数据</strong>。所有流保留原生时间戳。训练取帧时的规则（curation-pipeline.md §5）：</p>
+<ul>
+<li>信号流线性插值到查询时刻；</li>
+<li>视觉流取最近帧，并记录取帧 Δt（<code>fdp.image_dt_ns.&lt;camera&gt;</code>），模型可选消费。</li>
+</ul>
+<p>这样做的好处是对齐算法可以升级：bump <code>ingest_version</code> 后重算偏移，原始数据不动。</p>
+<h2>5.7 本章小结</h2>
+<ul>
+<li>只用 <code>publish_time</code>；视频取曝光中点；单调时钟 + UTC 偏移。</li>
+<li>四种同步手段按场景选；robot 轨跨板必须 PTP，自研设备默认硬件触发。</li>
+<li>误差预算以一个控制周期为界；超预算标记、按用途排除，不删除。</li>
+<li>标定随数据走、只增版本不覆盖；在线再估计发现漂移就打标。</li>
+<li>对齐产出元数据，不改数据；插值推迟到训练取帧。</li>
+</ul>
+<p><strong>延伸阅读</strong>：architecture.md §8 · ingest-spec.md §3 · capture-devices-design.md §6</p></section><section class="chapter"><h1>第 6 章 数据契约：MCAP、EpisodeMeta 与版本迁移</h1>
+<p>数据契约是 M1 的核心交付规范（data-format-contract.md）。它定死三件事：机上和原始 MCAP 文件长什么样；EpisodeMeta 每个字段的含义、谁写、何时写；如何映射到训练态。代码 <code>src/fdp/schema.py</code> 是契约的实现，<strong>改字段先改契约文档，再改代码</strong>。</p>
+<h2>6.1 MCAP 采集态</h2>
+<h3>文件与分段</h3>
+<ul>
+<li>一个 episode = 一个或多个文件 <code>&lt;episode_id&gt;.part-&lt;n&gt;.mcap</code>，单文件上限 2 GB 或 10 分钟。</li>
+<li>写入参数：chunk 4 MB、zstd level 3、每 chunk 带 CRC，索引在文件尾。</li>
+<li>目录：<code>data/raw/&lt;track&gt;/&lt;date&gt;/&lt;session_id&gt;/&lt;episode_id&gt;.part-&lt;n&gt;.mcap</code>。</li>
+<li><strong>入湖态按读取模式分组 topic</strong>：视觉流一组、本体感知 + 动作一组，各组时间主序写入、组间不共 chunk。这是 Dyna 在百万小时规模上验证过的做法 ⚠️，与分层采样率决策天然一致。</li>
+</ul>
+<h3>topic 命名</h3>
+<table>
+<thead>
+<tr>
+<th>topic</th>
+<th>频率</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>/video/&lt;camera&gt;</code></td>
+<td>10–60 Hz</td>
+<td>机上 h264/h265 Annex-B，入湖后 AV1；关键帧间隔 ≤1 s；<code>&lt;camera&gt;</code> 用语义名</td>
+</tr>
+<tr>
+<td><code>/signal/&lt;stream&gt;</code></td>
+<td>50–1000 Hz</td>
+<td><code>values: float32[dim]</code></td>
+</tr>
+<tr>
+<td><code>/imu/&lt;device&gt;</code></td>
+<td>≥200 Hz</td>
+<td>加速度 + 角速度 + 温度</td>
+</tr>
+<tr>
+<td><code>/event/intervention</code></td>
+<td>稀疏</td>
+<td>接管开始/结束</td>
+</tr>
+<tr>
+<td><code>/event/task</code></td>
+<td>稀疏</td>
+<td>任务开始/结束/中止、口令、子任务标记</td>
+</tr>
+<tr>
+<td><code>/event/sync</code></td>
+<td>稀疏</td>
+<td>跨设备同步事件</td>
+</tr>
+<tr>
+<td><code>/meta/episode</code></td>
+<td>文件头 1 次 + 结束 1 次</td>
+<td>结束那份含 <code>duration_ns</code></td>
+</tr>
+<tr>
+<td><code>/meta/calibration</code></td>
+<td>1 次</td>
+<td>内外参、时间偏移、<code>calibration_ref</code></td>
+</tr>
+<tr>
+<td><code>/meta/health</code></td>
+<td>1 Hz</td>
+<td>自检、丢帧计数、磁盘余量</td>
+</tr>
+</tbody>
+</table>
+<h3>相机语义名归一化</h3>
+<p>设备上任意命名，export 时映射到固定词表：<code>head</code>、<code>head_left/right</code>、<code>wrist_left/right</code>、<code>palm_left/right</code>、<code>ego</code>、<code>ego_wrist</code>、<code>third_person</code>、<code>slam_left/right</code>。映射表随设备档案走。</p>
+<p>这条看似琐碎，实则致命。SmolVLA 的教训：相机命名不一致会<strong>静默</strong>毁掉跨数据集训练——模型不会报错，只是把左腕当成右腕学。</p>
+<h2>6.2 EpisodeMeta：一张表管四条轨</h2>
+<p>EpisodeMeta（schema 0.2）是四轨共用的元数据。按"谁写"分五类写入者：REC（recorder）、ING（ingest）、CUR（curation）、EXP（export）、RT（运行时回流）。几组关键字段：</p>
+<p><strong>身份与来源</strong></p>
+<table>
+<thead>
+<tr>
+<th>字段</th>
+<th>写入者</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>episode_id</code></td>
+<td>REC</td>
+<td>ULID，全局唯一</td>
+</tr>
+<tr>
+<td><code>session_id</code></td>
+<td>REC</td>
+<td>同一次佩戴或开机</td>
+</tr>
+<tr>
+<td><code>track</code></td>
+<td>REC</td>
+<td>robot / human / device / sim</td>
+</tr>
+<tr>
+<td><code>source</code></td>
+<td>REC</td>
+<td>sim 子来源，或 robot 回流的 <code>fleet</code></td>
+</tr>
+<tr>
+<td><code>robot_model</code> / <code>device_id</code> / <code>operator_id</code></td>
+<td>REC</td>
+<td>具身档案、设备档案、采集者</td>
+</tr>
+<tr>
+<td><code>calibration_ref</code> / <code>firmware_version</code></td>
+<td>REC</td>
+<td>标定哈希、固件版本</td>
+</tr>
+<tr>
+<td><code>parent_episode_id</code></td>
+<td>CUR</td>
+<td>派生产物（转换、合成、增殖）指向原始</td>
+</tr>
+</tbody>
+</table>
+<p><strong>时间</strong></p>
+<table>
+<thead>
+<tr>
+<th>字段</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>started_at_ns</code></td>
+<td>UTC ns</td>
+</tr>
+<tr>
+<td><code>duration_ns</code></td>
+<td>结束时写；缺失由 ING 补并标 <code>flag:abnormal_end</code></td>
+</tr>
+<tr>
+<td><code>clock_domains</code></td>
+<td>多设备必填：<code>name, offset_to_utc_ns, drift_ppm</code></td>
+</tr>
+</tbody>
+</table>
+<p><strong>状态与质量</strong></p>
+<table>
+<thead>
+<tr>
+<th>字段</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>state</code></td>
+<td>状态机：raw → ingested → gated → scored → segmented → labeled → training_ready；<code>rejected</code> 终态</td>
+</tr>
+<tr>
+<td><code>quality_flags</code></td>
+<td><code>reject_*</code> / <code>flag:*</code>，标记不删除</td>
+</tr>
+<tr>
+<td><code>quality_score</code></td>
+<td>[0,1]；human 轨为伪标签质量分</td>
+</tr>
+<tr>
+<td><code>success</code> / <code>intervention_ts_ns</code></td>
+<td>成败与接管时刻</td>
+</tr>
+</tbody>
+</table>
+<p><strong>切分、存储与合规</strong></p>
+<table>
+<thead>
+<tr>
+<th>字段</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>scene_id</code></td>
+<td>场地标识，held-out 组切分键</td>
+</tr>
+<tr>
+<td><code>split</code> / <code>split_version</code></td>
+<td>train / held_out</td>
+</tr>
+<tr>
+<td><code>storage_uri</code> / <code>content_hash</code> / <code>size_bytes</code></td>
+<td>raw 位置、BLAKE3 合并哈希</td>
+</tr>
+<tr>
+<td><code>consent_ref</code> / <code>region</code></td>
+<td>human 轨必填；决定驻留与合规开关</td>
+</tr>
+<tr>
+<td><code>policy_version</code> / <code>deployment_id</code></td>
+<td>回流 episode 必填</td>
+</tr>
+</tbody>
+</table>
+<p><strong>标注</strong></p>
+<table>
+<thead>
+<tr>
+<th>字段</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>task_instruction</code></td>
+<td>任务级；VLM 标注可覆盖并保留原值到 lineage</td>
+</tr>
+<tr>
+<td><code>subtasks</code></td>
+<td><code>instruction, start_ns, end_ns</code></td>
+</tr>
+<tr>
+<td><code>environment_tags</code> / <code>object_tags</code></td>
+<td>再平衡与多样性计数</td>
+</tr>
+</tbody>
+</table>
+<p><strong>一条容易被忽视的规则</strong>：未在契约里的键，读侧忽略（前向兼容），写侧禁止（<code>extra="forbid"</code> 只对写路径开启）。这同时保证了"旧代码能读新数据"和"新代码不会偷偷写出未登记字段"。</p>
+<h2>6.3 版本迁移</h2>
+<ul>
+<li><code>schema_version</code> 用 <code>major.minor</code>。minor 升级只允许<strong>新增可选字段或放宽约束</strong>，必须能无损读旧数据；major 升级允许删字段，但要提供迁移函数并保留旧 reader 一个里程碑周期。</li>
+<li><strong>迁移在读侧完成</strong>（<code>fdp.schema.migrate(raw) -&gt; EpisodeMeta</code>），MCAP 文件本身不回写；ingest 把迁移后的元数据另存进元数据库，raw 永远保留原版本。</li>
+<li>0.1 → 0.2：<code>subtask_instructions</code> 复制到 <code>subtasks</code>（区间为 None）；<code>state</code> 由 <code>curated</code> 推断；其余新增字段取空。</li>
+<li>冻结样本 <code>tests/fixtures/episode_v0_1.json</code> 必须永远可读（<code>tests/test_schema.py::test_migrate_v0_1</code>）。</li>
+</ul>
+<p>这是本仓库目前<strong>已经实现</strong>的部分。</p>
+<h2>6.4 契约 0.3 待入项</h2>
+<p>随着设计推进，一批字段已经确定要加、但还没进 schema（data-format-contract §3.1）。列在这里，因为它们揭示了数据层下一步要表达什么：</p>
+<table>
+<thead>
+<tr>
+<th>待入项</th>
+<th>为什么</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>子任务槽位化字段：<code>hand</code>、<code>outcome</code>、<code>contact</code>、<code>keyframe_ns</code>、结构化描述槽位、<code>boundary_basis</code></td>
+<td>标注不再是一句自由文本（第 9 章）；现在采集时几乎不费事，以后补标代价很高</td>
+</tr>
+<tr>
+<td><code>grasp_aperture</code></td>
+<td>human 轨伪动作的连续抓取信号，与 device 轨 <code>gripper_width</code> 同义</td>
+</tr>
+<tr>
+<td>连续帧对导出（<code>frame_pair_stride</code>）</td>
+<td>世界-动作模型目标需要 (t, t+Δ) 帧对</td>
+</tr>
+<tr>
+<td>采集端事件下传</td>
+<td>失败、重拍、换道具、中止要随片段送到标注端</td>
+</tr>
+<tr>
+<td>human 轨估计内参与 <code>camera_fov</code></td>
+<td>众包设备没有出厂标定</td>
+</tr>
+<tr>
+<td>奖励列：<code>reward.outcome</code>、<code>reward.progress</code>、<code>reward.rubric.&lt;name&gt;</code></td>
+<td>奖励标注与语言标注同源，喂 RL 和评测；每列记来源（model / predicate / human）与版本</td>
+</tr>
+<tr>
+<td>力类动作槽位：<code>ee_wrench_target</code>、<code>stiffness</code></td>
+<td>触觉与力开始进入动作空间</td>
+</tr>
+<tr>
+<td>采集规则哈希（<code>collection_rule</code>、<code>quality_rule</code>）</td>
+<td>质检结论可复现（第 7 章）</td>
+</tr>
+<tr>
+<td>TIS2 末端档案扩展</td>
+<td>两节同构手的关节、命令来源、掌心视图</td>
+</tr>
+</tbody>
+</table>
+<h2>6.5 本章小结</h2>
+<ul>
+<li>MCAP 采集态：多 part、chunk 带 CRC、按读取模式分组 topic、语义化相机名。</li>
+<li>EpisodeMeta 一张表管四轨，按写入者分工；读侧宽容、写侧严格。</li>
+<li>迁移在读侧做，raw 不回写，冻结样本永远可读。</li>
+<li>0.3 待入项指向三个方向：标注结构化、奖励与力进入数据、质检可复现。</li>
+</ul>
+<p>训练态（LeRobot v3）的映射放在第 12 章讲，因为它依赖策展的产物。</p>
+<p><strong>延伸阅读</strong>：data-format-contract.md · <code>src/fdp/schema.py</code> · data-strategy-roadmap.md §7.2</p></section><section class="chapter"><h1>第 7 章 入湖：校验、对齐、转码、幂等</h1>
+<p>入湖（ingest）把上传完成的原始文件变成 <code>state = ingested</code> 的 episode：raw 区对象、元数据库记录、AV1 转码产物（ingest-spec.md）。它是第一道"确定性"关口——没有任何模型参与，只做物理上能判定的事。</p>
+<h2>7.1 流水线</h2>
+<pre><code>uploaded ──校验──► verified ──拆流/对齐──► aligned ──转码──► transcoded ──登记──► ingested
+   └─(哈希不符/损坏)→ rejected(reject_corrupt)   └─(对齐超预算)→ ingested + flag:sync_budget_exceeded
+</code></pre>
+<p>每一步幂等、每一步产物写 <code>artifacts</code> 表、任一步失败进重试。</p>
+<h2>7.2 校验</h2>
+<ul>
+<li><strong>完整性</strong>：分片哈希 vs 上传声明；全文件 BLAKE3 → <code>content_hash</code>；MCAP chunk CRC 全量校验；缺尾部索引 → 线性扫描恢复并标 <code>flag:recovered_index</code>。</li>
+<li><strong>元数据</strong>：<code>/meta/episode</code> 必须存在；human 轨缺 <code>consent_ref</code> / <code>region</code>、各轨缺 <code>device_id</code> / <code>calibration_ref</code> / <code>operator_id</code> → <code>reject_meta</code>。</li>
+<li><strong>标定</strong>：标定版本必须存在于 <code>devices</code> 表且与固件兼容；否则 <code>flag:calib_unknown</code>——不拒收，但不进 robot/device 训练分片。</li>
+<li><strong>时长</strong>：&lt;10 s → <code>reject_short</code>。</li>
+<li><strong>时间戳单调</strong>：任一流倒退 &gt;1 ms → <code>reject_timing</code>。GoPro 类设备已知有抖动，先用 50 条实测分布、阈值取 P99，写进 <code>configs/ingest/thresholds.yaml</code>（R-07）。</li>
+</ul>
+<p>注意"拒收"和"标记"的区别：拒收只用于<strong>物理上无法使用</strong>（损坏、缺授权、时间倒退）；能用但不适合某种用途的，一律标记。</p>
+<h2>7.3 拆流与对齐</h2>
+<ul>
+<li>非 MCAP 输入（MP4 + GoPro 遥测、手机 App 的 JSON 遥测）拆成标准 topic 写成 MCAP，原文件同样存 raw 区。</li>
+<li>视频帧时间取曝光中点；跨时钟域偏移按第 5 章的方法估计，写 <code>clock_domains[]</code>，残差进 QC。</li>
+<li><strong>丢帧</strong>：帧间隔 &gt;1.5/fps 记丢帧；丢帧率 &gt;2% 标 <code>flag:frame_drop</code>，&gt;10% <code>reject_frame_drop</code>；信号流缺口 &gt;100 ms 标 <code>flag:signal_gap</code>。</li>
+<li><strong>不重采样</strong>：所有流保留原生时间戳。</li>
+</ul>
+<h2>7.4 转码</h2>
+<ul>
+<li>存档：AV1（svt-av1，硬编优先）、<code>yuv420p</code>、CRF 30、先用 1 s 固定 GOP（ingest 时还不知道子任务边界；分割后按需重切 GOP 是可选优化）。</li>
+<li>训练分辨率阶梯（448p / 720p）与预览流在 curation 打包时生成，不在 ingest 做。</li>
+<li><strong>raw 原编码文件永久保留。</strong></li>
+</ul>
+<p>GOP 长度最终要跟着消费方式调：世界-动作模型的长序列可用大 GOP，VLA 的短窗口需要小 GOP（Dyna 的经验 ⚠️）。所以 GOP 是 export 参数，不是存档常量。</p>
+<h2>7.5 重试、退避与死信</h2>
+<table>
+<thead>
+<tr>
+<th>错误类型</th>
+<th>例子</th>
+<th>处置</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>可重试</td>
+<td>存储超时、GPU 池满、VLM API 限流</td>
+<td>指数退避 1→2→4→8→16 分钟，最多 5 次，之后进死信队列并告警</td>
+</tr>
+<tr>
+<td>不可重试</td>
+<td>哈希不符、schema 无法迁移、损坏无法恢复</td>
+<td>直接 <code>rejected</code>，通知上传方（App 显示原因，可重传）</td>
+</tr>
+<tr>
+<td>部分成功</td>
+<td>转码失败但校验/对齐成功</td>
+<td>保留 <code>aligned</code>，只重跑转码</td>
+</tr>
+</tbody>
+</table>
+<h2>7.6 幂等与增量重跑</h2>
+<ul>
+<li><strong>幂等键</strong>：<code>(episode_id, content_hash, ingest_version)</code>。同键重复触发直接返回已有结果。</li>
+<li><code>ingest_version</code> 随对齐算法、阈值、转码参数变化而 bump（<code>configs/ingest/*.yaml</code> 的哈希）。bump 后可对历史 episode <strong>增量重跑</strong>：只重跑受影响的步骤；旧产物保留到新产物验证通过后再标过期。</li>
+<li>重跑不改 <code>episode_id</code>，只写 <code>artifacts</code> 与 <code>decisions</code> 的新行。</li>
+</ul>
+<p>幂等是可重放的前提，可重放是"阈值可消融"的前提。如果重跑一次 ingest 会产生新的 episode_id，那么 lineage 就断了，任何"换一组阈值再试"的实验都无法和旧结果对比。</p>
+<h2>7.7 断点续传</h2>
+<ul>
+<li>上传分片 8 MB，每片带哈希；服务端记录已收分片集合；客户端可从任意分片续传；整文件哈希通过才触发 ingest。</li>
+<li>多 part 的 episode 要所有 part 到齐才进 ingest；超过 24 小时未到齐，标 <code>flag:incomplete_parts</code> 并以已到 part 入湖——<strong>不等永远</strong>。</li>
+<li><strong>预览流先行</strong>：320p 预览流先上传、先跑技术门 + 视觉门快筛，不通过则通知 App 停止上传存档流。对众包来说这一条省下的带宽相当可观。</li>
+</ul>
+<h2>7.8 采集规则快照绑定</h2>
+<p>这是 2026-11-17 对照某大模型厂商链路后新增的一条（data-pipeline-design.md §3）：每个采集任务下发时冻结两份规则文件，并把哈希写进该任务下每条 episode 的元数据。</p>
+<ul>
+<li><code>collection_rule</code>：标准步骤序列、允许的物体与场景、必需的流和相机。质检的流程指标（步骤覆盖率、顺序匹配率）和打标的边界先验都从这里读。</li>
+<li><code>quality_rule</code>：该任务适用的质检阈值版本与状态机。</li>
+</ul>
+<p>目的：<strong>规则改了，旧结论仍能对应到当时的规则。</strong> 否则半年后有人问"这批数据当时为什么判 pass"，没人答得上来。提议位置 <code>configs/qc/collection_rules/&lt;task&gt;.yaml</code>、<code>configs/qc/quality_rules/&lt;version&gt;.yaml</code>，改动 = 新版本，哈希字段随契约 0.3 入 schema。</p>
+<h2>7.9 验收</h2>
+<ul>
+<li>单测：损坏 MCAP 恢复、合成数据已知偏移的时钟估计、丢帧统计、幂等重入。</li>
+<li>golden fixture：一条 10 s 合成 episode（三路流 + 已知偏移），输出与预期元数据比对。</li>
+<li>H0 首批 100 小时数据 ingest 通过率 ≥90%，被拒原因分布可解释。</li>
+</ul>
+<h2>7.10 本章小结</h2>
+<ul>
+<li>ingest 只做确定性的事：校验、拆流、对齐（只产元数据）、转码、登记。</li>
+<li>拒收只给物理上不可用的；其余标记。</li>
+<li>幂等键 + 版本化配置 = 可增量重跑 = 阈值可消融。</li>
+<li>采集规则快照让质检结论可复现。</li>
+</ul>
+<p><strong>延伸阅读</strong>：ingest-spec.md · data-pipeline-design.md §3 · recorder-sync-and-storage.md §4</p></section><section class="chapter"><h1>第 8 章 质检：清洗是标记不是删除</h1>
+<p>质检是整条管线里<strong>唯一能在没有模型、没有本体的阶段就产生价值</strong>的环节，所以它最先交付（规则段随 M1，语义段与报告段随 M2）。这一章讲质检的状态机、成本金字塔、各道门、按轨的检查矩阵，以及把质检做成"交付物"的方法。</p>
+<h2>8.1 episode 状态机</h2>
+<pre><code>raw ──技术校验──► ingested ──质量门L1──► gated ──L2/L3──► scored
+     └─(拒收:损坏/不完整)         └─(flag:reject_*)      │
+                                                        ▼
+training_ready ◄──打包── labeled ◄──标注/伪标签── segmented ◄──分割──
+      │
+      ├──► 训练分片（LeRobotDataset v3）
+      └──► 演示库（3–12s 切片，按任务 embedding 检索）
+</code></pre>
+<p>每个 episode 携带 <code>quality_flags</code>（拒绝或降级的原因码）与 <code>quality_score</code>（0–1 合成分）。状态迁移全部落 lineage：谁（哪个 worker、哪个模型版本）在何时基于什么规则做了什么决定（curation-pipeline.md §0）。</p>
+<h2>8.2 为什么是"标记不删除"</h2>
+<p>三个理由：</p>
+<ol>
+<li><strong>阈值会错。</strong> v0 阈值大多取自他家自报数字，没经我们的数据验证。如果按错的阈值删了，就再也找不回来。</li>
+<li><strong>同一条数据对不同用途价值不同。</strong> 同步超预算的 episode 不能进动作专家分片，但能进 human 轨预训练；手部可见率低的 episode 不能做操作监督，但能做导航预训练。</li>
+<li><strong>失败数据有用。</strong> "元数据条件化优于过滤"（第 2 章）：失败、次优、自主 rollout 数据带标签进训练，模型学会区分。</li>
+</ol>
+<p>唯一的破坏性操作是<strong>隐私脱敏</strong>（人脸模糊不可逆），以及合法删除请求。</p>
+<h2>8.3 成本金字塔</h2>
+<p>cleaning-algo-selection.md §0 给出的级联原则：每层淘汰后才进下一层，单位成本差 1–2 个数量级。</p>
+<pre><code>第1层 规则/传统 CV     全量, CPU, ~0 成本    （ffprobe、直方图、Laplacian、IMU 积分）
+第2层 轻量专用模型     全量, GPU 批处理      （检测器、轻 CNN）
+第3层 重模型          通过者/抽样           （SLAM、手部姿态、光流、embedding）
+第4层 VLM             抽样/仲裁            （语义审计、标注、分歧仲裁）
+</code></pre>
+<p>三条选型原则：</p>
+<ol>
+<li><strong>判据物理明确的，传统方法优先</strong>（曝光=直方图、抖动=IMU 积分、时间=校验规则）。AI 在这些场景不是更准，只是更贵。</li>
+<li><strong>判据是语义的，AI 必须上</strong>（是不是目标任务、摆拍、手在不在画面）。</li>
+<li><strong>合规场景用最强模型，不省钱</strong>。隐私脱敏漏一张脸的代价是法律风险，选型标准是召回率。</li>
+</ol>
+<h2>8.4 三段执行</h2>
+<p>某大模型厂商的质检把同一件事拆成三段（data-pipeline-design.md §4.2），我们照此组织：</p>
+<table>
+<thead>
+<tr>
+<th>段</th>
+<th>内容</th>
+<th>计算</th>
+<th>原则</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>规则段</td>
+<td>文件完整、可解码、时间戳与丢帧、多路同步、模糊/过曝/过暗/黑屏冻结、运动学门、统计门</td>
+<td>CPU，确定性</td>
+<td>明显损坏的在这里拦截，<strong>不送入任何 VLM 调用</strong></td>
+</tr>
+<tr>
+<td>语义段</td>
+<td>遮挡/畸变、手与交互物可见、无效动作、异常静止、步骤覆盖与顺序</td>
+<td>VLM，先粗后细</td>
+<td>只对粗筛圈出的候选段细检；输出过 schema 校验</td>
+</tr>
+<tr>
+<td>报告段</td>
+<td>合并、去重叠、判定状态、写报告</td>
+<td>CPU</td>
+<td>报告只读汇总结果，不重新计算</td>
+</tr>
+</tbody>
+</table>
+<h2>8.5 规则段的各道门</h2>
+<h3>技术门（入湖即跑）</h3>
+<p>文件完整、时间戳单调与对齐残差、时长与帧率、元数据完整、隐私（人脸检测→模糊，GPS 剥离）。临时值：相邻帧间隔 &gt;100 ms 记为异常；多路相机算<strong>同步覆盖率</strong> = 各路交集时长 / 最长一路。</p>
+<h3>视觉门</h3>
+<ul>
+<li>清晰度：Laplacian 方差 &lt;100 记为模糊帧（临时值）；</li>
+<li>曝光：亮度 ≥235 的像素占比 ≥80% 为过曝帧，≤16 的占比 ≥80% 为过暗帧（临时值）；</li>
+<li>抖动：有 IMU 用 IMU 角速度积分，纯视频用稀疏光流；</li>
+<li>内容有效性：黑屏/冻结帧、镜头遮挡、朝天花板占比；</li>
+<li><strong>手部可见率</strong>（human/device 轨）：&lt;60% 不拒，<strong>降级路由</strong>到导航或预训练轨道。</li>
+</ul>
+<p>上述临时值取自云厂商已交付的 Ego 采集质检（公司自报 ⚠️），只作 v0 起点。</p>
+<h3>运动学门（L1）</h3>
+<p>robot/device 轨：目标机器人 IK 可行性（人手能到、机器人到不了的段标记不可重定向）、自碰撞、速度/加速度/jerk 离群（&gt;99.9 分位截断）、静止占比 &gt;70% 降级。</p>
+<h3>样本窗口判定（human 轨，L1）</h3>
+<p>这是 2026-11-18 从 GR00T 2 回灌的一条重要改动（curation §1.3b）：human 轨不按整段 episode 判，而是<strong>按训练样本实际读取的时间窗判</strong>。对每个候选样本起点，取覆盖其观测历史和动作目标的窗口，窗口内全部通过才把这个起点标为合格。这样一段 episode 里只有局部头动过猛或手出画的部分被排除，其余照常可用。</p>
+<table>
+<thead>
+<tr>
+<th>信号</th>
+<th>窗口统计</th>
+<th>临时值（GR00T 2 自报 ⚠️）</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>头部角速度</td>
+<td>均值</td>
+<td>≤20°/s</td>
+</tr>
+<tr>
+<td>头部平移速度</td>
+<td>均值</td>
+<td>≤0.2 m/s</td>
+</tr>
+<tr>
+<td>手骨长误差</td>
+<td>最大</td>
+<td>≤0.05</td>
+</tr>
+<tr>
+<td>手可见性</td>
+<td>最小</td>
+<td>双手都在画面内（单手任务放宽）</td>
+</tr>
+<tr>
+<td>腕速度</td>
+<td>最大</td>
+<td>≤1.0 m/s</td>
+</tr>
+</tbody>
+</table>
+<p>窗口长度跟着训练配方的观测历史和动作块长度走，配方变了就重算——这是第 12 章"QC 视图"的来源。</p>
+<h3>统计门（L2）</h3>
+<p>与同任务集群比较：时长、平滑度、工作空间覆盖的分布位置，尾部 1% 人工复核。目的是抓"单条看正常、放进群体看异常"的样本——比如某台设备的速度普遍偏高，多半是标定坏了。</p>
+<h3>跨模态一致性门</h3>
+<p>两个某大模型厂商清洗管线实战验证过的门（curation §1.4b）：</p>
+<ul>
+<li><strong>指令-动作一致性</strong>：标注说"拿起杯子"但夹爪从未闭合→标记；</li>
+<li><strong>视频-状态一致性</strong>：画面里手在动而状态流静止→时间错位或传感器故障。</li>
+</ul>
+<h2>8.6 语义段：先粗后细的 VLM 漏斗</h2>
+<ul>
+<li><strong>粗筛</strong>：整段按约 20 s 窗口、5 s 重叠、约 2 s 取 1 帧，拼成联系图（如 5×2）交给 VLM，判断任务与场景是否匹配，并圈出候选段。</li>
+<li><strong>细检</strong>：只对候选段（前后各扩约 3 s）按 max(0.5 s, 时长/20) 采样约 20 帧细推理；输出必须过 schema 校验，失败重试。</li>
+<li>三问：做的是不是声明的任务？是否实际完成？是否摆拍或无实质操作？输出 <code>task_match / completed / staged</code> 三个布尔 + 置信度。</li>
+<li><strong>流程指标</strong>（任务带标准步骤序列时）：步骤覆盖率 = 观察到的步骤 / 标准步骤；顺序匹配率 = 最长递增子序列长度 / 标准步骤数。<strong>没有标准序列的任务不计算，不得用 0 填充。</strong></li>
+<li>抽检率随 Creator 信誉浮动：新账户 100%，高信誉 1–5%。</li>
+</ul>
+<p>漏斗参数（窗口、重叠、扩边、采样点数）都是消融参数，进 <code>configs/</code>。</p>
+<h2>8.7 device 轨的三级执行</h2>
+<p>GR00T 2 的 UMI 数据按"采集站侧自动检查 → agent 打分 → 人工对金标准审计"三级过滤，合计滤掉约四分之一（站侧约 11%、agent 约 16%，自报 ⚠️）。我们的对应（data-pipeline-design §4.2）：</p>
+<ul>
+<li><strong>站侧</strong>：帧时序不均、丢帧、跟踪或夹爪故障在采集端当场拒绝、当场重采；结果写 <code>/meta/health</code>，入湖时规则段复核。</li>
+<li><strong>agent 打分</strong>：四个方面——任务完成、动作质量（无微调、抖动、犹豫）、场景有效性、视角质量（每路相机都能看到夹爪和任务区）。任一致命失败或低分即拒。</li>
+<li><strong>人工审计回灌</strong>：抽样复核 agent 判决，对照金标准集，纠错结果回灌为 judge 的训练样本——<strong>质检模型本身也要被质检</strong>。</li>
+</ul>
+<h2>8.8 反欺诈：账户级，与 episode 级并行</h2>
+<p>按分钟计酬必然催生刷量，所以欺诈检测是一等公民（curation §1.6）：</p>
+<ul>
+<li>设备指纹 + 时空一致性（同设备不可能同时在两地）；</li>
+<li>回放攻击：屏幕翻拍检测（摩尔纹、边框）、同内容跨账户 embedding 碰撞；</li>
+<li><strong>激励层防御</strong>：计酬锚定"通过策展的分钟数"，而不是上传分钟数；</li>
+<li>Creator 信誉分 = 历史通过率与审计结果的指数滑动平均；</li>
+<li><strong>红队</strong>：平台方每月自己制作 ≥100 条已知欺诈样本混入正常流量，检出率即漏检率的度量，SLO ≥95%（data-platform.md §5）。</li>
+</ul>
+<h2>8.9 四维 × 四轨检查矩阵</h2>
+<p>某大模型厂商的框架是四个质量维度 × 四种数据形态，映射到我们的四轨，并把"标注本身"单列一列（data-pipeline-design §4.1）：</p>
+<table>
+<thead>
+<tr>
+<th>维度</th>
+<th>robot</th>
+<th>human</th>
+<th>device</th>
+<th>sim</th>
+<th>标注</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>完整性</td>
+<td>本体型号与频率、多视角流、关节/末端/夹爪状态、干预事件</td>
+<td>流完整、无丢帧、估计内参已写入</td>
+<td>鱼眼视频 + IMU、夹爪标定、SLAM 轨迹连续</td>
+<td>随机化配置哈希、种子可追溯</td>
+<td>帧级索引对应、边界与描述齐全</td>
+</tr>
+<tr>
+<td>有效性</td>
+<td>画质、双臂无冲突、静止占比、任务成功</td>
+<td>画质、手部可见率、静止占比</td>
+<td>SLAM 位姿与尺度一致、开合误差、重定位漂移</td>
+<td>物理合理、渲染有效、增殖成功</td>
+<td>边界精度、指代正确率、无幻觉</td>
+</tr>
+<tr>
+<td>可训练性</td>
+<td>槽位布局、时延补偿、跨本体归一化</td>
+<td>相机系→世界系约定、MANO 拓扑、伪动作维度</td>
+<td>位姿对齐到 TCP、开度归一化</td>
+<td>与真机同槽位、动作语义一致</td>
+<td>规范与 schema 版本可追溯</td>
+</tr>
+<tr>
+<td>真实性与合规</td>
+<td>非仿真冒充、非回放伪造；现场授权</td>
+<td>授权与知情同意、人脸与敏感背景脱敏</td>
+<td>场地与对象授权</td>
+<td>资产与生成模型 license</td>
+<td>标注模型许可、数据不出域、返修留痕</td>
+</tr>
+</tbody>
+</table>
+<h2>8.10 质检产物：做成交付物</h2>
+<ul>
+<li><strong>episode 质检报告</strong> <code>quality_report.json</code>：采集指标、各路相机体检、候选段与序列评估、<strong>每项指标的分子分母</strong>、判定（pass / flag / reject 及原因码）、所用 <code>quality_rule</code> 与模型版本。</li>
+<li><strong>批次汇总</strong> <code>summary.json</code>：按批次和任务汇总通过率、主要拒因、需重采的序列数，给采集运营和供应商验收。</li>
+<li><strong>指标进元数据库</strong>：每项指标一行，供漏斗仪表盘和阈值消融使用。</li>
+</ul>
+<p>报告有两类读者：内部（漏斗、消融）和外部（采集供应商验收、PL3 策展即服务的客户交付）。所以报告格式要稳定、带版本号、<strong>字段只增不删</strong>。</p>
+<h2>8.11 阈值由谁裁决</h2>
+<p>所有阈值的最终裁判是下游消融（curation §7）：同批数据不同阈值切子集 → 小模型训练 → 仿真基准分。<strong>指标不涨的严格化一律回退。</strong> 在消融工具（M3 的 mixture-runner）交付前的过渡方案：阈值取写死的临时值并版本化，各门只标记不删除，记录漏斗通过率，等工具就绪后回溯裁决（U-16）。</p>
+<p>漏斗本身也要被监控：单门通过率周环比变化 &gt;20% 触发人工检查——多半是阈值或模型漂移了，而不是数据突然变好或变差（data-platform.md §4）。</p>
+<h2>8.12 本章小结</h2>
+<ul>
+<li>状态机 + 原因码 + 合成分，迁移全落 lineage。</li>
+<li>标记不删除：阈值会错、用途不同、失败有用。</li>
+<li>成本金字塔：规则全量、轻模型全量、重模型抽样、VLM 仲裁；损坏样本不进 VLM。</li>
+<li>human 轨按样本窗口判，不按整段判。</li>
+<li>质检模型也要被质检；反欺诈靠激励设计 + 红队。</li>
+<li>质检报告是交付物：分子分母可查、版本化、字段只增不删。</li>
+<li>阈值由消融裁决，严格化不涨就回退。</li>
+</ul>
+<p><strong>延伸阅读</strong>：curation-pipeline.md §0–§1、§7 · cleaning-algo-selection.md · data-pipeline-design.md §4 · research-gr00t2.md §4</p></section><section class="chapter"><h1>第 9 章 分割与标注：先定边界，再写描述</h1>
+<p>一条 episode 要变成训练样本，还需要两样东西：时间上的结构（它由哪几个子任务组成、每段从哪到哪）和语言上的描述（每段在做什么）。本章讲这两件事怎么做、怎么验收、怎么让它们变成可重算的派生物。</p>
+<h2>9.1 三级切分</h2>
+<table>
+<thead>
+<tr>
+<th>层级</th>
+<th>定义</th>
+<th>用途</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>session → episode</td>
+<td>一次任务尝试</td>
+<td>策展与训练的基本单位</td>
+</tr>
+<tr>
+<td>episode → segment（子任务段）</td>
+<td>按子任务边界切</td>
+<td>子任务级指令、段级策展、奖励</td>
+</tr>
+<tr>
+<td>segment → clip（切片）</td>
+<td>3–12 s 干净片段</td>
+<td>演示库（物理提示、少样本适应）</td>
+</tr>
+</tbody>
+</table>
+<p>session → episode 的起止信号优先级：App 显式标记 &gt; 语音口令（"开始""完成"）&gt; 静止检测兜底。</p>
+<h2>9.2 子任务边界：按可靠度排序的四种信号</h2>
+<p>curation-pipeline.md §3.2：</p>
+<ol>
+<li><strong>硬件事件锚点</strong>（device/robot 轨首选）：夹爪开合沿、接触力突变——物理事件是最干净的边界；</li>
+<li><strong>手-物接触事件</strong>（human 轨）：手部关键点与物体检测框的接触与分离；</li>
+<li><strong>运动学分割</strong>：末端或手部速度极小值点（动作单元之间必减速）；</li>
+<li><strong>VLM 时序定位</strong>：给 VLM 整段视频输出子任务时间戳（多个冻结基础模型投票）——最灵活也最贵，用于校正前三者。</li>
+</ol>
+<p>融合策略：1–3 生成候选边界，4 做语义合并与命名。边界精度要求"秒级"，不追帧级。</p>
+<p>用 VLM 切边界时的两条经验：先整段粗分，prompt 里写明"只切完成事件"，不给清单和粒度先验；再在粗边界附近开窗局部精修，不外扩窗口。</p>
+<h2>9.3 先定边界，再写描述</h2>
+<p>这是从某大模型厂商链路学到的一条关键纪律（curation §3.2）：<strong>边界和描述两步解耦</strong>。边界错和描述错的原因不同，混在一次推理里没法分别诊断。写描述时只在已固定的边界上写，不得移动边界。</p>
+<p>边界确定之后跑<strong>确定性后处理</strong>（纯代码，规则版本化）：吸收过短碎片、合并相邻同类动作、边界吸附到硬件/接触/速度信号的最近事件点、修复相邻段的空隙与重叠。</p>
+<h2>9.4 已知失效模式</h2>
+<p>他方实测（自报 ⚠️）的几种典型失败，是我们评测集要专门覆盖的切片：</p>
+<ul>
+<li><strong>欠分割为主</strong>：大量段超过 10 s；</li>
+<li><strong>模型间共识低</strong>：严格 IoU ≥0.75 的只有约三成；</li>
+<li><strong>短动作切不出</strong>：短于 2 s 的动作基本切不出来；</li>
+<li><strong>人工标注也不可靠</strong>：约四成人工标注段需要复核。</li>
+</ul>
+<p>三种采集形态的难点不同，规则按轨分开调：device 轨是设备入画、抖动、边界难定；human 轨是没有空间锚点、动作短而密；robot 轨是空闲段多、任务模板化、错误容易被批量复制。</p>
+<h2>9.5 两把尺子</h2>
+<p>分割器验收<strong>同时报两把尺子</strong>（curation §7）——因为同一对模型，宽松口径差 2.7 倍，严格口径差 7.5 倍（某大模型厂商单视频实证 ⚠️）。只报宽松口径会掩盖欠分割。</p>
+<ul>
+<li><strong>宽松</strong>：切点级 boundary F1，边界落在容忍窗口（起步 0.3–0.5 s）内即命中；</li>
+<li><strong>严格</strong>：整段 IoU ≥0.75 才算配对，一对一匹配，<strong>禁止一对多</strong>；</li>
+<li>另报：预测段数 / GT 段数之比、平均段长。</li>
+</ul>
+<p>GT 用两套：sim 轨 <code>planning_trace</code> 的谓词真值（零成本、精确），和人工金标准。评估口径不得奖励"切得粗"——一对多匹配要记为错误，而不是丢弃。</p>
+<h2>9.6 分层语言标注</h2>
+<ul>
+<li><strong>三级</strong>：任务级（整段一句）/ 子任务级（每段一句）/ 操作级（动词短语，可选）。</li>
+<li><strong>事后反推式 prompt</strong>（Figure 原方）："你会给机器人什么指令，才能得到这段视频里的行为？"</li>
+<li><strong>轨迹投影叠加</strong>（某大模型厂商技巧）：标注前把手腕或末端轨迹投影叠加到采样帧上，让 VLM 能"看见"运动而不只是静帧。</li>
+<li><strong>采集端事件随片段下传</strong>：失败、重拍、换道具、中止（来自 <code>/event/task</code>）必须随片段送到标注端，不能只给一个 mp4。</li>
+</ul>
+<h3>三条描述规则（自 GR00T 2 Flora 回灌）</h3>
+<ol>
+<li><strong>失败的尝试按意图描述，不暗示成功</strong>："试图把杯子放进篮子"，而不是"把杯子放进篮子"。成败另存为结果槽位。否则失败段会以成功指令进训练。</li>
+<li><strong>双手并发的不同动作保持为两个独立区间</strong>，不合并成一句，各自标明是哪只手。</li>
+<li>描述一个区间时可以看前后相邻帧来确定物体身份和意图，但<strong>描述只写目标区间本身</strong>。</li>
+</ol>
+<h2>9.7 槽位化：描述不是一句自由文本</h2>
+<p>描述按槽位结构化存储：动作、操作对象、目标位置、结果状态，加上子边界与边界判据（硬件事件 / 接触 / 速度极小值 / VLM / 人工）。好处：</p>
+<ul>
+<li>粒度调整、模板变更时用<strong>离线重映射</strong>生成新描述，不重标；</li>
+<li>抽检可以按槽位分别统计错误率。</li>
+</ul>
+<p><strong>错误主要出在指代上</strong>——容器、目标位置、结果状态——而不是动词。同一 episode 内一处指代错误会连续复制到后面多段。所以抽检和交叉校验优先盯这几个槽位；也要防止把 episode 级任务名直接当成子任务描述。</p>
+<h2>9.8 一致性防线</h2>
+<ul>
+<li><strong>双模型交叉标注</strong>：本地 Qwen-VL + 外部 API，分歧样本进人工队列；</li>
+<li><strong>形式违规</strong>（字段缺失、格式不符）由自动校验修正或重试，不进人工队列；</li>
+<li><strong>对齐度检查</strong>：指令与视频 embedding 的 CLIP 分数过低→重标。</li>
+</ul>
+<p>标注不一致比标注缺失更伤下游（DeMiAn 结论，论文）。</p>
+<h2>9.9 按用途定义标注档案</h2>
+<p>同一份视频，用途不同，要的标注不同，验收口径甚至互相矛盾（某大模型厂商自报：粒度与用途不匹配，训练效果下降 60% ⚠️）。所以标注按<strong>档案</strong>产出（data-pipeline-design.md §5.1）：</p>
+<table>
+<thead>
+<tr>
+<th>档案</th>
+<th>消费方</th>
+<th>边界要求</th>
+<th>描述要求</th>
+<th>验收重点</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>action_expert</code></td>
+<td>动作专家（S1）</td>
+<td>帧对齐，与连续轨迹一致</td>
+<td>动词短语即可</td>
+<td>严格 IoU 尺子、伪动作质量分</td>
+</tr>
+<tr>
+<td><code>planner</code></td>
+<td>规划器 / S2</td>
+<td>语义边界（子任务完成事件）</td>
+<td>槽位齐全，指代准确</td>
+<td>指代正确率、指令可执行性</td>
+</tr>
+<tr>
+<td><code>pretrain</code></td>
+<td>0→1 预训练</td>
+<td>覆盖面优先于精度</td>
+<td>任务级 + 子任务级一句话</td>
+<td>覆盖率、宽松尺子</td>
+</tr>
+</tbody>
+</table>
+<p>档案是 export 的输入参数，不是三份独立标注：底层存同一份槽位化标注，按档案在导出时组装。新增或修改档案 = 改配置版本，靠离线重映射生成，不重标。</p>
+<h2>9.10 规范版本管理与待裁决队列</h2>
+<ul>
+<li>标注规范是版本化文件（提议 <code>configs/annotation/spec/&lt;version&gt;.md</code> + 机器可读规则 <code>.yaml</code>），每条标注记录所用规范版本。</li>
+<li><strong>规范待裁决队列</strong>：规范没有覆盖的情况——"接近算不算一段""微调算不算""空闲归谁""双手同时动怎么表达"——不强迫模型或审核员当场给答案，而是进队列；裁决结果回写规范、产生新版本，再离线重映射受影响的已有标注。</li>
+<li>目标是把规范逐步从"人能读懂"变成"机器可判定"：每条规则要么能被确定性后处理执行，要么能被自动校验检查，否则它就是待裁决项。</li>
+</ul>
+<h2>9.11 标注引擎化</h2>
+<p>GR00T 2 用 Flora 三模型（切分 / 描述 / 奖励）两天重标约 40 万小时 ⚠️，人只负责最优样本和金标准（gr00t2-trends-analysis.md §2）。这意味着三件事：</p>
+<ol>
+<li><strong>标注是可重算的派生物</strong>。规范、模型和版本管理比标注量重要；manifest 要钉住标注版本。</li>
+<li><strong>用可验证奖励训标注模型</strong>。两把尺子和指代正确率不只是验收指标，也可以作为标注模型的奖励；金标准集与 held-out 分开。</li>
+<li><strong>奖励标注与语言标注同源</strong>。同一个引擎产出结果奖励、稠密进度、rubric 分项，直接喂 RL 和评测（契约 0.3 的奖励列）。</li>
+</ol>
+<p>人在环的方向因此是：从"从零标"到"只改错"，再到"只看风险分级后的高风险片段"。人工改错按 SFT 语料格式存，回灌标注模型。</p>
+<h2>9.12 打标评测集</h2>
+<ul>
+<li>每条轨、每个档案各维护一套<strong>金标准小集</strong>（几十条 episode 量级，按任务分层），两名以上标注员独立标注并裁决；</li>
+<li>指标：两把尺子、段数比、平均段长、<strong>指代槽位正确率</strong>、描述幻觉率；</li>
+<li><strong>任何打标模型、prompt、后处理规则或规范版本的变更，都先在金标准集上回归，不退步才上线。</strong></li>
+</ul>
+<p>外包标注的计价不能按段数或按时长单独计：前者诱导多切，后者诱导少切（curation §9）。</p>
+<h2>9.13 本章小结</h2>
+<ul>
+<li>边界信号按可靠度排序：硬件事件 &gt; 接触 &gt; 速度极小值 &gt; VLM。</li>
+<li>先定边界再写描述；确定性后处理版本化。</li>
+<li>两把尺子同时报，评估不奖励切得粗。</li>
+<li>描述槽位化，错误盯指代；失败按意图描述。</li>
+<li>标注按档案组装，规范版本化，未覆盖情况进待裁决队列。</li>
+<li>标注引擎化后，标注是可重算的派生物；任何变更先过金标准回归。</li>
+</ul>
+<p><strong>延伸阅读</strong>：curation-pipeline.md §3–§4、§7、§9 · data-pipeline-design.md §5 · gr00t2-trends-analysis.md §2 · research-vendor-robotics.md §7.4</p></section><section class="chapter"><h1>第 10 章 伪标签、具身转换与合成</h1>
+<p>human 轨的视频没有动作，device 轨的穿戴子形态把人体拍进了画面，机器人数据又贵又少。这一章讲三种把"不能直接用"变成"能用"的处理：伪标签工厂、具身转换、合成。它们的共同纪律是：<strong>产物是派生 episode，<code>parent_episode_id</code> 指回原始，raw 永存，失败是标记不是删除，所用模型版本与权重哈希进 lineage。</strong></p>
+<h2>10.1 具身鸿沟的三种跨法</h2>
+<table>
+<thead>
+<tr>
+<th>做法</th>
+<th>输入</th>
+<th>动作来源</th>
+<th>适用</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>伪标签工厂</td>
+<td>human 轨视频</td>
+<td>从视频恢复手部位姿 → 末端 → 重定向</td>
+<td>覆盖层数据进动作监督</td>
+</tr>
+<tr>
+<td>具身转换</td>
+<td>device 轨穿戴/头戴子形态</td>
+<td>硬件真值</td>
+<td>人体入画的穿戴设备</td>
+</tr>
+<tr>
+<td>人类视频 → 机器人演示合成</td>
+<td>human 轨视频 + 伪标签</td>
+<td>伪动作经重定向 + IK</td>
+<td>把人的视频变成"机器人在做"的视频</td>
+</tr>
+</tbody>
+</table>
+<p>此外还有不依赖人类视频的合成：仿真增殖和世界模型生成（§10.5）。</p>
+<p>一个背景判断：潜动作模型（LAPA 式）在操作任务上表现差（MetaWorld 0.14 vs 光流中间表征 SOF 0.69，论文），光流、重定向这类<strong>显式中间表征</strong>目前更可靠（architecture.md §6）。</p>
+<h2>10.2 伪标签工厂</h2>
+<p>curation-pipeline.md §4.2 的六步：</p>
+<ol>
+<li><strong>手部关键点</strong>：HaMeR / WiLoR 级模型逐帧初值；</li>
+<li><strong>整段时序优化</strong>：骨长恒定 + 关节限位 + 速度上限约束 + Savitzky-Golay / SLERP 平滑；遮挡帧标插值；</li>
+<li><strong>相机位姿</strong>：VIO/SLAM 解出世界系，先解自运动再解手；</li>
+<li><strong>末端化 + 逐形态重定向</strong>：FK 感知，保持腕与指尖的任务空间几何；</li>
+<li><strong>中间表征</strong>：光流（必做）、单目深度（可选）；</li>
+<li><strong>质量分合成</strong> = 模型置信 × 多视角一致 × 时序一致 × 物理合理 × 误差预测器。</li>
+</ol>
+<h3>质量分怎么验证</h3>
+<p>第 6 步的乘积公式本身要被验证：在金标准配对集上算"质量分 vs 真实误差"的 Spearman 相关，&lt;0.5 就回退到单因子（只用误差预测器）。金标准配对集来自第 3 章的配对采集——头戴设备与 UMI 同时佩戴，得到"纯视觉伪标签 vs 硬件真值"。</p>
+<p>指标：MPJPE（mm）、末端位置 RMSE（mm）、姿态 RMSE（°）、开度 MAE。<strong>算法升级必须先过金标准回归。</strong></p>
+<h3>骨长误差的双重身份</h3>
+<p>样本窗口判定里的手骨长误差（第 8 章）同时是伪标签质量信号：一段持续超限通常意味着手部重建失败，进质量分而不只是过滤。</p>
+<h3>伪动作的上限</h3>
+<p>GR00T 2 的人类视频收益主要来自视频预测损失，动作损失依赖手部位姿精度，这层精度在我们这里还没有基线（gr00t2-trends-analysis.md §5）。人类视频还丢了主动感知；生成视频"几何幸存、控制信号丢失"。伪动作能撑多深的任务，是本书最后一章的开放问题之一。</p>
+<h2>10.3 具身转换（可选阶段）</h2>
+<p>UMI 式手持夹爪靠腕装鱼眼保证"本体不入观测"，无需转换。但穿戴孪生手套（Sunday 式）和穿戴外骨骼（TwinDEX 式）走头戴观测，人体手臂会入画，且各采集员运动学不一。对这类子形态，在 ingest 与 curation 之间插入可选的<strong>具身转换阶段</strong>（architecture §2.3）：</p>
+<ul>
+<li>输入 device 轨原始 episode，输出机器人域 episode：人体抹除 + 机器人臂合成 + 跨采集员运动学归一化；</li>
+<li>配方对标 厂商论文 六步与 Sunday 的 Skill Transform（Sunday 自报 90%+ 成功率 ⚠️）；</li>
+<li>触发条件由设备档案决定；human 轨不走这一阶段；</li>
+<li>失败标 <code>reject_embodiment_transform</code>。</li>
+</ul>
+<h2>10.4 人类视频 → 机器人演示合成</h2>
+<p>这是 2026-11-17 新增的一环（data-pipeline-design.md §7.2），对标 厂商论文 与某大模型厂商预处理管线的六步：输入 → 重定向与平滑 → 手臂分割 → <strong>人手擦除与修复</strong> → 底座搜索 + IK → <strong>深度引导的机器人合成</strong>。他方规模：1,933 小时人类视频生成 15 种本体共 24,808 小时演示（≈12.8×，论文，口径见 D-11）。</p>
+<p>我们的规则：</p>
+<ul>
+<li><strong>前置条件</strong>：输入必须已经通过伪标签工厂，质量分达到门槛；IK 门标为不可重定向的段不进合成。</li>
+<li><strong>归属</strong>：观测是部分生成的、动作是伪标签，按 sim 轨判据提议归 sim 轨，<code>source = human2robot_composite</code>，<code>parent_episode_id</code> 指回 human 轨原始（U-47 待裁决）。不新增 track。</li>
+<li><strong>合成专属 QC</strong>：人手擦除残留（检测器在擦除后的帧上仍检出手）、机器人臂与场景深度遮挡关系一致、合成臂姿态与动作逐帧一致（渲染姿态反投影误差）、IK 可行与自碰撞。不过的标 <code>reject_synthesis_*</code>。</li>
+<li><strong>与具身转换共用代码</strong>（<code>curation.synthesis</code>）：两者流程同构，都是"抹人 + 合成机器人"，区别只在输入轨和动作来源。</li>
+<li><strong>本体档案</strong>：每种目标本体一份合成档案（URDF/网格、相机安装位姿、可达空间），版本哈希进 lineage。第一批只做自己的本体和二指兼容视图，不追求 15 种。</li>
+</ul>
+<h2>10.5 仿真增殖与世界模型生成</h2>
+<p><strong>仿真增殖</strong>（sim-track.md §3）：DexMimicGen 从每任务 10–50 条种子演示增殖 100–1000×；SimFoundry 用 10–15 条种子 + MimicGen + 域随机化做到零样本迁移，物体表亲在 held-out 物体上 +50 点（论文）。增殖成功判定（DexMimicGen 自带的任务成功检查）必须为真才入 <code>training_ready</code>。</p>
+<p><strong>域随机化版本化</strong>：光照、纹理、物体位姿分布、相机抖动、动力学参数写在 <code>configs/sim/randomization/&lt;name&gt;.yaml</code>，哈希进每条 sim episode。</p>
+<p><strong>资产纪律</strong>：MJCF 是唯一手写源，USD 与 URDF 一律由 MJCF 生成、不手改、不反向转换——因为 URDF → MJCF 会丢掉最影响接触的参数（每个 geom 的摩擦、<code>solref/solimp</code>）。</p>
+<p><strong>世界模型生成</strong>（data-pipeline-design §7.3）：候选有 厂商世界模型、厂商合成模型、Cosmos 系列，受 license 准入规则约束，效果均为自报 ⚠️。用途优先级：<strong>评测代理 &gt; 长尾补充 &gt; 数据增殖</strong>。世界模型只在专家动作分布内可信，所以生成数据只补长尾，不当主力。神经轨迹必须经 IDM 打伪动作并标质量分。</p>
+<h2>10.6 合成的触发与配比</h2>
+<ul>
+<li><strong>合成不普遍铺开，由挖掘结果驱动</strong>：再平衡的稀缺簇、回流闭环的数据缺口决定合成什么、合成多少（第 11、14 章）。</li>
+<li>合成数据在配方里<strong>按 <code>source</code> 单独成组</strong>设权重，配比由缩放消融裁决。</li>
+<li><strong>评测集永不包含合成数据</strong>；种子来自 held-out 的 episode 不得用于合成——泄漏规则的延伸。</li>
+</ul>
+<h2>10.7 闭源合成模型的风险</h2>
+<p>某大模型厂商的合成模型以"闭源权重 + 受保护联合训练"交付：客户数据只读授权给平台、不可导出，训练后的模型按需导出或限定在其云上部署。这和"raw 永存、lineage 可追溯、删除可传导"冲突（R-27）。采用前必须确认三条：</p>
+<ol>
+<li>合成数据和用它训出的权重归谁、能否导出到我们的存储与训练栈；</li>
+<li>lineage 能否记录合成模型的版本与权重哈希（至少要有不可变的版本标识与调用记录）；</li>
+<li>删除请求能否传导到对方平台上的副本。</li>
+</ol>
+<p>任何一条不满足，该合成来源只进研究分支。</p>
+<h2>10.8 本章小结</h2>
+<ul>
+<li>伪标签工厂六步，质量分本身要用金标准配对集验证。</li>
+<li>具身转换只给人体入画的穿戴子形态；human 轨走独立的合成支路，产物落 sim 轨。</li>
+<li>合成专属 QC 看擦除残留、遮挡一致、姿态一致、IK 可行。</li>
+<li>世界模型优先做评测代理，生成数据只补长尾。</li>
+<li>合成由挖掘驱动、按 source 成组、评测集永不含合成数据。</li>
+<li>闭源合成平台的三问不过，只进研究分支。</li>
+</ul>
+<p><strong>延伸阅读</strong>：curation-pipeline.md §4.2 · data-pipeline-design.md §7 · sim-track.md · index-replica-plan.md §4 · research-sunday.md · research-twindex.md · research-simfoundry.md</p></section><section class="chapter"><h1>第 11 章 去重、再平衡与挖掘</h1>
+<p>质检回答"这条数据能不能用"，标注回答"这条数据是什么"。这一章回答两个更靠近训练的问题：<strong>这些数据放在一起，分布对不对？</strong> 以及 <strong>我要找某类数据时，能不能找到？</strong> 前者是去重与再平衡（策展五阶段的门③④），后者是挖掘（2026-11-17 新增的一环）。</p>
+<h2>11.1 去重</h2>
+<ul>
+<li><strong>embedding 选型</strong>：SigLIP 帧特征聚合（Apache-2.0）起步；InternVideo2 / VideoMAE V2 类视频级表征在 license 核查通过后升级（cleaning-algo-selection.md §1.9）。</li>
+<li><strong>两层阈值</strong>：近重复（余弦 &gt;0.95，同机位同任务重复录制）→ 保留质量分最高的 1 条；语义重复（0.85–0.95）→ <strong>不删</strong>，参与再平衡降权。</li>
+<li><strong>同人去重严、跨人去重松</strong>：跨人的"相似"本身就是操作者多样性。</li>
+</ul>
+<h2>11.2 再平衡</h2>
+<ul>
+<li>对 curated 池按（任务 × 物体 × 环境 × 操作者）四轴聚类：前三轴用 embedding + HDBSCAN，操作者轴直接用 <code>operator_id</code>。操作者轴的依据是 Lin 幂律：场景、物体、操作者数是要扩的三个维度（论文）。</li>
+<li><strong>多样性 KPI</strong>：每 1,000 可用训练小时的独特任务 / 物体 / 环境 / 操作者数。Index 自报每 1,000 小时 373 任务 / 1,146 物体 / 116 环境 ⚠️，但分母口径未公开，不直接对比（D-09）。</li>
+<li><strong>稀缺簇 → 生成任务配额下发 App</strong>（主动采集）；过剩簇 → 采样降权（被动平衡）。</li>
+<li>训练分片构建时按簇做温度采样（稀缺簇过采样），温度是消融参数。</li>
+</ul>
+<p>GR00T 2 给了一个补充视角：配比按"稀缺度"而不是按小时，任务多样性靠工程生成（gr00t2-trends-analysis.md §1.4）。我们据此提议把"技能 × 物体"网格填充率加进多样性计数（行动清单 #9，M3）。</p>
+<h2>11.3 挖掘要解决的问题</h2>
+<p>原设计里，演示库的"按任务检索"只有一句话。对照某大模型厂商链路后，挖掘被定义为一个完整环节（data-pipeline-design.md §6.1）：</p>
+<table>
+<thead>
+<tr>
+<th>用途</th>
+<th>输入</th>
+<th>输出</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>演示库检索</td>
+<td>自然语言或示例片段</td>
+<td>3–12 s 干净切片（in-context 演示、少样本适应）</td>
+</tr>
+<tr>
+<td>难例 / 长尾挖掘</td>
+<td>失败模式描述、少量示例</td>
+<td>存量中相似片段 → 补标、重加权、合成种子</td>
+</tr>
+<tr>
+<td>技能原语盘点</td>
+<td>原语词表</td>
+<td>每个原语的小时数、场景数、操作者数</td>
+</tr>
+<tr>
+<td>按查询建训练集</td>
+<td>保存的查询 + 过滤条件</td>
+<td>冻结的片段清单（进 manifest）</td>
+</tr>
+<tr>
+<td>评测失败反查</td>
+<td>评测失败片段</td>
+<td>训练集中相近样本的分布（是缺数据还是数据有错）</td>
+</tr>
+</tbody>
+</table>
+<p>最后一项是回流闭环的诊断入口（第 14 章）。</p>
+<h2>11.4 检索架构：过滤 + 召回 + 精排</h2>
+<pre><code>查询（文本 / 片段 / 混合） + 结构化条件（track、任务、手别、成败、质量分层、split）
+   │
+   ├─ 结构化过滤：元数据库（Postgres），先缩小候选集合；held-out 默认排除
+   ├─ 召回：片段级 embedding（子任务段 + 演示库切片两种粒度），向量库 Top-K
+   └─ 精排：交叉编码器对 Top-K 逐一打分，区分方向、左右手、顺逆时针等细节
+   ▼
+结果集（带分数）→ 人工抽看 → 保存为查询结果快照
+</code></pre>
+<p>三条设计要点：</p>
+<ul>
+<li><strong>索引粒度</strong>是子任务段和演示库切片；整 episode 粒度只用于去重。</li>
+<li><strong>去重 embedding 和检索 embedding 分开</strong>：去重只要"像不像"，检索要能分清动作细节——"拧开"和"拧紧"在去重眼里一样，在检索里必须不同。</li>
+<li><strong>存储</strong>沿用 pgvector 起步，规模超过约 1e7 向量换 Milvus/Qdrant。</li>
+</ul>
+<h2>11.5 模型选型与验收</h2>
+<ul>
+<li>基线：SigLIP 帧特征聚合（已是去重默认）。</li>
+<li>候选：Qwen3-VL-Embedding（召回）+ Qwen3-VL-Rerank（精排）。⚠️ license 与权重开放情况待核查，核查前只进研究分支（U-11）。</li>
+<li><strong>验收用自己的标注构造检索基准</strong>，不用对方的案例数字：从打标结果自动生成"成对难查询"——同任务但方向相反、左手 vs 右手、成功 vs 失败——看 Top-K 召回率和精排后 Top-1 正确率。</li>
+</ul>
+<p>这把尺子有个附带好处：它<strong>同时检验打标槽位的质量</strong>。如果检索分不清左右手，可能是 embedding 不行，也可能是 <code>hand</code> 槽位标错了。</p>
+<p>一个外推警告：车企 corner case 案例的召回准确率（22 个标签平均 70%+，自报 ⚠️）是驾驶图片场景，不能外推到操作视频。</p>
+<h2>11.6 查询即配置</h2>
+<ul>
+<li>保存的查询是版本化文件（提议 <code>configs/queries/&lt;name&gt;.yaml</code>）：查询文本或示例片段引用、结构化条件、召回与精排模型版本、Top-K、阈值。</li>
+<li>查询结果快照（片段清单 + 分数）写入 lineage；训练集 manifest 可以引用查询快照，查询哈希随配方哈希一起进训练 run 的 lineage。</li>
+</ul>
+<p>这样"这批训练数据是怎么挑出来的"可以复现，也能被删除请求沿链追到。</p>
+<h2>11.7 模块归属</h2>
+<p>提议 <code>src/fdp/curation/mining.py</code>，CLI <code>fdp curate --stage mine</code>（建索引）与 <code>fdp curate --query &lt;name&gt;</code>（执行查询、产出快照），待 U-48 裁决。不单开管线层：挖掘读的是 curation 的产物、写的是 curation 的决策与快照，归 curation 层最自然。</p>
+<h2>11.8 本章小结</h2>
+<ul>
+<li>去重两层阈值：近重复留最好的一条，语义重复只降权。</li>
+<li>再平衡四轴聚类，稀缺簇触发采集配额，过剩簇降权，温度采样是消融参数。</li>
+<li>挖掘 = 结构化过滤 + 召回 + 精排；去重与检索用不同的 embedding。</li>
+<li>检索验收用成对难查询，同时检验标注槽位。</li>
+<li>查询即配置：版本化、快照进 lineage、manifest 可引用。</li>
+</ul>
+<p><strong>延伸阅读</strong>：curation-pipeline.md §2 · data-pipeline-design.md §6 · cleaning-algo-selection.md §1.9 · data-platform.md §2</p></section><section class="chapter"><h1>第 12 章 数据集构建：从标记到可训练视图</h1>
+<p>前面所有环节都在"追加标记"。到了数据集构建这一步，要把这些标记兑现成一份<strong>冻结的、可复现的、可被模型直接读的</strong>训练集。这一章讲统一槽位向量、LeRobot v3 映射、QC 视图、manifest，以及评测集的固定与泄漏防护。</p>
+<h2>12.1 输入与步骤</h2>
+<p>data-pipeline-design.md §8：</p>
+<ul>
+<li><strong>输入</strong>：策展决策（哪些 episode 处于 <code>training_ready</code>）、配方（<code>configs/mixtures/*.yaml</code>）、可选的查询快照、标注档案。</li>
+<li><strong>步骤</strong>：可训练性检查 → 按配方采样 → 按档案组装标注 → 导出 LeRobot v3 与演示库切片 → 生成冻结的 manifest。</li>
+</ul>
+<h2>12.2 统一槽位向量</h2>
+<p>四轨数据的状态和动作维度各不相同。本仓库用固定布局的<strong>槽位向量 + 二值有效掩码</strong>统一它们（data-format-contract.md §2.3，<code>slot_layout_version = 1</code>），单位 SI，姿态用 3D 位置 + 6D 旋转：</p>
+<table>
+<thead>
+<tr>
+<th>段</th>
+<th>维</th>
+<th>内容</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>joint_pos</code></td>
+<td>32</td>
+<td>关节角，按具身档案顺序，不足补 0 + 掩码</td>
+</tr>
+<tr>
+<td><code>ee_pose_left</code> / <code>ee_pose_right</code></td>
+<td>9 + 9</td>
+<td>末端位姿（相机系或基座系，<code>frame</code> 元数据声明）</td>
+</tr>
+<tr>
+<td><code>gripper_left</code> / <code>gripper_right</code></td>
+<td>1 + 1</td>
+<td>开度 [0,1]</td>
+</tr>
+<tr>
+<td><code>hand_left</code> / <code>hand_right</code></td>
+<td>16 + 16</td>
+<td>灵巧手关节</td>
+</tr>
+<tr>
+<td><code>base_vel</code></td>
+<td>3</td>
+<td>vx, vy, ωz</td>
+</tr>
+<tr>
+<td><code>head_pose</code></td>
+<td>9</td>
+<td>头部位姿（human/device 轨的相机自运动）</td>
+</tr>
+</tbody>
+</table>
+<p>合计 96 维。动作段同布局，以<strong>相机系增量</strong>为主。RDT 的 128 维与某大模型厂商的 80 维是同一思路。</p>
+<p><strong>为什么用掩码而不是每具身一个头</strong>：GR00T 式的每具身独立 MLP 头与"新增采集形态 = 新增 track 值不改 schema"的哲学冲突；掩码槽位更干净，新具身零架构改动（training-pipeline.md §1.3）。</p>
+<p><strong>兼容视图</strong>：同一数据集另导出 π0 兼容视图（原生维度 + 零填充到 32 维），让 M1 导出即可用 openpi 微调，这是 Stage A 的前提。</p>
+<h2>12.3 LeRobot v3 映射</h2>
+<p>LeRobot v3 一个数据集只有一个 <code>fps</code>。规则：<strong>主表 fps = 动作/状态率</strong>（robot 默认 100，device = 传感器原生率，human = 伪标签输出率，默认 30）；视觉流按原生 fps 存 mp4，取帧用最近帧并记录 Δt。</p>
+<p>主要列：</p>
+<table>
+<thead>
+<tr>
+<th>列</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>timestamp</code> / <code>fdp.timestamp_ns</code></td>
+<td>秒（LeRobot 必需）/ 纳秒（无损，跨数据集对齐用）</td>
+</tr>
+<tr>
+<td><code>observation.images.&lt;camera&gt;</code></td>
+<td>语义名；<code>fdp.image_dt_ns.&lt;camera&gt;</code> 记取帧 Δt</td>
+</tr>
+<tr>
+<td><code>observation.state</code> / <code>state_mask</code></td>
+<td>槽位向量与掩码</td>
+</tr>
+<tr>
+<td><code>action</code> / <code>action_mask</code></td>
+<td>动作槽位与掩码</td>
+</tr>
+<tr>
+<td><code>fdp.raw.&lt;stream&gt;</code></td>
+<td>不进槽位的流原样带出（如触觉阵列）</td>
+</tr>
+<tr>
+<td><code>fdp.intervention</code></td>
+<td>该帧处于人工接管中</td>
+</tr>
+<tr>
+<td><code>fdp.subtask_index</code></td>
+<td>子任务索引，−1 = 无</td>
+</tr>
+<tr>
+<td><code>fdp.quality_score</code></td>
+<td>episode 级质量分</td>
+</tr>
+</tbody>
+</table>
+<p>episode 级元数据全量 JSON 写进 <code>meta/episodes/*.parquet</code> 的 <code>fdp_meta</code> 列；子任务指令与区间在 <code>meta/fdp_subtasks.parquet</code>。</p>
+<p>另有可选的<strong>连续时间事件流视图</strong>：每条消息一行 <code>(timestamp_ns, stream, values)</code>，不对齐到任何 fps。它是"schema 不预设消费架构"这一宣称的可验证形式（U-12）。</p>
+<h2>12.4 训练态加工</h2>
+<p>curation-pipeline.md §5：</p>
+<ul>
+<li><strong>分辨率阶梯</strong>：原始存档 / 训练 448p–720p / 预览 320p。GR00T 2 的经验是训练消费的是低分辨率、低帧率的连续窗口，存储要分层；按末端类型分档的分辨率与帧率是后续优化（行动清单 #8）。</li>
+<li><strong>归一化统计</strong>：按（track × 具身）分开的分位数统计，1%/99% 截断归一化优于 min-max；统计文件随 <code>dataset_version</code> 走，<strong>只在 QC 视图保留的样本上计算</strong>。</li>
+<li><strong>增强不落盘</strong>：颜色抖动、裁剪在 dataloader 做，存储永远保持原样。</li>
+</ul>
+<h2>12.5 QC 视图：标记不删除在训练态的落地</h2>
+<p>这是 2026-11-18 从 GR00T 2 回灌的关键机制（curation §5）：</p>
+<ul>
+<li>各门的判定结果作为<strong>列</strong>追加到 episode / 步级指标表，<strong>不改写原数据，也不在 dataloader 里实时过滤</strong>。</li>
+<li>export 时按（数据集版本 × <code>quality_rule</code> 版本 × 训练配方的窗口长度）离线生成一份"合格样本起点"视图，写成 manifest 的一部分，连同该视图上算出的归一化统计一起进 lineage。</li>
+<li>新增一个门 = 新增一列 + 重建视图，不重写已有列。</li>
+</ul>
+<p>结果是：同一份数据可以同时存在多个视图，<strong>消融只是换视图</strong>。这就是第 8 章"阈值由消融裁决"在工程上可行的原因。</p>
+<h2>12.6 可训练性检查</h2>
+<p>export 前单独出报告，作为与完整性、有效性并列的独立质检维度：统一坐标系与单位、相机系→世界系变换约定、MANO 拓扑与关节定义一致、state/action 维度与槽位布局对齐、抽帧与编码规范、schema 与标注版本可追溯。<strong>任何一项不过，该 episode 不进训练分片，只标记。</strong></p>
+<h2>12.7 分片、幂等与增量</h2>
+<ul>
+<li>分片按（track × 任务簇 × 质量层）组织，每 shard ≤2 GB parquet + 对应 mp4；<code>meta/fdp_shards.parquet</code> 记录每 shard 的 episode 与内容哈希。</li>
+<li>幂等键：<code>(dataset_version, episode_id, content_hash)</code>。重跑时哈希一致的跳过，不一致的整 shard 重写并 bump <code>dataset_version</code>。</li>
+<li>增量：新 episode 追加为新 shard，旧 shard 不改。</li>
+<li>writer 抽象成接口（<code>ExportWriter</code>），LeRobot v3 是默认实现，对 <code>lerobot</code> 核心包的依赖限定在该实现内（R-10）。</li>
+</ul>
+<h2>12.8 manifest</h2>
+<p>冻结的 manifest 包含：episode 清单与内容哈希、配方哈希、查询快照哈希、标注档案与规范版本、<code>split_version</code>、合成数据占比、QC 视图。它对应 lineage 的 <code>datasets</code> / <code>dataset_episodes</code> 表。</p>
+<p>有了 manifest，"这个模型是用什么数据训出来的"就有了唯一答案。</p>
+<h2>12.9 评测集固定与泄漏防护</h2>
+<p>curation-pipeline.md §8：</p>
+<ul>
+<li><strong>held-out 在 ingest 后、curation 前就固定</strong>：按 <code>scene_id</code> 与 <code>operator_id</code> 做组切分（同一场景、同一操作者不跨 train/held-out），比例 5–10%，写入 <code>split</code> 并版本化；<strong>曾进入 held-out 的 episode 永不回流训练集</strong>。</li>
+<li>M1 期 curation 还没实现时，export 层用同一组规则生成 held-out 清单文件——机制不等 M2。</li>
+<li>去重与再平衡只在 train 池内做；演示库切片不得取自 held-out；合成种子不得取自 held-out。</li>
+<li><strong>泄漏检测</strong>：训练前跑 train↔held-out 的近重复检查（余弦 &gt;0.95 视为泄漏，从 train 剔除并记录）。</li>
+</ul>
+<p>为什么要在 curation 之前固定？因为如果先策展再切分，再平衡的聚类统计就已经"看过"了评测集，评测结果会系统性偏高。</p>
+<h2>12.10 本章小结</h2>
+<ul>
+<li>96 维槽位 + 掩码统一四轨；同时出 π0 兼容视图。</li>
+<li>主表 fps = 动作率，视觉按原生率，取帧记 Δt。</li>
+<li>QC 视图：判定是列，视图离线生成，消融只是换视图。</li>
+<li>可训练性检查不过只标记、不进分片。</li>
+<li>manifest 钉住数据、配方、查询、标注版本、切分版本。</li>
+<li>held-out 入湖即固定、组切分、永不回流，训练前查泄漏。</li>
+</ul>
+<p><strong>延伸阅读</strong>：data-format-contract.md §2 · curation-pipeline.md §5、§8 · data-pipeline-design.md §8 · research-gr00t2.md §4.7</p></section><section class="chapter"><h1>第 13 章 训练如何消费数据</h1>
+<p>这本书讲的是数据管线，不是模型。但数据管线的每一个设计——分层采样率、槽位向量、相机语义名、帧对导出、奖励列——都是为某种训练消费方式准备的。这一章从数据的角度看训练层：模型要什么，数据层要为此做什么。训练层本身的设计在 training-pipeline.md，不在本仓库实现（fdp-policy 独立仓库）。</p>
+<h2>13.1 原则：数据引擎优先，模型设计保守</h2>
+<p>每个模型决策抄已被 ≥2 家独立验证的共识，创新预算全部留给数据层。理由来自"规模换参数"的证据：Octo 93M 训 80 万演示 ≈ RT-2 55B；OpenVLA 7B 训 97 万 OXE episode &gt; RT-2-X 55B（论文）——<strong>中等模型 + 大而多样的数据集是可行的开源路线</strong>。</p>
+<h2>13.2 Figure Helix 的三层，和我们对应到哪</h2>
+<table>
+<thead>
+<tr>
+<th>层</th>
+<th>Helix</th>
+<th>频率</th>
+<th>本仓库</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>S2 大脑</td>
+<td>开源 7B VLM + 500 h 机器人演示微调</td>
+<td>7–9 Hz</td>
+<td>VLM 骨干；视觉流 10–30 Hz 对齐它</td>
+</tr>
+<tr>
+<td>S1 动作专家</td>
+<td>80M cross-attn，视觉主干在仿真中预训练</td>
+<td>200 Hz</td>
+<td>流匹配 DiT 头；状态/动作 100–200 Hz 对齐它</td>
+</tr>
+<tr>
+<td>S0 全身控制</td>
+<td>仿真训练，1 kHz</td>
+<td>1 kHz</td>
+<td>范围外，留给 Isaac Lab 生态</td>
+</tr>
+</tbody>
+</table>
+<p>决策三（分层采样率）就是这张表在数据层的投影。</p>
+<h2>13.3 架构决策与它们对数据的要求</h2>
+<p>training-pipeline.md §1.2 的八条决策，每条都对应数据层的一项交付：</p>
+<table>
+<thead>
+<tr>
+<th>架构决策</th>
+<th>共识来源</th>
+<th>数据层要交付什么</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>VLM 主干 + 流匹配 DiT 动作头</td>
+<td>π0 / GR00T / RDT2 / 某大模型厂商</td>
+<td>无特殊要求</td>
+</tr>
+<tr>
+<td>两段式动作课程：预训练离散 token，部署流匹配</td>
+<td>π0.5 / Wall-OSS / RDT2</td>
+<td>动作数值归一化统计</td>
+</tr>
+<tr>
+<td>统一槽位向量 + 掩码</td>
+<td>RDT 128 维、某大模型厂商 80 维</td>
+<td>96 维槽位 + 掩码（第 12 章）</td>
+</tr>
+<tr>
+<td>相机系增量末端动作为主</td>
+<td>UMI / 某大模型厂商；≥4 家收敛</td>
+<td>相机外参、内参随数据走；<code>frame</code> 声明</td>
+</tr>
+<tr>
+<td>具身感知提示条件</td>
+<td>某大模型厂商模板</td>
+<td>平台、频率、chunk 长度可从元数据读出</td>
+</tr>
+<tr>
+<td>物理提示：演示入上下文</td>
+<td>GEN-1.5</td>
+<td>演示库 3–12 s 切片，"物理提示可用"质量位</td>
+</tr>
+<tr>
+<td>分层频率消费</td>
+<td>与 schema 一一对应</td>
+<td>不全局重采样</td>
+</tr>
+<tr>
+<td>不做 S0</td>
+<td>—</td>
+<td>—</td>
+</tr>
+</tbody>
+</table>
+<p><strong>物理提示接口要从第一天预留</strong>：观测序列允许拼接演示片段 token。GEN-1.5 证明这个能力随规模涌现（自报 ⚠️），上下文里留演示槽位不花钱，事后加要动架构。对数据层来说，这意味着演示库不是"以后再做"的东西。</p>
+<h2>13.4 观察名单与可选分支</h2>
+<ul>
+<li><strong>世界-动作模型（WAM）目标</strong>（next-frame 与 next-action 协同预测）：2026-09-14 从观察名单升为可选分支（U-37）——Dyna-2、NVIDIA DreamZero、AgiBot GE-Act 2.0、Cosmos Policy 四家独立验证。仍不做默认路径，因为四家都没公开与纯动作目标的可控消融。数据层唯一要求：<strong>export 保留连续帧对</strong>（契约 0.3）。</li>
+<li>不抄的：仅一家的统一异步流（Harmonic Reasoning）；自回归离散动作做部署头；每具身独立 MLP 头。</li>
+</ul>
+<h2>13.5 规模阶梯：数据量决定模型档位</h2>
+<table>
+<thead>
+<tr>
+<th>档位</th>
+<th>骨干</th>
+<th>触发条件</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>S（0.45–0.5B）</td>
+<td>SmolVLA 类 / Qwen-VL 最小杯</td>
+<td>现在；混合等效 &lt;1e3 小时时的唯一 0→1 档位</td>
+</tr>
+<tr>
+<td>M（2–4B）</td>
+<td>Qwen-VL 3B/4B 级</td>
+<td>混合等效 5e3–1e4 小时、具身数 ≥10</td>
+</tr>
+<tr>
+<td>L（7B+）</td>
+<td>届时最强开源 VLM</td>
+<td>&gt;1e4 小时 / 20+ 具身，且 M 档未饱和</td>
+</tr>
+</tbody>
+</table>
+<p>档位切换只看两个量：混合等效小时数，和缩放曲线是否仍在下降。<strong>不按日历切换。</strong> 小数据喂大模型是浪费（GEN-0 骨化相变，自报 ⚠️）。</p>
+<h2>13.6 训练课程四阶段</h2>
+<pre><code>Stage A 管线验证    微调 openpi(π0)/SmolVLA on 10–50h 精策划 robot 轨数据（LoRA，单卡）
+                    通过判据：仿真基准显著优于零样本；证明数据层无毒
+Stage B 0→1 预训练  数据 &lt;1e3h 不启动；先离散 token 后流匹配；
+                    四轨混合：human 打底 / sim 中层 / device+robot 顶层
+                    止损门：不超 Stage A 微调对照 → 回退查数据
+Stage C 后训练      任务 SFT（高质量分层过滤子集）+ 演示库物理提示评测
+Stage D RL 闭环     奖励分类器（QC 成功/失败/介入标记直接当标注）→
+                    HIL-SERL / 冻结基座 + 残差 SAC
+持续    评测 CI     每个 checkpoint 跑 LIBERO/RoboTwin 子集 + 少样本适应基准
+</code></pre>
+<p>注意 Stage A 的定位：它不是为了得到好模型，而是<strong>证明数据层无毒</strong>。一条管线可能每个环节都"看起来对"，但只要相机名映射错了一处、归一化统计算错了一处，微调就会比零样本还差。Stage A 是对整条 M1 管线的端到端验收。</p>
+<p>Stage D 的数据来源完全来自质检：QC 状态机里的 success / failure / intervention 标记直接就是奖励分类器的标注。这是"标记不删除"的又一个回报。</p>
+<h2>13.7 数据配方是一等公民</h2>
+<p><code>configs/mixtures/*.yaml</code> 声明各轨、各任务簇、各质量层的采样权重与温度，配方文件哈希进训练 run 元数据。任何模型都可以回溯到确切的数据配方。</p>
+<p>配方的结构（roadmap L6 与 GR00T 2 的启发）：</p>
+<ul>
+<li>按 <code>track</code>、<code>source</code>、<code>embodiment</code> 设份额；</li>
+<li>合成数据按 <code>source</code> 单独成组；</li>
+<li>play 数据单独成组；</li>
+<li>目标域 ≤5%，广度优先（Stage B）；</li>
+<li>元数据条件化：低质、失败、自主 rollout 数据带标签入训练。</li>
+</ul>
+<p><strong>汇率问题</strong>：人类视频一小时顶几小时遥操作？GR00T 2 只证明了人类视频的边际收益为正，没给出换算。任何按他家配比照搬预算的做法都没有依据，只能靠我们自己的换算率实验（U-40）。</p>
+<h2>13.8 自建工具：数据引擎的方向盘</h2>
+<p>training-pipeline.md §3.2 的五个自建工具（M3 交付）：</p>
+<ol>
+<li><strong>mixture-runner</strong>：读配方 → 构建混合流式数据集 → 提交训练 → 登记 lineage。消融 = 多配方并行。</li>
+<li><strong>scaling-fitter</strong>：对消融结果拟合 L(D) = (D_c/D)^α，加按场景/物体/操作者切分的多样性幂律检验，输出"下一小时数据该采什么"的预算建议。<strong>这是数据引擎的方向盘。</strong></li>
+<li><strong>fewshot-bench</strong>：从演示库抽 1 条 / 5 分钟数据，做零梯度 in-context 与 10 步微调两种评测——比全量微调更灵敏的数据质量探针。</li>
+<li><strong>reward-trainer</strong>：从 QC 标记批量训练任务奖励分类器，Stage D 与 L3 语义审计共用。</li>
+<li><strong>eval-CI</strong>：checkpoint 触发的仿真回归 + 指标仪表盘 + 真机协议模板。</li>
+</ol>
+<h2>13.9 工具链版本的教训</h2>
+<p>lerobot 0.7.0 于 2026-11-05 发布。0.6 有两个<strong>静默失效</strong>：<code>--policy.use_peft=true</code> 实际跑全参微调；批量图像增强中 7 种变换在 uint8 帧上是空操作（research-rd-tooling.md §7）。所以 Stage A 的 LoRA 单卡与任何开增强的对照实验必须在 0.7 上跑；外部或历史报数若来自 0.6，标注版本后再比较。</p>
+<p>这条教训对数据层同样适用：工具版本要进 lineage，否则"同一个配方两次结果不同"就无从排查。</p>
+<h2>13.10 本章小结</h2>
+<ul>
+<li>训练保守、数据创新；中等模型 + 大而多样的数据是可行路线。</li>
+<li>每条架构决策对应一项数据层交付：槽位、相机系动作、演示库、帧对、奖励列。</li>
+<li>模型档位由数据量和缩放曲线决定，不按日历。</li>
+<li>Stage A 是数据层无毒性的端到端验收；Stage D 的标注来自 QC 标记。</li>
+<li>配方是版本化一等公民；汇率只能自己测。</li>
+<li>scaling-fitter 是数据引擎的方向盘。</li>
+</ul>
+<p><strong>延伸阅读</strong>：training-pipeline.md · research-vla-pretraining.md §5 · research-model-recipes.md · research-dyna-comparison.md</p></section><section class="chapter"><h1>第 14 章 评测与回流闭环</h1>
+<p>数据飞轮转没转，只有一个证据：<strong>数据改动之后，评测涨了没有。</strong> 这一章讲评测的口径（什么叫"显著优于"）、checkpoint 的排名方法、仿真与真机的关系、车队回流，以及把这些串起来的回流闭环。</p>
+<h2>14.1 诚实性协议</h2>
+<p>先讲为什么评测要设计得这么严。Figure 的关键宣称有第三方反驳先例：BMW 曾公开反驳其部署宣称（单台、非生产时段 vs "每天端到端运营"）；81 小时分拣直播被质疑有遥操作痕迹（第三方，architecture.md §4）。</p>
+<p>所以本仓库的评测协议要求：<strong>可复现日志 + 干预率记录</strong>，杜绝"零干预"式不可验证宣称。对外任何能力宣称必须能指向一个 run_id 及其日志。</p>
+<h2>14.2 指标字典</h2>
+<p>eval-protocol.md §1 是本仓库所有"显著""达标""收益"的唯一定义。</p>
+<p><strong>数据侧</strong>：通过率漏斗、可用训练小时、每可用训练小时全成本、多样性计数（按词表版本报）、伪标签质量、同步残差 P95、欺诈检出率。</p>
+<p><strong>模型侧</strong>：</p>
+<table>
+<thead>
+<tr>
+<th>指标</th>
+<th>定义</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>成功率</td>
+<td>任务模板完成判据为真的 trial 比例，<strong>一起报 95% Wilson 区间</strong></td>
+</tr>
+<tr>
+<td>任务进度分</td>
+<td>子任务完成数 / 子任务总数的均值</td>
+</tr>
+<tr>
+<td>介入率</td>
+<td>接管次数 / 自主运行小时；接管时长占比</td>
+</tr>
+<tr>
+<td>吞吐</td>
+<td>每小时完成任务数（营业级指标）</td>
+</tr>
+<tr>
+<td>少样本适应</td>
+<td>三个刻度并列：1 条演示零梯度；1–5 分钟数据 10 步微调；≤10 h 全量后训练</td>
+</tr>
+<tr>
+<td>OOD 分轴</td>
+<td>背景 / 光照 / 物体 / 场地四轴各自的成功率下降</td>
+</tr>
+</tbody>
+</table>
+<p><strong>规模侧</strong>：L(D) 拟合报 α、D_c、R²，数据每翻倍重拟合；多样性幂律按场景数、物体数、操作者数各自拟合。</p>
+<h2>14.3 消融判定规则</h2>
+<ul>
+<li><strong>单位</strong>：一次消融 = 同一代码 commit、同一超参、只变一个因子。</li>
+<li><strong>显著性</strong>：仿真 ≥3 seed，报均值 ± 标准差；真机每任务 ≥20 trial；Fisher 精确检验（成功率）或 Welch t（进度分），α = 0.05；<strong>效应量至少 5 个百分点才算收益</strong>。</li>
+<li><strong>功效预估</strong>：20 trial 检测 25 个百分点差异的功效约 0.8；检测 10 个百分点需 ≥80 trial。<strong>报告必须注明本次功效。</strong></li>
+<li><strong>Stage A 放行</strong>：仿真自建任务集上微调后成功率 − 零样本 ≥10 个百分点且 p &lt; 0.05，3 seed。</li>
+<li><strong>Stage B 止损</strong>：0→1 预训练模型不低于 Stage A 微调对照（差 &lt;5 个百分点视为持平，持平不放行）。</li>
+<li><strong>阈值裁决</strong>：严格化后指标不涨（&lt;5 个百分点且不显著）一律回退。</li>
+</ul>
+<p>功效这一条特别重要。20 trial 的真机评测只能检出很大的差异；如果报告说"A 和 B 没有显著差异"，而功效只有 0.3，这个结论几乎没有信息量。</p>
+<h2>14.4 真机协议模板</h2>
+<p>每次真机评测填写并存档 <code>data/eval/&lt;run_id&gt;/protocol.yaml</code>：策略与基线的 checkpoint、数据集版本与配方哈希；具身与固件；每任务 ≥20 trial、ABAB 交替、操作员盲测；≥3 个场景且至少一个 held-out 场地；种子化物体摆放（照片存档）；成功判据版本；接管策略；MCAP 全量记录且 rollout 回流入湖；报告成功率 + Wilson 区间、进度分、介入率、吞吐、失败案例视频索引。</p>
+<h2>14.5 checkpoint 排名：盲测 A/B + Bradley-Terry</h2>
+<p>绝对成功率会随采集站、操作员、硬件和日期漂移，不同场次的数字不能直接比。挑 checkpoint、比配方时要回答的是"哪个更好、好多少、有多确定"。做法参照 NVIDIA GearArena（自报 ⚠️，eval-protocol §3.1）：</p>
+<ul>
+<li><strong>一次 trial</strong>：同一场景、同一操作员、几分钟内，以随机顺序跑 2–4 个 checkpoint，操作员不知道哪个是哪个，给出排序。漂移由同组共享，在比较中抵消。</li>
+<li><strong>评分</strong>：所有成对比较拟合 Bradley-Terry，换算成 Elo；每个任务等权；置信区间<strong>按任务</strong>重采样 bootstrap（独立单位是任务，不是 trial）。</li>
+<li><strong>接入</strong>：新 checkpoint 先和当前榜首对打，保证评分在一个连通的尺度上。</li>
+<li><strong>任务集维护</strong>：所有 checkpoint 都能完成的任务归档，都完成不了的搁置——两者都不区分模型。</li>
+<li><strong>边界</strong>：GR00T 2 报告 30–35% 的比较是平局，任务少时区间很宽，报告必须注明比较数和任务数。</li>
+</ul>
+<h2>14.6 仿真：相对比较可以，绝对能力不行</h2>
+<table>
+<thead>
+<tr>
+<th>基准</th>
+<th>用途</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>LIBERO（四套件）</td>
+<td>每 checkpoint 回归；社区可比</td>
+</tr>
+<tr>
+<td>SIMPLEREnv</td>
+<td>real-to-sim 一致性</td>
+</tr>
+<tr>
+<td>Isaac Lab-Arena 自建任务集（与真机任务模板一一对应；场景用 SimFoundry 从真机评测场地视频重建）</td>
+<td>消融主战场</td>
+</tr>
+<tr>
+<td>RoboTwin 子集</td>
+<td>双臂</td>
+</tr>
+<tr>
+<td>长任务规划基准（SimFoundry 孪生 + BDDL 逐步校验 + 扰动）</td>
+<td>S2 规划</td>
+</tr>
+</tbody>
+</table>
+<p>仿真基准用的具身与目标本体不同（LIBERO 是 Franka），所以仿真结论<strong>只用于相对比较</strong>（配方 A vs B），绝对能力以真机为准。</p>
+<h3>sim-real gap 探针与相关性门</h3>
+<ul>
+<li>同任务的 <code>teleop_replay</code> 与真机 episode 比轨迹 RMSE 与成功率差；gap &gt;20 个百分点的任务簇标"仿真不可信"。</li>
+<li>场景级保真度：同一组策略在孪生场景与真机各跑 ≥20 trial，报 Pearson r 与 MMRV。SimFoundry 论文值 0.911 / 0.018；我们的门槛 r ≥0.8。</li>
+<li>GR00T 2 用 14 个 checkpoint 标定后，仿真与真机的进度、成功率、Elo 的 Pearson r 在 0.92–0.93（自报 ⚠️）。标定后仿真承担三件事：checkpoint 追踪与候选收窄、<strong>数据管线改动的回归</strong>（loader、配方改动先跑小规模训练 + 闭环仿真）、推理设置初筛。三项都过门槛的任务簇才允许用仿真替代真机做这三件事；最终放行仍以真机为准。</li>
+</ul>
+<p><img alt="图 3：评测三层代理" src="../assets/strategy/f07-eval-tiers.svg" /></p>
+<p><em>图 3（引自 data-strategy-roadmap §1.5）　评测三层代理与各自的可信度：真机是真值但每 ±2 点需约 1,030 次试验；仿真孪生用每任务约 10 条真机演示校准；世界模型代理与真机相关最高 0.989，但只在专家动作分布内有效。代理相关性连续两季度 &lt;0.8 即回退真机（G4）。</em></p>
+<h2>14.7 车队回流</h2>
+<p>部署中的机器人用同一个 recorder 记录自主 rollout（<code>source="fleet"</code>，<code>policy_version</code> 与 <code>deployment_id</code> 必填），回坞批量卸数（robot-track-teleop.md §6、runtime-and-deployment.md §3–§4）：</p>
+<ul>
+<li><strong>带宽有限时的优先级</strong>：含接管、OOD、失败的 episode 优先上传；成功 episode 抽样 20%。</li>
+<li><strong>用途优先级</strong>：奖励分类器素材 &gt; 纠错片段（接管前后各 5 s）&gt; 成功 rollout 进 SFT；失败 rollout 不进 SFT，只进 RL。</li>
+<li><strong>OOD 事件</strong>：动作块一致性差、观测 embedding 偏离训练分布、任务进度停滞、力/触觉超限，任一触发即记 <code>/event/ood</code>，与接管一起对齐到 episode 时间轴，是 RL 闭环的负样本来源。</li>
+<li><strong>再训练触发</strong>：接管率周环比上升 &gt;30%，或某任务簇成功率跌破阈值 → 开经验后训练 run（Stage D）。</li>
+<li><strong>train/serve skew 的三大来源</strong>（相机语义映射、归一化统计、分辨率阶梯）全部由 export 产物驱动，不在运行时手写。</li>
+</ul>
+<p>干预段是最贵的对齐层数据：只在自家部署中产生，没有厂商公开干预率。在车队到位之前，用配对集 + DAgger 替代，首批部署当采集车队而非收入来源（roadmap §2.5）。</p>
+<h2>14.8 回流闭环：一轮的步骤</h2>
+<p>这是 2026-11-17 新增的跨层流程（data-pipeline-design.md §9）：</p>
+<pre><code>触发：评测报告 或 车队回流（干预、失败、OOD 事件）
+  1. 失败归类：每个失败片段按失败模式词表打标
+  2. 反查：用失败片段做挖掘查询，看训练集中相近样本的数量和质量
+  3. 诊断，三选一或组合：
+       数据少          → 采集配额（下发采集任务，带 collection_rule）或合成种子
+       数据有但被过滤  → 检查对应阈值是否过严（走消融，不直接改）
+       数据有但标错    → 打标规范待裁决 + 重映射
+  4. 生成新数据集版本，写 manifest
+  5. 再评测：按统计判定规则比较前后版本
+  6. 评测不涨 → 本轮数据改动回退
+</code></pre>
+<p>第 3 步是整条闭环的核心：<strong>失败的原因只有三种——缺数据、数据被误杀、数据标错</strong>，每种对应管线的一个不同环节。挖掘（第 11 章）就是做这个诊断的工具。</p>
+<p><img alt="图 4：车队数据飞轮" src="../assets/strategy/f10-fleet-flywheel.svg" /></p>
+<p><em>图 4（引自 data-strategy-roadmap §1.6）　车队数据飞轮：部署机器人在 OOD 探针触发下录制干预段，经段级策展与估值进入 DAgger / 车队 RL，新 checkpoint 过评测 CI 再部署。</em></p>
+<h2>14.9 loop 记录</h2>
+<p>每一轮写一条 loop 记录：触发来源、失败归类统计、执行的查询与快照、采取的动作（配额 / 合成 / 重加权 / 重标）、产出的数据集版本、评测前后对比、结论（保留 / 回退）。对应 lineage 的 <code>loops</code> 表。</p>
+<p>这条记录是"数据飞轮转了没有"的<strong>唯一证据</strong>，也是向管理层汇报数据投入产出的依据。数据系统的"闭环有效率"指标 = 评测提升的轮次 / 总轮次。</p>
+<p>节奏：M3 起按评测节奏运行（每个配方 A/B 周期一轮）；单任务部署场景（如洗衣分类大脑的每周难例集）可以更快，但走同一记录格式。</p>
+<h2>14.10 本章小结</h2>
+<ul>
+<li>诚实性协议：可复现日志 + 干预率；对外宣称必须能指向 run_id。</li>
+<li>显著性看 Fisher/Welch + 效应量 ≥5 点 + 功效声明。</li>
+<li>checkpoint 排名用盲测成对比较 + Bradley-Terry，按任务 bootstrap。</li>
+<li>仿真只做相对比较；过了相关性门才能替代真机做回归和初筛。</li>
+<li>车队回流：失败与接管优先，失败不进 SFT 只进 RL。</li>
+<li>回流闭环：失败归类 → 反查 → 缺数据 / 被误杀 / 标错三选一 → 新版本 → 再评测 → 不涨就回退；每轮一条 loop 记录。</li>
+</ul>
+<p><strong>延伸阅读</strong>：eval-protocol.md · data-pipeline-design.md §9 · runtime-and-deployment.md · robot-track-teleop.md §6 · research-gr00t2.md §4.8</p></section><section class="chapter"><h1>第 15 章 数据平台与数据系统</h1>
+<p>前面的章节按"数据被处理的顺序"讲管线。这一章换一个角度：要支撑这条管线，需要建哪些子系统、交付哪些数据产品、要多大容量、花多少钱、谁来运营（data-system-plan.md、data-platform.md）。</p>
+<h2>15.1 九个子系统</h2>
+<p><img alt="图 DP2：数据系统子系统与接口" src="../assets/strategy/p02-data-system-architecture.svg" /></p>
+<p><em>图 DP2（引自 data-system-plan §3）　数据系统的 9 个子系统：采集端 → 接入 → 处理（读写存储）→ 数据服务 → 消费端；人工作业台和治理、观测横跨各层。</em></p>
+<table>
+<thead>
+<tr>
+<th>子系统</th>
+<th>职责</th>
+<th>状态</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>SS1 采集端</td>
+<td>录制、本地缓冲、上传；接收任务</td>
+<td>已有规范</td>
+</tr>
+<tr>
+<td>SS2 采集任务与规则下发</td>
+<td>任务库、规则快照、配额、下发与回执</td>
+<td><strong>新增</strong></td>
+</tr>
+<tr>
+<td>SS3 接入</td>
+<td>上传网关、校验、对时、转码、幂等入湖</td>
+<td>已有规范</td>
+</tr>
+<tr>
+<td>SS4 存储</td>
+<td>raw / curated / training 三区、元数据、向量、缓存</td>
+<td>已有规范</td>
+</tr>
+<tr>
+<td>SS5 处理</td>
+<td>质检、打标、伪标签、去重再平衡、挖掘、合成；<strong>模型网关</strong>与<strong>处理模型和配置注册</strong></td>
+<td>部分新增</td>
+</tr>
+<tr>
+<td>SS6 数据服务</td>
+<td>目录、检索、数据集构建与导出、报告分发</td>
+<td><strong>新增</strong></td>
+</tr>
+<tr>
+<td>SS7 人工作业台</td>
+<td>标注改错、审核、规范裁决、采集运营、欺诈灰区</td>
+<td><strong>新增</strong></td>
+</tr>
+<tr>
+<td>SS8 治理</td>
+<td>lineage、权限、审计、删除传导、license 台账</td>
+<td>已有规范</td>
+</tr>
+<tr>
+<td>SS9 观测</td>
+<td>漏斗、SLO、成本、闭环记录、告警</td>
+<td>已有规范</td>
+</tr>
+</tbody>
+</table>
+<p>几个新增子系统的要点：</p>
+<ul>
+<li><strong>模型网关</strong>：所有 VLM 和模型调用经过一层薄网关，负责记账、数据分级检查、按阶段设日预算、超限自动降级到本地模型。自建，因为"记账、分级、降级"是我们的规则。</li>
+<li><strong>处理模型与配置注册</strong>：每个阶段用的模型版本、权重哈希、配置哈希都在这里登记，lineage 引用它。</li>
+<li><strong>人工作业台</strong>：curation 的五个人工触点（欺诈灰区、L2 尾部复核、VLM 分歧队列、伪标签金标准抽检、规范待裁决队列）合进一个统一工作台的多个队列视图。界面采购，队列和规则自建（U-51）。</li>
+</ul>
+<h2>15.2 八类数据产品</h2>
+<p>数据产品是规划的单位：先定义产品和消费者，再倒推子系统（data-system-plan §2）。</p>
+<table>
+<thead>
+<tr>
+<th>编号</th>
+<th>数据产品</th>
+<th>消费者</th>
+<th>版本规则</th>
+<th>服务水平</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>DP1</td>
+<td>训练数据集（LeRobot v3 + 冻结 manifest）</td>
+<td>训练、PL3 客户</td>
+<td><code>dataset_version</code>，只增不改</td>
+<td>H1 规模 ≤24 小时</td>
+</tr>
+<tr>
+<td>DP2</td>
+<td>演示库（切片 + embedding + 槽位描述）</td>
+<td>in-context 训练、fewshot-bench</td>
+<td>随索引版本</td>
+<td>检索 P95 ≤2 s</td>
+</tr>
+<tr>
+<td>DP3</td>
+<td>评测集（held-out + 真机/仿真任务集）</td>
+<td>评测</td>
+<td><code>split_version</code> 冻结</td>
+<td>永不回流训练</td>
+</tr>
+<tr>
+<td>DP4</td>
+<td>质检报告（episode + 批次）</td>
+<td>采集运营、供应商、客户</td>
+<td>报告 schema 版本，字段只增不删</td>
+<td>规则段 ≤1 小时；完整 ≤24 小时</td>
+</tr>
+<tr>
+<td>DP5</td>
+<td>标注资产</td>
+<td>数据集构建、检索</td>
+<td>规范版本 + 离线重映射</td>
+<td>金标准回归不退步才发布</td>
+</tr>
+<tr>
+<td>DP6</td>
+<td>检索服务</td>
+<td>训练、评测、闭环、采集运营</td>
+<td>查询哈希 + 模型版本</td>
+<td>P95 ≤2 s</td>
+</tr>
+<tr>
+<td>DP7</td>
+<td>采集任务包</td>
+<td>Creator App、采集员、供应商</td>
+<td>规则文件版本化</td>
+<td>下发后不可改，只能发新版</td>
+</tr>
+<tr>
+<td>DP8</td>
+<td>运营看板</td>
+<td>管理层、各 owner</td>
+<td>—</td>
+<td>日更</td>
+</tr>
+</tbody>
+</table>
+<p>每个数据产品有唯一 owner。</p>
+<h2>15.3 lineage：整个系统的骨架</h2>
+<p>lineage 不是一个附加功能，而是让"标记不删除""阈值可消融""删除可传导""数据集可复现"同时成立的那张表（data-platform §3，data-pipeline-design §10.1）：</p>
+<pre><code>episodes(episode_id, session_id, track, source, state, meta, storage_uri, content_hash, ...)
+sessions / devices / operators
+artifacts(artifact_id, episode_id, stage, kind, model_name, model_version, weight_hash, config_hash, uri, ...)
+decisions(decision_id, episode_id, stage, verdict[pass|flag|reject], flags[], score, config_hash, model_ref, ...)
+datasets(dataset_version, manifest_uri, mixture_config_hash, split_version, ...)
+dataset_episodes(dataset_version, episode_id, shard, split)
+training_runs(run_id, dataset_version, mixture_config_hash, code_commit, checkpoint_uri, eval_report_uri)
+deletions(request_id, subject, requested_at, propagated_to[], completed_at)
+-- 2026-11-17 提议新增
+qc_reports / annotation_specs / arbitrations / queries / query_snapshots / loops
+</code></pre>
+<p>三条规则：</p>
+<ol>
+<li>每个策展阶段写一行 <code>decisions</code> 与零到多行 <code>artifacts</code>；</li>
+<li><strong>模型升级 = 新 <code>model_version</code>，历史 decision 不改</strong>；</li>
+<li>删除请求沿 <code>dataset_episodes → training_runs</code> 查出受影响的模型并记录。</li>
+</ol>
+<h2>15.4 版本化配置目录</h2>
+<p>所有规则、规范、查询、配方都是文件，改动 = 新版本、不覆盖、哈希进 lineage（data-pipeline-design §10.2）：</p>
+<table>
+<thead>
+<tr>
+<th>目录</th>
+<th>内容</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>configs/qc/collection_rules/</code></td>
+<td>任务标准步骤、允许物体与场景、必需流</td>
+</tr>
+<tr>
+<td><code>configs/qc/quality_rules/</code></td>
+<td>质检阈值、状态机、校验规则</td>
+</tr>
+<tr>
+<td><code>configs/annotation/spec/</code></td>
+<td>标注规范（人读 + 机器可判定）</td>
+</tr>
+<tr>
+<td><code>configs/annotation/profiles/</code></td>
+<td>标注档案</td>
+</tr>
+<tr>
+<td><code>configs/queries/</code></td>
+<td>挖掘查询</td>
+</tr>
+<tr>
+<td><code>configs/synthesis/</code></td>
+<td>合成本体档案与参数</td>
+</tr>
+<tr>
+<td><code>configs/sim/randomization/</code></td>
+<td>域随机化</td>
+</tr>
+<tr>
+<td><code>configs/mixtures/</code></td>
+<td>训练配方</td>
+</tr>
+<tr>
+<td><code>configs/embodiments/</code></td>
+<td>具身档案（关节顺序、限位、相机映射与安装位、槽位映射）</td>
+</tr>
+</tbody>
+</table>
+<p>截至成书日，<code>configs/</code> 下只有 <code>embodiments/</code> 与 <code>mixtures/</code> 两个目录，其余为提议，实现时创建。</p>
+<h2>15.5 容量与成本</h2>
+<p><strong>存储</strong>（data-platform §1.2，按每月可用小时 H，含未通过策展的原始上传 ≈3H）：</p>
+<table>
+<thead>
+<tr>
+<th>阶段</th>
+<th>H</th>
+<th>raw/月</th>
+<th>12 个月累计</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>H0</td>
+<td>100 h/月</td>
+<td>1.5 TB</td>
+<td>~25 TB</td>
+</tr>
+<tr>
+<td>H1</td>
+<td>1,000 h/月</td>
+<td>15 TB</td>
+<td>~250 TB</td>
+</tr>
+<tr>
+<td>H2</td>
+<td>10,000 h/月</td>
+<td>150 TB</td>
+<td>~2.5 PB</td>
+</tr>
+</tbody>
+</table>
+<p>raw 永存意味着 raw 区只增不减，所以<strong>分层存储</strong>：raw 入湖 30 天后转冷存，curated/training 热存，可重算的中间产物 90 天后删除（不违反 raw 永存）。</p>
+<p><strong>月费</strong>（H1 口径，2026 年公有云挂牌价量级）：存储约 $0.7k，策展算力 $3–5k，场景重建 $0.5–1k，托管服务 $0.5–1k，合计约 <strong>$6–8k/月</strong>，即每可用小时 $6–8 平台成本（不含计酬与设备）。</p>
+<p><strong>新变量是 VLM 调用量和向量索引，不是存储</strong>（data-system-plan §6）：</p>
+<ul>
+<li>按某大模型厂商单次验证口径（自报 ⚠️）外推，H1 语义质检约需 4 个持续并发槽，按 6 个规划；</li>
+<li>打标和合成的算力<strong>没有可信口径</strong>，M2 前半用 50 小时样本实测、M3 前用 10 小时样本实测；</li>
+<li>子任务段向量 H1 一年 4–9M 条，约在第一年末到 pgvector 的 1e7 切换点；</li>
+<li>规则：<strong>合成的单位成本超过同等数据的采集成本时，不扩量</strong>。</li>
+</ul>
+<h2>15.6 SLO</h2>
+<table>
+<thead>
+<tr>
+<th>指标</th>
+<th>SLO</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>ingest 延迟（上传完成 → ingested）</td>
+<td>P95 ≤1 小时</td>
+</tr>
+<tr>
+<td>规则段质检报告</td>
+<td>P95 ≤1 小时</td>
+</tr>
+<tr>
+<td>完整质检报告</td>
+<td>P95 ≤24 小时</td>
+</tr>
+<tr>
+<td>打标周转</td>
+<td>P95 ≤72 小时</td>
+</tr>
+<tr>
+<td>采集 → 可训练时延</td>
+<td>P50 ≤3 天，P95 ≤7 天</td>
+</tr>
+<tr>
+<td>质检一致性（同一样本重跑结论一致）</td>
+<td>≥98%</td>
+</tr>
+<tr>
+<td>死信队列</td>
+<td>0 积压 &gt;24 小时</td>
+</tr>
+<tr>
+<td>欺诈红队检出率</td>
+<td>≥95%</td>
+</tr>
+<tr>
+<td>删除请求完成</td>
+<td>30 天</td>
+</tr>
+<tr>
+<td>闭环周期</td>
+<td>一个配方 A/B 周期内</td>
+</tr>
+</tbody>
+</table>
+<p>"质检一致性"值得单独说：如果同一条数据重跑两次质检结论不同，那么所有基于质检的消融都没有意义。VLM 的非确定性让这一条并不容易做到。</p>
+<h2>15.7 自建与采购</h2>
+<p><strong>自建</strong>：状态机、质检规则、标注规范、查询、配方、lineage 语义、模型网关。这些是资产不贬值、可迁移的前提。</p>
+<p><strong>采购或开源</strong>：对象存储、元数据库（PostgreSQL）、向量库（pgvector → Milvus/Qdrant）、编排（Prefect/Dagster）、批计算（Ray）、标注界面、可视化（rerun、Foxglove）、训练算力。</p>
+<p><strong>底座是采购问题，不是设计问题</strong>（data-pipeline-design §11）。如果业务方要求数据不出其云，可以把存储、调度、批计算、训练托管到云厂商，本仓库的模块作为其上的作业运行——前提是确认数据导出能力、lineage 能否完整记录、成本，以及闭源合成平台的三问（第 10 章）。裁决见 U-49。</p>
+<h2>15.8 运营与组织</h2>
+<ul>
+<li><strong>不设"数据标注团队"</strong>：标注走 VLM 初标 + 分层人工抽检 + 外包审核员，避免形成固定成本中心（roadmap §4.3）。</li>
+<li><strong>人工编制估算</strong>（H1，1,000 小时/月入湖）：欺诈灰区 2 人、L2 尾部 + 分歧样本 2 人、金标准抽检 1 人，共约 5 人/千小时·月，随信誉体系成熟下降（curation §9）。</li>
+<li><strong>审核员一致性</strong>（Cohen's κ）每月抽测，&lt;0.7 重训指南；审核员只看脱敏预览流，raw 不进审核台。</li>
+<li>数据引擎按四个组组织：数据平台与契约、策展与对齐算法、评测与闭环、采集与 Creator 运营；<strong>评测负责人先于采集扩张到岗</strong>（U-27）。</li>
+</ul>
+<h2>15.9 本章小结</h2>
+<ul>
+<li>九个子系统，新增任务下发、模型网关与注册、数据服务、人工作业台。</li>
+<li>八类数据产品各有 owner、版本规则和服务水平。</li>
+<li>lineage 是骨架：模型升级不改历史决策，删除沿链传导。</li>
+<li>所有规则都是版本化文件。</li>
+<li>容量的新变量是 VLM 调用和向量索引；未知的算力口径先实测。</li>
+<li>逻辑自建、底座采购；不设固定标注团队；评测先于采集扩张。</li>
+</ul>
+<p><strong>延伸阅读</strong>：data-system-plan.md · data-platform.md · data-pipeline-design.md §10–§11 · program-plan.md</p></section><section class="chapter"><h1>第 16 章 合规、安全与治理</h1>
+<p>具身数据比互联网数据更"私密"：它在别人的家里、办公室里、厨房里录下来，里面有人脸、有旁观者、有家居布局、有声音。"隐私是生存问题"（index-replica-plan.md §0）。这一章讲本仓库怎么把合规做成管线的一部分，以及怎么用治理登记管住设计里的不确定性。本章不是法律意见，每个区域上线前需法务出具意见（R-01 / R-11）。</p>
+<h2>16.1 "raw 永存"的准确表述</h2>
+<p>决策四说 raw 永存，隐私脱敏除外。准确的表述是（compliance-and-security.md §6）：<strong>脱敏后的原始 episode 永久保留，除非法律或数据主体要求删除。</strong></p>
+<table>
+<thead>
+<tr>
+<th>数据</th>
+<th>保留</th>
+<th>例外</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>raw（脱敏后存档）</td>
+<td>永久</td>
+<td>撤回或删除请求、未成年人、违法内容、区域法规强制</td>
+</tr>
+<tr>
+<td>raw 脱敏前帧哈希</td>
+<td>90 天</td>
+<td>审计用</td>
+</tr>
+<tr>
+<td>原始音频</td>
+<td>30 天</td>
+<td>口令转写文本永久</td>
+</tr>
+<tr>
+<td>Creator 身份与支付</td>
+<td>关系终止后按财税法规（通常 5–7 年）</td>
+<td></td>
+</tr>
+<tr>
+<td>审核台记录</td>
+<td>3 年</td>
+<td></td>
+</tr>
+<tr>
+<td>中间产物</td>
+<td>90 天（可重算）</td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<h2>16.2 区域矩阵</h2>
+<table>
+<thead>
+<tr>
+<th>区域</th>
+<th>主要法规</th>
+<th>数据驻留</th>
+<th>跨境训练</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>中国大陆</td>
+<td>个保法、数据安全法、生成式 AI 管理办法</td>
+<td>raw 与个人信息境内存储</td>
+<td><strong>默认不出境</strong>，训练在境内</td>
+</tr>
+<tr>
+<td>欧盟 / 英国</td>
+<td>GDPR、AI Act</td>
+<td>欧盟区域</td>
+<td>SCC + 传输影响评估；家庭场景 DPIA 必做</td>
+</tr>
+<tr>
+<td>美国</td>
+<td>CCPA/CPRA、州生物识别法</td>
+<td>无强制</td>
+<td>可；BIPA 州禁止人脸生物识别或单独同意</td>
+</tr>
+<tr>
+<td>其他</td>
+<td>逐国</td>
+<td>逐国</td>
+<td>未评估区域不开放 App</td>
+</tr>
+</tbody>
+</table>
+<p>实现：EpisodeMeta 的 <code>region</code> 字段决定 bucket 区域与合规开关集（人脸处理方式、保留期、删除 SLA）；跨区训练只用<strong>已脱敏的 training 区</strong>数据，raw 不跨区。</p>
+<p>2026 下半年的监管叠层让这件事从"合规成本"变成了"交付条件"：欧盟 Data Act、CRA、PLD、机械法规（2027-01-20 起适用）的叠层，以及中国 YD/T 6771-2026 八维数据质量标准（2026-11-01 实施）都要求机器可读的来源、同意与生命周期记录（data-strategy-roadmap.md §1.7）。</p>
+<h2>16.3 同意与旁观者</h2>
+<p><strong>Creator 协议要点</strong>：</p>
+<ul>
+<li>授权范围覆盖训练、评测、衍生数据集（含具身转换等派生产物）；对外发布数据集需<strong>单独勾选</strong>；</li>
+<li>撤回后 30 天内从 raw / curated / training 删除；<strong>已训练完成的模型不回滚</strong>，但记录在案，后续数据集版本剔除——必须在协议明示；</li>
+<li>按通过策展的分钟数计酬，费率与信誉分级公示。</li>
+</ul>
+<p><strong>旁观者与未成年人</strong>：</p>
+<ul>
+<li>端上：硬连线录制指示灯 + App 强提示；可选端上人脸模糊；</li>
+<li>入湖强制：人脸检测 + 模糊（EgoBlur，Apache）；检出未成年人特征的 episode 进人工审核，确认后整段拒收并从 raw 删除——"raw 永存"的合法例外之一；</li>
+<li>误模糊：脱敏前帧哈希留存 90 天供审计，误模糊率进 QC，误模糊的 episode 标 <code>flag:overblur</code>，不删除；</li>
+<li>语音：环境音频默认不入训练集，仅口令段附近 ±2 s 保留转写文本。</li>
+</ul>
+<p><strong>家居 3D 孪生</strong>（Creator 场景扫描经 SimFoundry 重建的物体清单、布局、网格）视为敏感个人数据：入网时单独勾选同意；按 <code>region</code> 驻留、不对外发布；随 Creator 删除请求一并删除，<strong>并传导到由其派生的 sim 轨 episode</strong>（<code>parent_episode_id</code> 链）。</p>
+<h2>16.4 删除传导</h2>
+<p>删除是 lineage 设计的最终检验。流程（compliance §4）：</p>
+<pre><code>deletions 表登记 → raw → curated → training → 数据集 manifest 剔除
+                → 派生 episode（转换、合成、增殖、孪生）沿 parent_episode_id 链删除
+                → 受影响的 training_runs 登记（模型不回滚）
+</code></pre>
+<p>SLA 30 天，第 21 天未完成告警；每季度随机抽查删除请求是否真的删干净。查询快照引用的片段同样在传导范围内——这是"查询即配置、快照进 lineage"的另一个用处。</p>
+<h2>16.5 数据分级与访问</h2>
+<table>
+<thead>
+<tr>
+<th>级别</th>
+<th>内容</th>
+<th>访问</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>L3 受限</td>
+<td>raw 未脱敏视频、Creator 身份、支付信息</td>
+<td>平台运维 + 合规专员；双人审批；只读</td>
+</tr>
+<tr>
+<td>L2 内部</td>
+<td>脱敏后 curated、元数据、审核台</td>
+<td>数据、策展、训练团队</td>
+</tr>
+<tr>
+<td>L1 可共享</td>
+<td>training 区脱敏数据集、统计指标</td>
+<td>全员；对外按开源策略</td>
+</tr>
+</tbody>
+</table>
+<p>raw 区只有 ingest 写、审计读；所有 L3 访问、删除处理、数据集发布记录写入不可篡改存储，保留 3 年。模型网关在调用外部 API 前做数据分级检查。</p>
+<h2>16.6 安全基线</h2>
+<ul>
+<li>设备：固件签名 + 安全启动；OTA 签名包与灰度；本地存储加密，密钥与账号绑定，丢失可远程吊销。</li>
+<li>端点：设备证书 + 短期 token；无证书上传直接拒绝。</li>
+<li><strong>投毒防御</strong>：新账户全量审计；跨账户 embedding 碰撞；红队植入测试；训练前 held-out 泄漏检查；单账户短期大量高相似上传自动冻结。</li>
+<li>供应链：依赖锁定（<code>uv.lock</code>）、镜像签名、模型权重哈希校验。</li>
+</ul>
+<h2>16.7 license 纪律</h2>
+<p>模型和资产的 license 是一个容易被忽视、一旦出事就很难补救的风险。本仓库的纪律（cleaning-algo-selection.md §2）：</p>
+<ol>
+<li><strong>每个模型的版本与权重哈希进 lineage</strong>——模型升级 = 数据世代切换，必须可追溯；</li>
+<li><strong>⚠️ 待核查项在 M2 策展实现开始前完成 license 终审；非商用许可的模型只允许出现在研究分支</strong>（DOVER、FAST-VQA、pyiqa 等）；</li>
+<li>所有 AI 判定阈值与传统阈值一样服从消融裁决；</li>
+<li>商业 API 没有权重哈希，改记<strong>模型名 + API 版本字符串 + 调用日期</strong>，其服务条款对"输出用于训练数据"的许可属于终审范围。</li>
+</ol>
+<p>几个具体例子：UMI 原配的 ORB-SLAM3 是 GPLv3，只允许服务端处理、不得进设备固件或分发件，商用发行前须切到 BSD 的 Basalt 或完成合规评估（U-10）；SimFoundry 本身 Apache-2.0，但默认安装链含非商用组件，进默认路径前要换件（U-20）。逐项核查状态在 governance.md 的 U-11 表。</p>
+<h2>16.8 治理登记：管住不确定性</h2>
+<p>一个设计里充满了"暂时这么定"。governance.md 用三张活表管住它们（截至成书日约 29 条风险、51 条未决决策、34 条自报数字）：</p>
+<table>
+<thead>
+<tr>
+<th>表</th>
+<th>内容</th>
+<th>每条必须有</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>R 风险登记</td>
+<td>合规、经济、技术、供应链风险</td>
+<td>严重度、触发信号、对策、owner、复检时点</td>
+</tr>
+<tr>
+<td>U 未决决策</td>
+<td>待裁决的设计选择（如 U-47 合成归属、U-48 挖掘模块、U-49 平台底座）</td>
+<td>owner、选项、裁决依据、状态</td>
+</tr>
+<tr>
+<td>D 自报数字</td>
+<td>设计依赖的他家自报数字</td>
+<td>来源属性、依赖它的设计、<strong>若不成立怎么办</strong>、对冲或探针</td>
+</tr>
+</tbody>
+</table>
+<p>D 表的"若不成立"一栏是关键。例如 D-01（Index 五阶段策展）：若阶段划分错了，状态机与漏斗要重排；对冲是各阶段的具体方法全部来自可验证的一手来源（Wall-OSS、Cosmos、厂商论文），五阶段的正确性实质上不依赖 Figure。</p>
+<p>规则：<strong>新增风险、新增依赖他家数字的设计决策、新增待裁决项，都必须先在这里登记，再写进设计文档。</strong> 状态只有 <code>open / mitigating / closed / accepted</code> 四种；owner 按角色（DATA、CUR、TRAIN、HW、PLAT、LEGAL、PM），不按人名。</p>
+<h2>16.9 引用纪律</h2>
+<p>最后一条治理规则关于"怎么说话"（CLAUDE.md 约定）：</p>
+<ul>
+<li>涉及他家的事实性宣称，引用 <code>docs/research-*.md</code> 的已核查条目，不凭记忆写；</li>
+<li>research 文档引用公司一手页面时，必须指向 sources/ 下的归档文本（URL、页面日期、抓取日期、HTML sha256），未归档的先归档再引用；</li>
+<li>引用他家数字必须标注来源属性（官方确认 / 第三方 / 公司自报 ⚠️）。</li>
+</ul>
+<p>这本书本身也遵守这条纪律。</p>
+<h2>16.10 本章小结</h2>
+<ul>
+<li>raw 永存 = 脱敏后永存，法律或数据主体要求时删除。</li>
+<li><code>region</code> 驱动驻留与合规开关；raw 不跨区。</li>
+<li>同意要细分（发布、家居孪生单独勾选）；撤回后模型不回滚但登记。</li>
+<li>删除沿 lineage 传导到所有派生产物，季度抽查。</li>
+<li>license 纪律：权重哈希进 lineage，非商用只进研究分支。</li>
+<li>治理三表管住不确定性；D 表必须写"若不成立"。</li>
+</ul>
+<p><strong>延伸阅读</strong>：compliance-and-security.md · governance.md · cleaning-algo-selection.md · open-source-strategy.md · sources/MANIFEST.md</p></section><section class="chapter"><h1>第 17 章 建设路线与尚未解决的问题</h1>
+<h2>17.1 先建什么</h2>
+<p>建设顺序与某大模型厂商自己的成熟度标注一致（data-pipeline-design.md §12）：<strong>质检已交付、打标是成熟方案、挖掘是长期方案、合成是联合训练方案</strong>。理由与"质量优先于吞吐"相同——质检是唯一能在没有模型、没有本体的阶段就产生价值的环节。</p>
+<table>
+<thead>
+<tr>
+<th>阶段</th>
+<th>内容</th>
+<th>依赖</th>
+<th>验收</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>M1</strong></td>
+<td>入湖 + 采集规则快照绑定；质检规则段 + 报告骨架；LeRobot 导出</td>
+<td>无模型、无本体</td>
+<td>外部样本数据集跑通入湖→规则段→报告→导出；报告字段稳定</td>
+</tr>
+<tr>
+<td><strong>M2 前半</strong></td>
+<td>质检语义段与报告段；打标边界与描述两段 + 确定性后处理；标注规范 v1 + 待裁决队列；金标准集与两把尺子</td>
+<td>VLM 可用（本地 Qwen-VL 起步）</td>
+<td>金标准集上有基线；质检报告可对采集供应商交付</td>
+</tr>
+<tr>
+<td><strong>M2 后半</strong></td>
+<td>去重再平衡；检索底座（SigLIP 基线 + 成对难查询基准）；演示库；查询即配置</td>
+<td>打标槽位产出稳定</td>
+<td>检索基准有基线；manifest 可引用查询快照</td>
+</tr>
+<tr>
+<td><strong>M3</strong></td>
+<td>人类视频→机器人演示合成；世界模型接入；回流闭环与 loop 记录；检索候选升级</td>
+<td>训练与评测栈可用</td>
+<td>至少一轮完整闭环且有评测前后对比；合成组的消融结论</td>
+</tr>
+</tbody>
+</table>
+<p><strong>M1 的出口条件</strong>（data-system-plan.md §10）：一个外部开放数据集和一批自采数据走通"入湖 → 规则段质检 → 报告 → 导出 → 训练读入"；规则段报告字段冻结为 v1；<strong>lineage 能从任一训练分片追到 raw</strong>。</p>
+<p><strong>前 8 周</strong>（data-system-plan §10）：冻结质检报告 schema v1 与规则文件格式；ingest 接上规则快照哈希、规则段质检落地；lineage 核心表与事件表上线并跑通外部数据集端到端；模型网关最小版（本地 VLM + 记账）；工作台选型试用；指标字典增补与运营看板骨架。</p>
+<h2>17.2 0–24 个月时间线</h2>
+<p><img alt="图 10：0–24 个月时间线" src="../assets/strategy/f08-timeline.svg" /></p>
+<p><em>图 10（引自 data-strategy-roadmap §4.1）　工程 M1–M3、硬件 H0–H2、采集设备 P0→P1 EVT→P1 DVT（止步，不做 PVT）、线条推进、对外产品 PL3/PL4，橙色三角为止损门 G1–G6。</em></p>
+<table>
+<thead>
+<tr>
+<th>阶段</th>
+<th>一句话目标</th>
+<th>放行判据（摘）</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>0–3 月（M1 / H0 / P0）</td>
+<td>把底座与评测先立起来，再谈采集</td>
+<td>一条真实 episode 被 openpi/lerobot 不改代码读入；伪标签在仿真可见收益；八维报告器 v0 可出报告</td>
+</tr>
+<tr>
+<td>3–6 月（M2 / H1 / P1 EVT）</td>
+<td>对齐层与段级策展成型</td>
+<td>每可用训练小时全成本 &lt; 遥操作 1/5；human 轨 OOD 增益显著</td>
+</tr>
+<tr>
+<td>6–12 月（M3 / H2 / P1 DVT）</td>
+<td>评测反向绑采集跑通一圈</td>
+<td>北极星 ≤20 真机小时 / ≤$5k；代理相关性 Pearson ≥0.8；干预率基线建立</td>
+</tr>
+<tr>
+<td>12–24 月</td>
+<td>规模化与对外产品</td>
+<td>北极星 ≤5 真机小时 / ≤$1k；代理 Spearman ≥0.85</td>
+</tr>
+</tbody>
+</table>
+<p>资源冲突时的优先级（roadmap §4.2）：<strong>校准数据与对齐集 &gt; 策展 &gt; 评测工具 &gt; 采集吞吐</strong>。采集吞吐永远可以外购，自家本体 × 自家任务的评测校准数据与对齐集不能。</p>
+<h2>17.3 止损门</h2>
+<p>好的路线图要写清楚"什么情况下停"（roadmap §4.5）：</p>
+<table>
+<thead>
+<tr>
+<th>门</th>
+<th>时点</th>
+<th>判据</th>
+<th>触发后</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>G1 评测先行</td>
+<td>3 月末</td>
+<td>分级得分协议与序贯检验未在 3 任务簇 × ≥3 策略变体上跑通</td>
+<td>冻结采集扩量，只做底座</td>
+</tr>
+<tr>
+<td>G2 人类视频主轴</td>
+<td>6 月末</td>
+<td>等小时消融 human 轨 OOD 增益不显著</td>
+<td>human 轨降回"规模腿"，预训练主体改 device + 开源大集</td>
+</tr>
+<tr>
+<td>G3 外购 vs 自采</td>
+<td>6 月末</td>
+<td>自采 device 轨全成本 &gt; 外购价 1.5×</td>
+<td>停自采改外购</td>
+</tr>
+<tr>
+<td>G4 代理评测</td>
+<td>孪生进 CI 后第二季度末</td>
+<td>代理 Pearson &lt;0.8 连续两季度</td>
+<td>评测回退真机，sim 轨预算减半</td>
+</tr>
+<tr>
+<td>G5 估值排序</td>
+<td>12 月末</td>
+<td>估值 top-50% 训练不优于随机 50%</td>
+<td>回退到 QC 门，影响函数线停</td>
+</tr>
+<tr>
+<td>G6 合规（商业口径）</td>
+<td>2026-11-01</td>
+<td>中国训练场客户要求八维报告而报告器未上线</td>
+<td>PL3 中国签约延后一季度</td>
+</tr>
+</tbody>
+</table>
+<h2>17.4 一个内部引擎，五条产品线</h2>
+<p>数据引擎对外的产品化（roadmap §5）：PL3 策展即服务现金流最早；PL4 评测即服务是战略控制点，校准数据从 H1 起内部积累，<strong>对外可以晚，数据不能晚</strong>；PL1/PL2 做供给接口与格式锁定；PL5 在 24 个月。</p>
+<p><img alt="图 11：一个内部引擎支撑五条产品线" src="../assets/strategy/f11-product-architecture.svg" /></p>
+<p><em>图 11（引自 data-strategy-roadmap §5.1）　一个内部数据引擎支撑五条对外产品线。</em></p>
+<p>第 8 章说质检报告"字段只增不删"、第 15 章说 DP4 要对外交付，原因就在这里：质检报告本身就是 PL3 的交付物。</p>
+<h2>17.5 尚未解决的问题</h2>
+<p>最后列出几个连领先团队自己也没解决的问题。它们决定了本书描述的很多设计只能是"带探针的假设"。</p>
+<h3>汇率</h3>
+<p>人类视频一小时顶几小时遥操作？GR00T 2 只证明人类视频的边际收益为正，没有给出换算；人类视频缩放曲线每档只训一次，1%→10% 在噪声内（gr00t2-trends-analysis.md §5）。任何按他家配比照搬预算的做法都没有依据。<strong>只能靠 U-40 的换算率实验自己测。</strong></p>
+<h3>伪动作的上限</h3>
+<p>人类视频丢了主动感知；生成视频"几何幸存、控制信号丢失"。GR00T 2 的人类视频收益主要来自视频预测损失，动作损失依赖手部位姿精度——这层精度在我们这里还没有基线。伪标签金标准抽检（第 10 章）是第一个探针。</p>
+<h3>触觉与力</h3>
+<p>人类视频不含触觉与力反馈，Index 类数据能撑多深的接触密集操作未被证明（architecture §6）。残差 RL 的力觉变体在接触密集任务 50%→93%（论文）说明力信号有价值，所以契约 0.3 预留了力类动作槽位、D1 规划了触觉 UMI 对照集——但"需要多少触觉数据"仍是开放问题。</p>
+<h3>自动验证不可靠</h3>
+<p>拧到一半的螺丝被模型和 agent 都判为完成（GR00T 2 自述）。标注引擎化、agent 质检、世界模型评测器都有同一个盲区：它们在专家分布外的判断不可信。所以本书反复强调<strong>保留人工金标准审计，不能完全去人</strong>。</p>
+<h3>灵巧度与端侧压缩的冲突</h3>
+<p>GR00T 2 的压缩版在灵巧手上掉一半成功率（自报 ⚠️）。"端侧够跑"只对夹爪类任务成立；灵巧手上机的延迟和精度仍然要折中。这会反过来影响数据：如果部署模型必须压缩，训练数据的分辨率、帧率、动作块长度可能都要按末端类型分档。</p>
+<h3>宣称的可信度</h3>
+<p>最后，也是最朴素的一条：行业里的数字大多是自报的，有第三方反驳的先例。架构设计不能按宣传口径过度乐观。治理表的 D 栏、"若不成立"分支、评测的诚实性协议，都是为此准备的。</p>
+<h2>17.6 全书小结</h2>
+<p>如果只记住一页，记住这些：</p>
+<ol>
+<li>瓶颈不是"采不到"，而是"对不齐、验不了、用不上"。原始小时是输入，不是资产。</li>
+<li>七条决策：双格式、四轨同 schema、分层采样率、策展五阶段、AV1 + yuv420p、质量优先、训练保守。</li>
+<li>时间对齐只用 <code>publish_time</code>，误差预算以一个控制周期为界，标定随数据走。</li>
+<li>清洗是标记不是删除；标记变成列，训练选视图，消融只是换视图。</li>
+<li>质检先交付：规则段零模型、语义段先粗后细、报告是交付物。</li>
+<li>先定边界再写描述；两把尺子；描述槽位化；标注是可重算的派生物。</li>
+<li>合成由挖掘驱动、按 source 成组、评测集永不含合成数据。</li>
+<li>manifest 钉住一切版本；held-out 入湖即固定、永不回流。</li>
+<li>评测口径先于结论：Wilson 区间、效应量、功效、按任务 bootstrap。</li>
+<li>回流闭环只有三种诊断：缺数据、被误杀、标错；每轮一条 loop 记录，不涨就回退。</li>
+<li>lineage 是骨架：可复现、可消融、可删除，三者同源。</li>
+<li>不确定性要登记：风险、未决、自报数字，每条有 owner 和"若不成立"。</li>
+</ol>
+<p><strong>延伸阅读</strong>：data-strategy-roadmap.md §4–§6 · program-plan.md · data-system-plan.md §10 · plans-review-hard-points.md · governance.md</p></section><section class="chapter"><h1>附录</h1>
+<h2>A. 术语表</h2>
+<table>
+<thead>
+<tr>
+<th>术语</th>
+<th>定义</th>
+<th>首次出现</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>track（轨）</td>
+<td>采集形态的枚举：robot / human / device / sim；同一 EpisodeMeta，<code>track</code> 字段区分</td>
+<td>第 2、3 章</td>
+</tr>
+<tr>
+<td>source</td>
+<td>sim 轨的子来源（<code>teleop_replay</code>、<code>dexmimicgen</code>、<code>neural_trajectory</code>、<code>mocap_retarget</code>、<code>rl_rollout</code>、<code>planning_trace</code>、提议中的 <code>human2robot_composite</code>），或 robot 轨回流的 <code>fleet</code></td>
+<td>第 3 章</td>
+</tr>
+<tr>
+<td>session（会话）</td>
+<td>一名采集者一次连续佩戴或开机到关机的过程，含多个 episode</td>
+<td>第 9 章</td>
+</tr>
+<tr>
+<td>episode</td>
+<td>一次任务尝试的完整记录，策展与训练的基本单位</td>
+<td>第 6 章</td>
+</tr>
+<tr>
+<td>segment（子任务段）</td>
+<td>episode 内按子任务边界切出的区间，带子任务级指令</td>
+<td>第 9 章</td>
+</tr>
+<tr>
+<td>clip（切片）</td>
+<td>从 segment 裁出的 3–12 s 干净片段，进演示库</td>
+<td>第 9 章</td>
+</tr>
+<tr>
+<td>演示库</td>
+<td>按任务 embedding 可检索的切片集合，训练分片之外的第二产物</td>
+<td>第 11 章</td>
+</tr>
+<tr>
+<td>入湖（ingest）</td>
+<td>原始文件进入数据湖：校验、对齐、转码、登记</td>
+<td>第 7 章</td>
+</tr>
+<tr>
+<td>质量门</td>
+<td>策展中的自动过滤阶段，含 L1 运动学 / L2 统计 / L3 VLM 语义</td>
+<td>第 8 章</td>
+</tr>
+<tr>
+<td>规则段 / 语义段 / 报告段</td>
+<td>质检的三段执行：确定性检查 / VLM 先粗后细 / 合并出报告</td>
+<td>第 8 章</td>
+</tr>
+<tr>
+<td>样本窗口判定</td>
+<td>按训练样本实际读取的时间窗判定合格与否，而不是整段 episode</td>
+<td>第 8 章</td>
+</tr>
+<tr>
+<td>QC 视图</td>
+<td>判定结果作为列追加，export 时离线生成合格样本起点视图</td>
+<td>第 12 章</td>
+</tr>
+<tr>
+<td>两把尺子</td>
+<td>分割验收的宽松（切点 F1）与严格（IoU ≥0.75 一对一）两种口径</td>
+<td>第 9 章</td>
+</tr>
+<tr>
+<td>槽位化描述</td>
+<td>按动作、对象、目标位置、结果状态等槽位结构化存储的子任务描述</td>
+<td>第 9 章</td>
+</tr>
+<tr>
+<td>标注档案</td>
+<td>按用途（<code>action_expert</code> / <code>planner</code> / <code>pretrain</code>）组装的标注规格</td>
+<td>第 9 章</td>
+</tr>
+<tr>
+<td>待裁决队列</td>
+<td>标注规范未覆盖情况的裁决队列，裁决结果回写规范并版本化</td>
+<td>第 9 章</td>
+</tr>
+<tr>
+<td>伪标签工厂</td>
+<td>human 轨从视频恢复动作标签的处理链</td>
+<td>第 10 章</td>
+</tr>
+<tr>
+<td>具身转换</td>
+<td>把穿戴/头戴 device 子形态 episode 变换为机器人域 episode 的可选阶段</td>
+<td>第 10 章</td>
+</tr>
+<tr>
+<td>再平衡</td>
+<td>按任务 × 物体 × 环境 × 操作者聚类调整采样权重</td>
+<td>第 11 章</td>
+</tr>
+<tr>
+<td>挖掘</td>
+<td>结构化过滤 + embedding 召回 + 精排的检索环节</td>
+<td>第 11 章</td>
+</tr>
+<tr>
+<td>查询快照</td>
+<td>一次挖掘查询的结果清单与分数，写入 lineage，可被 manifest 引用</td>
+<td>第 11 章</td>
+</tr>
+<tr>
+<td>槽位向量</td>
+<td>96 维固定布局的状态/动作表示 + 有效掩码</td>
+<td>第 12 章</td>
+</tr>
+<tr>
+<td>manifest</td>
+<td>冻结的数据集清单：episode 与哈希、配方、查询快照、标注版本、切分版本、QC 视图</td>
+<td>第 12 章</td>
+</tr>
+<tr>
+<td>held-out</td>
+<td>入湖后、策展前固定的评测切分，按场景与操作者组切分，永不回流</td>
+<td>第 12 章</td>
+</tr>
+<tr>
+<td>配方（mixture）</td>
+<td><code>configs/mixtures/*.yaml</code>，各轨/任务簇/质量层的采样权重与温度</td>
+<td>第 13 章</td>
+</tr>
+<tr>
+<td>play 数据</td>
+<td>与任务无关、只交代本体怎么动与长什么样的数据，按覆盖度验收</td>
+<td>第 3 章</td>
+</tr>
+<tr>
+<td>配对采集</td>
+<td>同一任务同一时刻用两种方式同时采集，产出对齐层语料</td>
+<td>第 3 章</td>
+</tr>
+<tr>
+<td>干预段</td>
+<td>部署或遥操作中人工接管前后的片段，最贵的对齐层数据</td>
+<td>第 14 章</td>
+</tr>
+<tr>
+<td>loop 记录</td>
+<td>每轮回流闭环的完整记录，飞轮是否在转的唯一证据</td>
+<td>第 14 章</td>
+</tr>
+<tr>
+<td>lineage</td>
+<td>从训练分片到策展决策到原始上传的全链路记录</td>
+<td>第 15 章</td>
+</tr>
+<tr>
+<td>北极星</td>
+<td>新任务上线成本：新任务真机达标所需的真机小时与全成本</td>
+<td>第 1 章</td>
+</tr>
+</tbody>
+</table>
+<h2>B. 关键数字与可信度</h2>
+<p>书中用到的他家数字，按来源属性归类。⚠️ 为公司自报，仅用于判断方向或给阈值定起点，不作为设计参数。登记号见 governance.md D 表。</p>
+<table>
+<thead>
+<tr>
+<th>数字</th>
+<th>来源属性</th>
+<th>本书用途</th>
+<th>章</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Figure 用 8 小时精策划数据即出可用策略</td>
+<td>官方</td>
+<td>质量优先于吞吐的依据</td>
+<td>2</td>
+</tr>
+<tr>
+<td>Index 每 1,000 小时 373 任务 / 1,146 物体 / 116 环境</td>
+<td>自报 ⚠️（分母口径未公开，D-09）</td>
+<td>多样性 KPI 对照，不直接比较</td>
+<td>11</td>
+</tr>
+<tr>
+<td>Index 五阶段策展丢弃大部分原始上传</td>
+<td>第三方（Forbes）</td>
+<td>可用远小于名义</td>
+<td>1</td>
+</tr>
+<tr>
+<td>GR00T 2 预训练混合：人类视频 ~92%、遥操 ~5%、UMI ~2%</td>
+<td>一手架构自述，比例自报 ⚠️（D-34）</td>
+<td>三层数据结构</td>
+<td>1</td>
+</tr>
+<tr>
+<td>GR00T 2 UMI 三级质检滤掉约 1/4（站侧 ~11%、agent ~16%）</td>
+<td>自报 ⚠️</td>
+<td>device 轨三级执行</td>
+<td>8</td>
+</tr>
+<tr>
+<td>GR00T 2 human 窗口阈值（头角速度 ≤20°/s 等）</td>
+<td>自报 ⚠️</td>
+<td>v0 临时阈值</td>
+<td>8</td>
+</tr>
+<tr>
+<td>GR00T 2 Flora 两天重标约 40 万小时</td>
+<td>自报 ⚠️</td>
+<td>标注引擎化趋势</td>
+<td>9</td>
+</tr>
+<tr>
+<td>GR00T 2 仿真-真机 Pearson 0.92–0.93</td>
+<td>自报 ⚠️</td>
+<td>仿真替代真机的条件</td>
+<td>14</td>
+</tr>
+<tr>
+<td>某大模型厂商 Ego 质检阈值（Laplacian &lt;100 等）</td>
+<td>自报 ⚠️（D-33）</td>
+<td>v0 临时阈值</td>
+<td>8</td>
+</tr>
+<tr>
+<td>某大模型厂商两把尺子：宽松差 2.7×、严格差 7.5×</td>
+<td>自报 ⚠️（D-33）</td>
+<td>为什么要同时报两把尺子</td>
+<td>9</td>
+</tr>
+<tr>
+<td>某大模型厂商粒度与用途不匹配训练效果下降 60%</td>
+<td>自报 ⚠️（D-33）</td>
+<td>标注档案</td>
+<td>9</td>
+</tr>
+<tr>
+<td>厂商论文 1,933 h 人类视频 → 15 种本体 24,808 h（≈12.8×）</td>
+<td>论文（D-11 口径）</td>
+<td>人→机合成</td>
+<td>10</td>
+</tr>
+<tr>
+<td>SimFoundry real2sim Pearson 0.911 / MMRV 0.018</td>
+<td>论文</td>
+<td>仿真保真度门槛参照</td>
+<td>14</td>
+</tr>
+<tr>
+<td>DexMimicGen：78 万条 ≈ 6,500 h，11 计算小时</td>
+<td>论文（GR00T）</td>
+<td>仿真增殖量级</td>
+<td>3、10</td>
+</tr>
+<tr>
+<td>Dyna MCAP + topic 分组：存储 −68%、读延迟 2.9×</td>
+<td>自报 ⚠️</td>
+<td>按读取模式分组 topic</td>
+<td>6</td>
+</tr>
+<tr>
+<td>Octo 93M ≈ RT-2 55B；OpenVLA 7B &gt; RT-2-X 55B</td>
+<td>论文</td>
+<td>规模换参数</td>
+<td>13</td>
+</tr>
+<tr>
+<td>HIL-SERL 真机 1–2 小时近满成功率</td>
+<td>论文</td>
+<td>RL 闭环</td>
+<td>13</td>
+</tr>
+<tr>
+<td>潜动作 0.14 vs 光流中间表征 0.69（MetaWorld）</td>
+<td>论文</td>
+<td>显式中间表征更可靠</td>
+<td>10</td>
+</tr>
+<tr>
+<td>众包第一视角视频 ~$6/小时</td>
+<td>第三方</td>
+<td>供给过剩</td>
+<td>1</td>
+</tr>
+<tr>
+<td>平台成本约 $6–8 / 可用小时（H1）</td>
+<td>本仓库估算</td>
+<td>单位经济</td>
+<td>15</td>
+</tr>
+</tbody>
+</table>
+<h2>C. 章节与规范文档对照</h2>
+<p>书中内容以下列规范为准，冲突时以规范为准并登记到 governance。</p>
+<table>
+<thead>
+<tr>
+<th>章</th>
+<th>主要规范文档</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1 瓶颈</td>
+<td>data-strategy-roadmap.md §0–§2、gr00t2-trends-analysis.md</td>
+</tr>
+<tr>
+<td>2 决策</td>
+<td>CLAUDE.md、architecture.md §7</td>
+</tr>
+<tr>
+<td>3 四轨</td>
+<td>architecture.md §1/§6.5、device-track-umi.md、robot-track-teleop.md、sim-track.md</td>
+</tr>
+<tr>
+<td>4 设备</td>
+<td>capture-devices-design.md、recorder-sync-and-storage.md、inhouse-isomorphic-end-effector.md</td>
+</tr>
+<tr>
+<td>5 时间同步</td>
+<td>architecture.md §8</td>
+</tr>
+<tr>
+<td>6 契约</td>
+<td>data-format-contract.md</td>
+</tr>
+<tr>
+<td>7 入湖</td>
+<td>ingest-spec.md、data-pipeline-design.md §3</td>
+</tr>
+<tr>
+<td>8 质检</td>
+<td>curation-pipeline.md §0–§1、cleaning-algo-selection.md、data-pipeline-design.md §4</td>
+</tr>
+<tr>
+<td>9 分割标注</td>
+<td>curation-pipeline.md §3–§4/§7/§9、data-pipeline-design.md §5</td>
+</tr>
+<tr>
+<td>10 伪标签合成</td>
+<td>curation-pipeline.md §4.2、data-pipeline-design.md §7、sim-track.md</td>
+</tr>
+<tr>
+<td>11 去重挖掘</td>
+<td>curation-pipeline.md §2、data-pipeline-design.md §6</td>
+</tr>
+<tr>
+<td>12 数据集</td>
+<td>data-format-contract.md §2、curation-pipeline.md §5/§8</td>
+</tr>
+<tr>
+<td>13 训练消费</td>
+<td>training-pipeline.md、research-vla-pretraining.md</td>
+</tr>
+<tr>
+<td>14 评测闭环</td>
+<td>eval-protocol.md、data-pipeline-design.md §9、runtime-and-deployment.md</td>
+</tr>
+<tr>
+<td>15 平台系统</td>
+<td>data-system-plan.md、data-platform.md</td>
+</tr>
+<tr>
+<td>16 合规治理</td>
+<td>compliance-and-security.md、governance.md</td>
+</tr>
+<tr>
+<td>17 路线</td>
+<td>data-strategy-roadmap.md §4–§5、program-plan.md</td>
+</tr>
+</tbody>
+</table>
+<h2>D. 修订记录</h2>
+<table>
+<thead>
+<tr>
+<th>日期</th>
+<th>内容</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>2026-11-20</td>
+<td>初版：基于截至 2026-11-18 的仓库文档整理，17 章 + 附录</td>
+</tr>
+</tbody>
+</table></section></body></html>

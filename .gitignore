@@ -19,3 +19,7 @@ data/*
 .ruff_cache/
 .mypy_cache/
 .DS_Store
+
+# Local-only work material (history backups, third-party copyrighted snapshots)
+work/scrub/
+work/gr00t2/
